@@ -106,7 +106,7 @@ class MuJoCoSO101Adapter(RobotAdapter):
             return None
 
         try:
-            renderer = mujoco.Renderer(self.model, width=640, height=480)
+            renderer = mujoco.Renderer(self.model, width=960, height=720)
             # Use the referee_cam if it exists, otherwise default free camera
             cam_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "referee_cam")
             if cam_id >= 0:

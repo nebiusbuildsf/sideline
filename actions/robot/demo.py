@@ -40,7 +40,7 @@ VIEWER_HTML = """<!DOCTYPE html>
   h1 { color: #e94560; margin-bottom: 5px; }
   #gesture { color: #0f3460; background: #e94560; padding: 4px 16px;
              border-radius: 4px; font-size: 1.2em; margin: 10px 0; }
-  img { border: 2px solid #333; border-radius: 8px; max-width: 90vw; }
+  img { border: 2px solid #333; border-radius: 8px; width: 90vw; max-width: 960px; height: auto; }
   .controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; justify-content: center; }
   button { background: #16213e; color: #eee; border: 1px solid #e94560;
            padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: monospace; }
@@ -50,7 +50,7 @@ VIEWER_HTML = """<!DOCTYPE html>
 <body>
 <h1>SIDELINE SO-101</h1>
 <div id="gesture">ready</div>
-<img id="frame" width="640" height="480" />
+<img id="frame" />
 <div class="controls">
   <button onclick="send('fault')">Fault</button>
   <button onclick="send('out')">Out</button>
