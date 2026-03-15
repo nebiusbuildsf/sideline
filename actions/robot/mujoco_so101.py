@@ -34,6 +34,8 @@ class MuJoCoSO101Adapter(RobotAdapter):
         self.model = None
         self.data = None
         self.viewer_handle = None
+        self._renderer = None
+        self._cam_id = -1
         self._step_dt = 0.002  # MuJoCo default timestep
 
     async def connect(self) -> None:
@@ -47,6 +49,10 @@ class MuJoCoSO101Adapter(RobotAdapter):
         if not self.headless:
             from mujoco import viewer as mj_viewer
             self.viewer_handle = mj_viewer.launch_passive(self.model, self.data)
+
+        # Pre-create renderer and camera for offscreen rendering
+        self._renderer = mujoco.Renderer(self.model, width=640, height=480)
+        self._cam_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "referee_cam")
 
         logger.info(f"MuJoCo SO-101 loaded: {self.scene_path} (headless={self.headless})")
         logger.info(f"  Actuators: {[self.model.actuator(i).name for i in range(self.model.nu)]}")
@@ -93,6 +99,9 @@ class MuJoCoSO101Adapter(RobotAdapter):
         return [float(self.data.qpos[i]) for i in range(min(6, self.model.nq))]
 
     async def disconnect(self) -> None:
+        if self._renderer is not None:
+            self._renderer.close()
+            self._renderer = None
         if self.viewer_handle is not None:
             self.viewer_handle.close()
             self.viewer_handle = None
@@ -102,24 +111,19 @@ class MuJoCoSO101Adapter(RobotAdapter):
 
     async def render_frame(self) -> bytes | None:
         """Render a frame as PNG bytes (for streaming to dashboard)."""
-        if self.model is None:
+        if self._renderer is None:
             return None
 
         try:
-            renderer = mujoco.Renderer(self.model, width=960, height=720)
-            # Use the referee_cam if it exists, otherwise default free camera
-            cam_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "referee_cam")
-            if cam_id >= 0:
-                renderer.update_scene(self.data, camera=cam_id)
+            if self._cam_id >= 0:
+                self._renderer.update_scene(self.data, camera=self._cam_id)
             else:
-                renderer.update_scene(self.data)
-            pixels = renderer.render()
-            renderer.close()
+                self._renderer.update_scene(self.data)
+            pixels = self._renderer.render()
         except Exception as e:
             logger.error(f"Render error: {e}")
             return None
 
-        # Convert to PNG
         from io import BytesIO
         from PIL import Image
         img = Image.fromarray(pixels)
