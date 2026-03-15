@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>Sideline | AI Referee Agent</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <script>
 tailwind.config = {
     darkMode: "class",
     theme: {
         extend: {
-            colors: { "primary": "#3b82f6", "background-dark": "#09090b" },
+            colors: { "primary": "#067ff9", "background-dark": "#0f1923" },
             fontFamily: { "display": ["Inter", "sans-serif"] },
         },
     },
@@ -20,23 +20,23 @@ tailwind.config = {
 </script>
 <style>
 body { font-family: 'Inter', sans-serif; }
-.glass-effect { background: rgba(9, 9, 11, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(59, 130, 246, 0.1); }
+.glass-effect { background: rgba(15, 25, 35, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(6, 127, 249, 0.1); }
 </style>
 </head>
 <body class="bg-background-dark text-slate-100 antialiased overflow-x-hidden">
 <div class="relative flex min-h-screen w-full flex-col">
 
 <!-- Navigation -->
-<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-background-dark/80 backdrop-filter backdrop-blur-md px-6 lg:px-20 py-4">
+<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-background-dark/80 backdrop-blur-md px-6 lg:px-20 py-4">
 <div class="max-w-7xl mx-auto flex items-center justify-between">
-    <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-sm font-extrabold text-white">S</div>
+    <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-4xl">precision_manufacturing</span>
         <h2 class="text-xl font-bold tracking-tight">Sideline</h2>
     </div>
     <nav class="hidden md:flex items-center gap-10">
-        <a class="text-sm font-medium hover:text-primary transition-colors" href="/architecture">Architecture</a>
-        <a class="text-sm font-medium hover:text-primary transition-colors" href="/playground">Playground</a>
-        <a class="text-sm font-medium hover:text-primary transition-colors" href="/future">Future</a>
+        <a class="text-sm font-medium hover:text-primary transition-colors" href="#features">Features</a>
+        <a class="text-sm font-medium hover:text-primary transition-colors" href="#sports">Sports</a>
+        <a class="text-sm font-medium hover:text-primary transition-colors" href="#technology">Technology</a>
         <a class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-primary/20" href="/referee">Launch Referee →</a>
     </nav>
 </div>
@@ -58,12 +58,10 @@ body { font-family: 'Inter', sans-serif; }
         <h1 class="text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight mb-6">
             The AI referee that <span class="text-primary">never blinks.</span>
         </h1>
-        <p class="text-lg lg:text-xl text-slate-400 font-light leading-relaxed mb-10 max-w-xl">
-            Sideline watches any sport, reasons about every play with chain-of-thought, and acts through any physical form — dashboards, speakers, robotic arms, or humanoid robots.
-        </p>
+        <p class="text-lg lg:text-xl text-slate-400 font-light leading-relaxed mb-10 max-w-xl">An agentic AI that watches any sport, reasons about every play with chain-of-thought, and acts through any physical form — dashboards, robotic arms, or humanoid robots.</p>
         <div class="flex flex-col sm:flex-row gap-4">
             <a href="/referee" class="bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-xl text-lg font-bold transition-all flex items-center justify-center gap-2">
-                Try Live Demo <span class="material-symbols-outlined">arrow_forward</span>
+                Launch Referee <span class="material-symbols-outlined">arrow_forward</span>
             </a>
             <a href="/architecture" class="border border-slate-700 hover:bg-slate-800 text-white px-10 py-4 rounded-xl text-lg font-bold transition-all text-center">
                 How It Works
@@ -71,22 +69,15 @@ body { font-family: 'Inter', sans-serif; }
         </div>
     </div>
     <div class="relative group">
-        <div class="absolute -inset-1 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-        <div class="relative h-[400px] lg:h-[550px] w-full bg-slate-800 rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center">
-            <div class="text-center p-12">
-                <div class="text-8xl mb-6"><span class="material-symbols-outlined" style="font-size:inherit">smart_toy</span></div>
-                <p class="text-2xl font-bold mb-2">Sideline Agent</p>
-                <p class="text-slate-500">Observe → Reason → Act</p>
-                <div class="mt-8 flex justify-center gap-4">
-                    <div class="glass-effect rounded-xl px-4 py-3 text-sm">
-                        <p class="text-xs text-primary font-bold mb-1">Last Call</p>
-                        <p class="font-medium">Out! 15-Love</p>
-                    </div>
-                    <div class="glass-effect rounded-xl px-4 py-3 text-sm">
-                        <p class="text-xs text-green-400 font-bold mb-1">Confidence</p>
-                        <p class="font-medium">92%</p>
-                    </div>
-                </div>
+        <div class="absolute -inset-1 bg-gradient-to-r from-primary to-blue-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
+        <div class="relative h-[400px] lg:h-[600px] w-full bg-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+            <div class="absolute inset-0 flex items-center justify-center">
+                <iframe src="/robots?embed=1" class="w-full h-full border-none"></iframe>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 to-transparent pointer-events-none"></div>
+            <div class="absolute bottom-6 left-6 p-4 glass-effect rounded-xl">
+                <p class="text-xs uppercase text-primary font-bold mb-1">Active Session</p>
+                <p class="text-sm font-medium">Mode: AI Referee — Tennis</p>
             </div>
         </div>
     </div>
@@ -96,240 +87,187 @@ body { font-family: 'Inter', sans-serif; }
 <!-- Stats -->
 <section class="py-20 bg-slate-900/50">
 <div class="max-w-7xl mx-auto px-6">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl hover:border-primary/50 transition-colors">
             <span class="text-primary text-5xl font-black mb-2">240M+</span>
             <p class="text-slate-400 text-sm uppercase tracking-widest font-bold">Matches Annually</p>
-            <p class="mt-4 text-sm text-slate-500">Tennis alone. Add cricket, pickleball, badminton — billions of plays with zero officiating.</p>
+            <p class="mt-4 text-sm text-slate-500">Tennis alone. Add pickleball, volleyball, cricket — billions of plays with zero officiating.</p>
         </div>
         <div class="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl hover:border-primary/50 transition-colors bg-primary/5">
             <span class="text-white text-5xl font-black mb-2">~0%</span>
             <p class="text-primary text-sm uppercase tracking-widest font-bold">Have a Referee</p>
-            <p class="mt-4 text-sm text-slate-500">Amateur and recreational sports are completely unserved. Every call is an argument.</p>
+            <p class="mt-4 text-sm text-slate-500">Amateur sports are completely unserved. Every close call is an argument.</p>
         </div>
         <div class="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl hover:border-primary/50 transition-colors">
             <span class="text-primary text-5xl font-black mb-2">3</span>
             <p class="text-slate-400 text-sm uppercase tracking-widest font-bold">Action Protocols</p>
-            <p class="mt-4 text-sm text-slate-500">Function Calls, MCP, and A2A — the agent acts through any interface and coordinates with other agents.</p>
-        </div>
-        <div class="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl hover:border-primary/50 transition-colors">
-            <span class="text-primary text-5xl font-black mb-2">4</span>
-            <p class="text-slate-400 text-sm uppercase tracking-widest font-bold">Embodiment Tiers</p>
-            <p class="mt-4 text-sm text-slate-500">Dashboard, tank bot, robotic arm, humanoid. Same brain, any body.</p>
+            <p class="mt-4 text-sm text-slate-500">Function Calls, MCP, and A2A — the agent acts through any interface.</p>
         </div>
     </div>
 </div>
 </section>
 
-<!-- Agent Pipeline -->
-<section class="py-24 px-6">
+<!-- Features -->
+<section class="py-24 px-6" id="features">
 <div class="max-w-7xl mx-auto">
     <div class="text-center mb-20">
-        <h2 class="text-4xl lg:text-5xl font-bold mb-4">An Agent, Not a Classifier</h2>
-        <p class="text-slate-400 max-w-2xl mx-auto">Sideline maintains state across an entire match. It remembers every call, tracks every point, and reasons about context — not just pixels.</p>
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Engineered for the Field</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Sideline combines agentic AI with robotics to bring officiating to every court, every match, every sport.</p>
     </div>
     <div class="grid md:grid-cols-3 gap-8">
+        <div class="flex flex-col gap-6 p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all">
+            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-3xl">settings_input_component</span>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-3">Modular Embodiment</h3>
+                <p class="text-slate-400 leading-relaxed">Same agent brain, any physical form. Dashboard, tank bot, 6-DOF arm, or humanoid — swap the body, keep the reasoning.</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-6 p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all">
+            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-3xl">hub</span>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold mb-3">Three Protocols</h3>
+                <p class="text-slate-400 leading-relaxed">Function Calls for speed. MCP for pluggability. A2A for multi-agent coordination. Three cameras, three agents, one coordinator.</p>
+            </div>
+        </div>
         <div class="flex flex-col gap-6 p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all">
             <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                 <span class="material-symbols-outlined text-3xl">visibility</span>
             </div>
             <div>
-                <h3 class="text-xl font-bold mb-3">Perceive</h3>
-                <p class="text-slate-400 leading-relaxed">Multiple sensor inputs — court cameras, robot vision, depth sensors, phone cameras. Frames extracted and fused for the vision model.</p>
-            </div>
-        </div>
-        <div class="flex flex-col gap-6 p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all">
-            <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400">
-                <span class="material-symbols-outlined text-3xl">psychology</span>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold mb-3">Reason</h3>
-                <p class="text-slate-400 leading-relaxed">Nebius Token Factory VLM with chain-of-thought: what happened → which rule applies → what's the call → confidence score. Full reasoning visible.</p>
-            </div>
-        </div>
-        <div class="flex flex-col gap-6 p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all">
-            <div class="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-400">
-                <span class="material-symbols-outlined text-3xl">precision_manufacturing</span>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold mb-3">Act</h3>
-                <p class="text-slate-400 leading-relaxed">Tool calls update scores, announce calls, signal gestures. MCP exposes tools externally. A2A coordinates multiple agents. Actuators execute physically.</p>
+                <h3 class="text-xl font-bold mb-3">Chain-of-Thought Vision</h3>
+                <p class="text-slate-400 leading-relaxed">Powered by Nebius Token Factory VLMs. The agent shows its reasoning — what it sees, which rule applies, and why it made the call.</p>
             </div>
         </div>
     </div>
 </div>
 </section>
 
-<!-- Three Protocols -->
-<section class="py-24 bg-primary/5">
-<div class="max-w-7xl mx-auto px-6">
-    <div class="grid lg:grid-cols-2 gap-20 items-center">
-        <div class="space-y-12">
-            <div>
-                <h2 class="text-4xl font-bold mb-6">Three Protocols, One Brain</h2>
-                <p class="text-slate-400 leading-relaxed">The agent dispatches actions through layered protocols. Each adds capability without replacing the one below.</p>
-            </div>
-            <div class="space-y-6">
-                <div class="flex gap-4">
-                    <div class="text-primary mt-1"><span class="material-symbols-outlined">bolt</span></div>
-                    <div>
-                        <h4 class="font-bold text-lg">Function Calls</h4>
-                        <p class="text-slate-500">Native tool_use via Nebius API. The VLM decides which tools to invoke — update_score, announce_call, robot_gesture.</p>
-                    </div>
-                </div>
-                <div class="flex gap-4">
-                    <div class="text-purple-400 mt-1"><span class="material-symbols-outlined">extension</span></div>
-                    <div>
-                        <h4 class="font-bold text-lg">MCP Server</h4>
-                        <p class="text-slate-500">Expose referee tools via Model Context Protocol. Any MCP client — Claude, ChatGPT, Cursor — can use Sideline as a tool.</p>
-                    </div>
-                </div>
-                <div class="flex gap-4">
-                    <div class="text-green-400 mt-1"><span class="material-symbols-outlined">hub</span></div>
-                    <div>
-                        <h4 class="font-bold text-lg">A2A Protocol</h4>
-                        <p class="text-slate-500">Agent-to-agent coordination. Multiple cameras, multiple agents, one coordinator — like autonomous VAR.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="relative rounded-2xl border border-slate-700 bg-black/50 overflow-hidden">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-xs font-mono text-slate-500">AGENT_OUTPUT</span>
-                    <span class="text-xs font-mono text-green-500">● LIVE</span>
-                </div>
-                <div class="font-mono text-xs text-slate-500 space-y-2">
-                    <p class="text-slate-400">&gt; Frame 47 received from court_camera_01</p>
-                    <p class="text-purple-400">&gt; VLM reasoning: "Ball trajectory indicates landing past baseline..."</p>
-                    <p class="text-primary">&gt; tool_call: announce_call({call: "out", confidence: 0.92})</p>
-                    <p class="text-primary">&gt; tool_call: update_score({player: "p2", reason: "out"})</p>
-                    <p class="text-yellow-400">&gt; tool_call: robot_gesture({gesture: "point_out", direction: "right"})</p>
-                    <p class="text-slate-600">---</p>
-                    <p class="text-green-400">&gt; MCP: sideline-referee.announce_call → speaker.speak("Out!")</p>
-                    <p class="text-green-400">&gt; MCP: robot-control.gesture → /servo [60°, 30°, 45°]</p>
-                    <p class="text-slate-600">---</p>
-                    <p class="text-teal-400">&gt; A2A: tasks/send → commentary-agent → "Brilliant shot goes wide!"</p>
-                    <p class="text-teal-400">&gt; A2A: tasks/send → robot-agent → execute_gesture(point_out)</p>
-                    <p class="text-slate-600">---</p>
-                    <p class="text-slate-400">&gt; Score: 15-30 (Games: 2-1, Set 1) | Server: Player 1</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</section>
-
-<!-- Embodiment -->
-<section class="py-24 px-6">
+<!-- Skill Store / Sports -->
+<section class="py-24 px-6 bg-slate-900/30" id="sports">
 <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold mb-4">Same Brain, Any Body</h2>
-        <p class="text-slate-400 max-w-xl mx-auto">The agent doesn't care what form it takes. Swap the output layer — the reasoning stays the same.</p>
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Sport Modules</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Each sport has its own rules engine, prompts, and scoring logic. One platform, every court.</p>
     </div>
-    <div class="grid md:grid-cols-4 gap-6">
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all text-center">
-            <div class="text-5xl mb-4"><span class="material-symbols-outlined" style="font-size:inherit">dashboard</span></div>
-            <p class="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Tier 0</p>
-            <h3 class="text-lg font-bold mb-2">Dashboard</h3>
-            <p class="text-sm text-slate-500">Video + reasoning + scoreboard. No hardware. Always works.</p>
+    <div class="grid md:grid-cols-3 gap-8">
+        <!-- Tennis -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="material-symbols-outlined text-primary text-3xl">sports_tennis</span>
+                    <h3 class="text-2xl font-bold">Tennis & Table Tennis</h3>
+                </div>
+                <p class="text-slate-400 mb-8">Fault, out, ace, winner, let — full scoring with deuce and advantage. Ball tracking and line call analysis.</p>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                        <span class="material-symbols-outlined text-primary text-sm">gavel</span>
+                        <div><p class="text-xs font-bold uppercase tracking-wider">Official Mode</p><p class="text-[10px] text-slate-500">AI-driven officiating for matches.</p></div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                        <span class="material-symbols-outlined text-primary text-sm">school</span>
+                        <div><p class="text-xs font-bold uppercase tracking-wider">Coach Mode</p><p class="text-[10px] text-slate-500">Real-time feedback and technique analysis.</p></div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl">
+                        <span class="material-symbols-outlined text-primary text-sm">swords</span>
+                        <div><p class="text-xs font-bold uppercase tracking-wider">Competition Mode</p><p class="text-[10px] text-slate-500">Bot plays against you.</p><span class="ml-2 text-[8px] px-1.5 py-0.5 bg-slate-700 text-slate-400 rounded-full font-bold uppercase">WIP</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all text-center">
-            <div class="text-5xl mb-4"><span class="material-symbols-outlined" style="font-size:inherit">smart_toy</span></div>
-            <p class="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Tier 1</p>
-            <h3 class="text-lg font-bold mb-2">MentorPi</h3>
-            <p class="text-sm text-slate-500">Tank bot with camera, speaker, lidar. ROSA + ROS2. Courtside observer.</p>
+        <!-- Pickleball -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="material-symbols-outlined text-primary text-3xl">sports_handball</span>
+                    <h3 class="text-2xl font-bold">Pickleball</h3>
+                </div>
+                <p class="text-slate-400 mb-8">Kitchen violations, line calls, scoring — for the fastest-growing sport in America.</p>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                        <span class="material-symbols-outlined text-primary text-sm">gavel</span>
+                        <div><p class="text-xs font-bold uppercase tracking-wider">Official Mode</p><p class="text-[10px] text-slate-500">Automated line calls and score tracking.</p></div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                        <span class="material-symbols-outlined text-primary text-sm">school</span>
+                        <div><p class="text-xs font-bold uppercase tracking-wider">Coach Mode</p><p class="text-[10px] text-slate-500">Kitchen play and positioning drills.</p></div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl">
+                        <span class="material-symbols-outlined text-primary text-sm">swords</span>
+                        <div><p class="text-xs font-bold uppercase tracking-wider">Competition Mode</p><p class="text-[10px] text-slate-500">Interactive rallies.</p><span class="ml-2 text-[8px] px-1.5 py-0.5 bg-slate-700 text-slate-400 rounded-full font-bold uppercase">WIP</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all text-center">
-            <div class="text-5xl mb-4"><span class="material-symbols-outlined" style="font-size:inherit">precision_manufacturing</span></div>
-            <p class="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Tier 2</p>
-            <h3 class="text-lg font-bold mb-2">SO-101 Arm</h3>
-            <p class="text-sm text-slate-500">6-DOF robotic arm via HuggingFace LeRobot. Signals calls with physical gestures.</p>
-        </div>
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all text-center">
-            <div class="text-5xl mb-4"><span class="material-symbols-outlined" style="font-size:inherit">directions_run</span></div>
-            <p class="text-xs text-slate-500 uppercase tracking-widest font-bold mb-2">Tier 3</p>
-            <h3 class="text-lg font-bold mb-2">Humanoid</h3>
-            <p class="text-sm text-slate-500">Unitree G1. Walks the court, gestures, speaks, head-tracks the ball.</p>
+        <!-- Volleyball -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="material-symbols-outlined text-primary text-3xl">sports_volleyball</span>
+                    <h3 class="text-2xl font-bold">Volleyball</h3>
+                </div>
+                <p class="text-slate-400 mb-8">Line calls, rotation tracking, serve analysis — complete volleyball officiating.</p>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                        <span class="material-symbols-outlined text-primary text-sm">gavel</span>
+                        <div><p class="text-xs font-bold uppercase tracking-wider">Official Mode</p><p class="text-[10px] text-slate-500">Real-time line-call and rotation tracking.</p></div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                        <span class="material-symbols-outlined text-primary text-sm">school</span>
+                        <div><p class="text-xs font-bold uppercase tracking-wider">Coach Mode</p><p class="text-[10px] text-slate-500">Serving drills and receive analysis.</p></div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl">
+                        <span class="material-symbols-outlined text-primary text-sm">swords</span>
+                        <div><p class="text-xs font-bold uppercase tracking-wider">Competition Mode</p><p class="text-[10px] text-slate-500">Shadow training simulation.</p><span class="ml-2 text-[8px] px-1.5 py-0.5 bg-slate-700 text-slate-400 rounded-full font-bold uppercase">WIP</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 </section>
 
-<!-- Tech Stack -->
-<section class="py-24 px-6 overflow-hidden">
+<!-- Technology / VLM -->
+<section class="py-24 px-6 overflow-hidden" id="technology">
 <div class="max-w-7xl mx-auto relative">
     <div class="absolute top-0 right-0 -mr-24 -mt-24 w-96 h-96 bg-primary/10 blur-[120px] rounded-full"></div>
-    <div class="bg-slate-900 border border-slate-800 rounded-[40px] p-8 lg:p-16 relative overflow-hidden">
-        <div class="text-primary font-bold uppercase tracking-[0.2em] text-sm mb-4">Powered By</div>
-        <h2 class="text-4xl lg:text-5xl font-bold mb-12">Built on Open Standards</h2>
-        <div class="grid md:grid-cols-3 lg:grid-cols-6 gap-6">
-            <div class="text-center p-6 rounded-2xl border border-slate-800 hover:border-primary/30 transition-colors">
-                <div class="text-3xl mb-3"><span class="material-symbols-outlined" style="font-size:inherit">psychology</span></div>
-                <p class="font-bold text-sm">Nebius</p>
-                <p class="text-xs text-slate-500 mt-1">Token Factory</p>
+    <div class="bg-slate-900 border border-slate-800 rounded-[40px] p-8 lg:p-20 relative overflow-hidden">
+        <div class="grid lg:grid-cols-2 gap-12">
+            <div>
+                <div class="text-primary font-bold uppercase tracking-[0.2em] text-sm mb-4">The Brain</div>
+                <h2 class="text-4xl lg:text-5xl font-bold mb-8">Agentic Reasoning with Nebius VLM</h2>
+                <p class="text-slate-400 text-lg mb-8 leading-relaxed">Sideline doesn't just see pixels — it understands the game. Chain-of-thought reasoning: what happened, which rule applies, what's the call, how confident. Every decision is explainable.</p>
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-3 text-slate-300"><span class="material-symbols-outlined text-primary">psychology</span> Chain-of-thought reasoning</li>
+                    <li class="flex items-center gap-3 text-slate-300"><span class="material-symbols-outlined text-primary">bolt</span> Native tool calling (function use)</li>
+                    <li class="flex items-center gap-3 text-slate-300"><span class="material-symbols-outlined text-primary">extension</span> MCP server for pluggable tools</li>
+                    <li class="flex items-center gap-3 text-slate-300"><span class="material-symbols-outlined text-primary">hub</span> A2A multi-agent coordination</li>
+                </ul>
             </div>
-            <div class="text-center p-6 rounded-2xl border border-slate-800 hover:border-primary/30 transition-colors">
-                <div class="text-3xl mb-3"><span class="material-symbols-outlined" style="font-size:inherit">bolt</span></div>
-                <p class="font-bold text-sm">FastAPI</p>
-                <p class="text-xs text-slate-500 mt-1">WebSocket</p>
+            <div class="relative rounded-2xl border border-slate-700 bg-black/50 overflow-hidden">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-xs font-mono text-slate-500">AGENT_OUTPUT</span>
+                        <span class="text-xs font-mono text-green-500">● LIVE</span>
+                    </div>
+                    <div class="font-mono text-[10px] text-slate-500 space-y-2">
+                        <p class="text-slate-400">&gt; Frame 47 received from court_camera</p>
+                        <p class="text-purple-400">&gt; CoT: "Ball trajectory past baseline, landing 3cm out..."</p>
+                        <p class="text-primary">&gt; tool_call: announce_call({call: "out", confidence: 0.92})</p>
+                        <p class="text-primary">&gt; tool_call: update_score({player: "p2", reason: "out"})</p>
+                        <p class="text-yellow-400">&gt; tool_call: robot_gesture({gesture: "point_right"})</p>
+                        <p class="text-slate-600">---</p>
+                        <p class="text-green-400">&gt; MCP: referee.announce → speaker.speak("Out!")</p>
+                        <p class="text-green-400">&gt; MCP: robot.gesture → /servo [60°, 30°, 45°]</p>
+                        <p class="text-slate-600">---</p>
+                        <p class="text-teal-400">&gt; A2A: → commentary-agent → "Shot goes wide!"</p>
+                        <p class="text-slate-400">&gt; Score: 15-30 | Games: 2-1 | Server: P1</p>
+                    </div>
+                </div>
             </div>
-            <div class="text-center p-6 rounded-2xl border border-slate-800 hover:border-primary/30 transition-colors">
-                <div class="text-3xl mb-3"><span class="material-symbols-outlined" style="font-size:inherit">extension</span></div>
-                <p class="font-bold text-sm">MCP</p>
-                <p class="text-xs text-slate-500 mt-1">Anthropic</p>
-            </div>
-            <div class="text-center p-6 rounded-2xl border border-slate-800 hover:border-primary/30 transition-colors">
-                <div class="text-3xl mb-3"><span class="material-symbols-outlined" style="font-size:inherit">hub</span></div>
-                <p class="font-bold text-sm">A2A</p>
-                <p class="text-xs text-slate-500 mt-1">Google</p>
-            </div>
-            <div class="text-center p-6 rounded-2xl border border-slate-800 hover:border-primary/30 transition-colors">
-                <div class="text-3xl mb-3"><span class="material-symbols-outlined" style="font-size:inherit">smart_toy</span></div>
-                <p class="font-bold text-sm">ROSA</p>
-                <p class="text-xs text-slate-500 mt-1">NASA JPL</p>
-            </div>
-            <div class="text-center p-6 rounded-2xl border border-slate-800 hover:border-primary/30 transition-colors">
-                <div class="text-3xl mb-3"><span class="material-symbols-outlined" style="font-size:inherit">precision_manufacturing</span></div>
-                <p class="font-bold text-sm">LeRobot</p>
-                <p class="text-xs text-slate-500 mt-1">HuggingFace</p>
-            </div>
-        </div>
-    </div>
-</div>
-</section>
-
-<!-- Team -->
-<section class="py-24 px-6">
-<div class="max-w-7xl mx-auto">
-    <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold mb-4">Built by Builders</h2>
-        <p class="text-slate-400">Four engineers who know sports, robots, and inference.</p>
-    </div>
-    <div class="grid md:grid-cols-4 gap-6">
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">RJ</div>
-            <h4 class="font-bold">Ravinder Jilkapally</h4>
-            <p class="text-primary text-sm mb-2">Agent Pipeline + Dashboard</p>
-            <p class="text-xs text-slate-500">Edge AI, full-stack, inference</p>
-        </div>
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">VR</div>
-            <h4 class="font-bold">Vivek Gopal Ramaswamy</h4>
-            <p class="text-green-400 text-sm mb-2">Robotics + Architecture</p>
-            <p class="text-xs text-slate-500">CMU Robotics, VLA, self-driving</p>
-        </div>
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">KH</div>
-            <h4 class="font-bold">Kruthik Hulisandra</h4>
-            <p class="text-yellow-400 text-sm mb-2">Domain Rules + Pitch</p>
-            <p class="text-xs text-slate-500">Sports referee, MCP, AI engineer</p>
-        </div>
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">VB</div>
-            <h4 class="font-bold">Visshwa Balasubramanian</h4>
-            <p class="text-pink-400 text-sm mb-2">Model Work + Backend</p>
-            <p class="text-xs text-slate-500">Palantir, USACO Gold, NeurIPS</p>
         </div>
     </div>
 </div>
@@ -338,15 +276,11 @@ body { font-family: 'Inter', sans-serif; }
 <!-- CTA -->
 <section class="py-24 px-6 text-center">
 <div class="max-w-3xl mx-auto space-y-8">
-    <h2 class="text-4xl lg:text-6xl font-bold tracking-tight leading-tight">See the <span class="text-primary italic">agent</span> in action.</h2>
-    <p class="text-slate-400 text-lg">Watch Sideline analyze a tennis match, make calls, update scores, and command a robot — all in real-time.</p>
+    <h2 class="text-4xl lg:text-6xl font-bold tracking-tight leading-tight">Every match deserves a <span class="text-primary italic">fair call.</span></h2>
+    <p class="text-slate-400 text-lg">Watch the AI referee analyze a tennis match, make calls, update scores, and command a robot — in real-time.</p>
     <div class="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/referee" class="bg-primary hover:bg-primary/90 text-white px-12 py-5 rounded-2xl text-xl font-bold transition-all shadow-2xl shadow-primary/40">
-            Launch Referee →
-        </a>
-        <a href="/playground" class="border border-slate-700 hover:bg-slate-800 text-white px-12 py-5 rounded-2xl text-xl font-bold transition-all">
-            Open Playground
-        </a>
+        <a href="/referee" class="bg-primary hover:bg-primary/90 text-white px-12 py-5 rounded-2xl text-xl font-bold transition-all shadow-2xl shadow-primary/40">Launch Referee →</a>
+        <a href="/playground" class="border border-slate-700 hover:bg-slate-800 text-white px-12 py-5 rounded-2xl text-xl font-bold transition-all">Open Playground</a>
     </div>
 </div>
 </section>
@@ -355,14 +289,15 @@ body { font-family: 'Inter', sans-serif; }
 
 <footer class="bg-background-dark border-t border-slate-800 py-12 px-6">
 <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-    <div class="flex items-center gap-3">
-        <div class="w-7 h-7 rounded-md bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-xs font-extrabold text-white">S</div>
+    <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-2xl">precision_manufacturing</span>
         <span class="font-bold">Sideline</span>
         <span class="text-slate-600 text-sm">· Nebius.Build SF 2026</span>
     </div>
     <div class="flex gap-8 text-sm text-slate-600">
         <a class="hover:text-slate-400" href="https://github.com/nebiusbuildsf/sideline" target="_blank">GitHub</a>
         <a class="hover:text-slate-400" href="/architecture">Architecture</a>
+        <a class="hover:text-slate-400" href="/robots">Robots</a>
         <a class="hover:text-slate-400" href="https://nebius.com" target="_blank">Nebius</a>
     </div>
 </div>
