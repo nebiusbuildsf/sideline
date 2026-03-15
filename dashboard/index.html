@@ -337,9 +337,12 @@
                     <a href="/robots" target="_blank" style="font-size:10px;color:var(--accent);text-decoration:none;margin-left:8px">↗</a>
                 </div>
                 <div id="robot-3d" style="flex:1;min-height:300px"></div>
-                <div style="padding:6px 12px;border-top:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--dim);display:flex;justify-content:space-between">
-                    <span id="robot-gesture-label">idle</span>
-                    <span id="robot-call-label">—</span>
+                <div style="padding:8px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <div id="robot-dot" style="width:6px;height:6px;border-radius:50%;background:var(--dim)"></div>
+                        <span id="robot-gesture-label" style="font-family:var(--mono);font-size:11px;color:var(--secondary)">idle</span>
+                    </div>
+                    <span id="robot-call-label" style="font-size:11px;font-weight:600;color:var(--accent)"></span>
                 </div>
             </div>
 
@@ -799,6 +802,7 @@ window.addEventListener('message', (e) => {
 // Also listen via WebSocket directly
 const proto = location.protocol === 'https:' ? 'wss' : 'ws';
 const rws = new WebSocket(`${proto}://${location.host}/ws`);
+let lastCallLabel = '';
 rws.onmessage = (e) => {
     const msg = JSON.parse(e.data);
     if (msg.type === 'gesture') {
@@ -806,13 +810,27 @@ rws.onmessage = (e) => {
         currentGesture = Object.keys(gestures).includes(g) ? g : 'point_right';
         gestureTime = 0;
         document.getElementById('robot-gesture-label').textContent = currentGesture;
-        document.getElementById('robot-call-label').textContent = msg.data.direction || '';
+        document.getElementById('robot-dot').style.background = 'var(--green)';
+        document.getElementById('robot-dot').style.boxShadow = '0 0 6px #22c55e40';
         clearTimeout(window._rTimer);
-        window._rTimer = setTimeout(() => { currentGesture = 'idle'; document.getElementById('robot-gesture-label').textContent = 'idle'; }, 3000);
+        window._rTimer = setTimeout(() => {
+            currentGesture = 'idle';
+            document.getElementById('robot-gesture-label').textContent = 'idle';
+            document.getElementById('robot-dot').style.background = 'var(--dim)';
+            document.getElementById('robot-dot').style.boxShadow = 'none';
+            document.getElementById('robot-call-label').textContent = '';
+        }, 3000);
+    }
+    if (msg.type === 'call') {
+        const ct = (msg.data.call_type || '').toUpperCase();
+        document.getElementById('robot-call-label').textContent = ct;
     }
 };
 
-window.switchRobot = function(name) { /* future: switch models */ };
+window.switchRobot = function(name) {
+    // Open full robot sim with selected robot
+    window.open('/robots#' + name, '_blank');
+};
 
 const clock = new THREE.Clock();
 function animate() {
