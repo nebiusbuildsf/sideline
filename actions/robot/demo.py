@@ -121,7 +121,10 @@ class ViewerHandler(SimpleHTTPRequestHandler):
 
 
 def start_web_server(port: int):
+    import socket
+    HTTPServer.allow_reuse_address = True
     server = HTTPServer(("0.0.0.0", port), ViewerHandler)
+    server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server.serve_forever()
 
 
