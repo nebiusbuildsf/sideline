@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sideline — Architecture</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <style>
         :root {
             --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
@@ -67,6 +68,7 @@
         }
         .dag-node:hover, .dag-node.highlight { border-color: #444; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
         .dag-node .icon { font-size: 22px; margin-bottom: 6px; }
+        .dag-node .icon .material-symbols-outlined { font-size: inherit; }
         .dag-node .name { font-size: 12px; font-weight: 700; white-space: nowrap; }
         .dag-node .sub { font-size: 9px; color: var(--dim); font-family: var(--mono); margin-top: 2px; white-space: nowrap; }
         .dag-node.layer-sensor { border-left: 3px solid var(--accent); }
@@ -206,65 +208,65 @@
                 <div style="position:relative;margin-top:-720px;height:720px;pointer-events:none;">
                     <!-- Layer 1: Sensors -->
                     <div class="dag-node layer-sensor" style="left:130px;top:30px;pointer-events:auto" data-id="cam" onclick="showDetail('cam')">
-                        <div class="icon">📹</div><div class="name">Court Camera</div><div class="sub">RGB · wide-angle</div>
+                        <div class="icon"><span class="material-symbols-outlined">videocam</span></div><div class="name">Court Camera</div><div class="sub">RGB · wide-angle</div>
                     </div>
                     <div class="dag-node layer-sensor" style="left:340px;top:30px;pointer-events:auto" data-id="robot-cam" onclick="showDetail('robot-cam')">
-                        <div class="icon">🤖</div><div class="name">Robot Vision</div><div class="sub">MentorPi cam</div>
+                        <div class="icon"><span class="material-symbols-outlined">smart_toy</span></div><div class="name">Robot Vision</div><div class="sub">MentorPi cam</div>
                     </div>
                     <div class="dag-node layer-sensor" style="left:560px;top:30px;pointer-events:auto" data-id="depth" onclick="showDetail('depth')">
-                        <div class="icon">🔳</div><div class="name">Depth Sensor</div><div class="sub">stereo · point cloud</div>
+                        <div class="icon"><span class="material-symbols-outlined">grid_view</span></div><div class="name">Depth Sensor</div><div class="sub">stereo · point cloud</div>
                     </div>
                     <div class="dag-node layer-sensor" style="left:780px;top:30px;pointer-events:auto" data-id="mobile" onclick="showDetail('mobile')">
-                        <div class="icon">📱</div><div class="name">Mobile / File</div><div class="sub">phone · upload · replay</div>
+                        <div class="icon"><span class="material-symbols-outlined">phone_iphone</span></div><div class="name">Mobile / File</div><div class="sub">phone · upload · replay</div>
                     </div>
 
                     <!-- Layer 2: Extraction -->
                     <div class="dag-node layer-extract" style="left:360px;top:140px;pointer-events:auto;min-width:200px" data-id="extract" onclick="showDetail('extract')">
-                        <div class="icon">🖼</div><div class="name">Frame Extractor</div><div class="sub">1fps · JPEG · base64 · multi-source fusion</div>
+                        <div class="icon"><span class="material-symbols-outlined">image</span></div><div class="name">Frame Extractor</div><div class="sub">1fps · JPEG · base64 · multi-source fusion</div>
                     </div>
 
                     <!-- Layer 3: Reasoning -->
                     <div class="dag-node layer-agent" style="left:280px;top:250px;pointer-events:auto;min-width:180px" data-id="agent" onclick="showDetail('agent')">
-                        <div class="icon">🧠</div><div class="name">Sideline Agent</div><div class="sub">CoT · tools · Nebius VLM</div>
+                        <div class="icon"><span class="material-symbols-outlined">psychology</span></div><div class="name">Sideline Agent</div><div class="sub">CoT · tools · Nebius VLM</div>
                     </div>
                     <div class="dag-node layer-agent" style="left:520px;top:250px;pointer-events:auto;min-width:160px" data-id="state" onclick="showDetail('state')">
-                        <div class="icon">💾</div><div class="name">Game State</div><div class="sub">score · history · context</div>
+                        <div class="icon"><span class="material-symbols-outlined">memory</span></div><div class="name">Game State</div><div class="sub">score · history · context</div>
                     </div>
 
                     <!-- Layer 4: Protocols -->
                     <div class="dag-node layer-protocol" style="left:140px;top:360px;pointer-events:auto" data-id="fn" onclick="showDetail('fn')">
-                        <div class="icon">⚡</div><div class="name">Function Calls</div><div class="sub">native tool_use</div>
+                        <div class="icon"><span class="material-symbols-outlined">bolt</span></div><div class="name">Function Calls</div><div class="sub">native tool_use</div>
                     </div>
                     <div class="dag-node layer-protocol" style="left:420px;top:360px;pointer-events:auto" data-id="mcp" onclick="showDetail('mcp')">
-                        <div class="icon">🔌</div><div class="name">MCP Server</div><div class="sub">external tools</div>
+                        <div class="icon"><span class="material-symbols-outlined">extension</span></div><div class="name">MCP Server</div><div class="sub">external tools</div>
                     </div>
                     <div class="dag-node layer-protocol" style="left:680px;top:360px;pointer-events:auto" data-id="a2a" onclick="showDetail('a2a')">
-                        <div class="icon">🔗</div><div class="name">A2A Protocol</div><div class="sub">agent-to-agent</div>
+                        <div class="icon"><span class="material-symbols-outlined">hub</span></div><div class="name">A2A Protocol</div><div class="sub">agent-to-agent</div>
                     </div>
 
                     <!-- Layer 5: Actuators -->
                     <div class="dag-node layer-action" style="left:80px;top:465px;pointer-events:auto" data-id="dashboard" onclick="showDetail('dashboard')">
-                        <div class="icon">📊</div><div class="name">Dashboard</div><div class="sub">display · WebSocket</div>
+                        <div class="icon"><span class="material-symbols-outlined">analytics</span></div><div class="name">Dashboard</div><div class="sub">display · WebSocket</div>
                     </div>
                     <div class="dag-node layer-action" style="left:230px;top:465px;pointer-events:auto" data-id="score" onclick="showDetail('score')">
-                        <div class="icon">🏆</div><div class="name">Scoreboard</div><div class="sub">state machine</div>
+                        <div class="icon"><span class="material-symbols-outlined">scoreboard</span></div><div class="name">Scoreboard</div><div class="sub">state machine</div>
                     </div>
                     <div class="dag-node layer-action" style="left:400px;top:465px;pointer-events:auto" data-id="speaker" onclick="showDetail('speaker')">
-                        <div class="icon">🔊</div><div class="name">Speaker</div><div class="sub">TTS · voice</div>
+                        <div class="icon"><span class="material-symbols-outlined">volume_up</span></div><div class="name">Speaker</div><div class="sub">TTS · voice</div>
                     </div>
                     <div class="dag-node layer-action" style="left:570px;top:465px;pointer-events:auto" data-id="arm" onclick="showDetail('arm')">
-                        <div class="icon">🦾</div><div class="name">Arm Servos</div><div class="sub">gesture · signal</div>
+                        <div class="icon"><span class="material-symbols-outlined">precision_manufacturing</span></div><div class="name">Arm Servos</div><div class="sub">gesture · signal</div>
                     </div>
                     <div class="dag-node layer-action" style="left:740px;top:465px;pointer-events:auto" data-id="wheels" onclick="showDetail('wheels')">
-                        <div class="icon">🛞</div><div class="name">Locomotion</div><div class="sub">wheels · navigation</div>
+                        <div class="icon"><span class="material-symbols-outlined">tire_repair</span></div><div class="name">Locomotion</div><div class="sub">wheels · navigation</div>
                     </div>
                     <div class="dag-node layer-action" style="left:900px;top:465px;pointer-events:auto" data-id="body" onclick="showDetail('body')">
-                        <div class="icon">🏃</div><div class="name">Full Body</div><div class="sub">humanoid joints</div>
+                        <div class="icon"><span class="material-symbols-outlined">directions_run</span></div><div class="name">Full Body</div><div class="sub">humanoid joints</div>
                     </div>
 
                     <!-- Layer 6: Simulation -->
                     <div class="dag-node layer-sim" style="left:220px;top:580px;pointer-events:auto" data-id="sim-viz" onclick="showDetail('sim-viz')">
-                        <div class="icon">🖥</div><div class="name">Visual Sim</div><div class="sub">browser · 3D replay</div>
+                        <div class="icon"><span class="material-symbols-outlined">dashboard</span></div><div class="name">Visual Sim</div><div class="sub">browser · 3D replay</div>
                     </div>
                     <div class="dag-node layer-sim" style="left:470px;top:580px;pointer-events:auto" data-id="sim-physics" onclick="showDetail('sim-physics')">
                         <div class="icon">⚙️</div><div class="name">Physics Sim</div><div class="sub">Isaac Sim · MuJoCo</div>
