@@ -15,11 +15,7 @@ if "MUJOCO_GL" not in os.environ:
 
 import numpy as np
 
-try:
-    import mujoco
-    HAS_MUJOCO = True
-except ImportError:
-    HAS_MUJOCO = False
+import mujoco
 
 from actions.robot.base import RobotAdapter
 from actions.robot.gestures import get_gesture, JOINT_NAMES
@@ -33,8 +29,6 @@ class MuJoCoSO101Adapter(RobotAdapter):
     """Controls a simulated SO-101 arm in MuJoCo."""
 
     def __init__(self, headless: bool = False, scene_path: str | None = None):
-        if not HAS_MUJOCO:
-            raise RuntimeError("mujoco not installed — pip install mujoco")
         self.scene_path = Path(scene_path) if scene_path else SCENE_XML
         self.headless = headless
         self.model = None
