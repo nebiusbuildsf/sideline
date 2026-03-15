@@ -269,10 +269,10 @@
                         <div class="icon"><span class="material-symbols-outlined">dashboard</span></div><div class="name">Visual Sim</div><div class="sub">browser · 3D replay</div>
                     </div>
                     <div class="dag-node layer-sim" style="left:470px;top:580px;pointer-events:auto" data-id="sim-physics" onclick="showDetail('sim-physics')">
-                        <div class="icon">⚙️</div><div class="name">Physics Sim</div><div class="sub">Isaac Sim · MuJoCo</div>
+                        <div class="icon"><span class="material-symbols-outlined">settings</span></div><div class="name">Physics Sim</div><div class="sub">Isaac Sim · MuJoCo</div>
                     </div>
                     <div class="dag-node layer-sim" style="left:870px;top:580px;pointer-events:auto" data-id="sim-digital" onclick="showDetail('sim-digital')">
-                        <div class="icon">🌐</div><div class="name">Digital Twin</div><div class="sub">Osmo · training loop</div>
+                        <div class="icon"><span class="material-symbols-outlined">public</span></div><div class="name">Digital Twin</div><div class="sub">Osmo · training loop</div>
                     </div>
                 </div>
 
@@ -296,7 +296,7 @@
             <div class="desc">Each protocol adds a layer of capability. Function calls are fast and internal. MCP makes tools swappable. A2A enables multi-agent coordination.</div>
             <div class="proto-grid">
                 <div class="proto-card blue">
-                    <h3>⚡ Function Calls</h3>
+                    <h3><span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle">bolt</span> Function Calls</h3>
                     <div class="tag">OpenAI tool_use · Nebius API</div>
                     <p>VLM decides which tools to invoke. Score updates, announcements, gestures — all through native tool calling.</p>
                     <div class="code">tool_calls: [
@@ -311,7 +311,7 @@
 ]</div>
                 </div>
                 <div class="proto-card purple">
-                    <h3>🔌 MCP Server</h3>
+                    <h3><span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle">extension</span> MCP Server</h3>
                     <div class="tag">Model Context Protocol</div>
                     <p>Expose referee as MCP tools. Any client — Claude, ChatGPT, Cursor — can ask "was that ball out?" and get a referee analysis.</p>
                     <div class="code">sideline-referee (stdio)
@@ -329,7 +329,7 @@ robot-control (ros2)
 └── move(dir, speed)</div>
                 </div>
                 <div class="proto-card green">
-                    <h3>🔗 A2A Protocol</h3>
+                    <h3><span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle">hub</span> A2A Protocol</h3>
                     <div class="tag">Agent-to-Agent · JSON-RPC 2.0</div>
                     <p>Multiple Sideline agents coordinate. Three cameras, three agents, one coordinator — autonomous VAR.</p>
                     <div class="code">Camera-1 Agent ──┐

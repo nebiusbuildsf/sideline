@@ -296,7 +296,7 @@
 
             <div class="video-section">
                 <div class="video-frame">
-                    <video id="video" src="/clips/tennis_short.mp4" controls muted style="width:100%;height:100%;object-fit:contain"></video>
+                    <video id="video" src="/clips/tennis_demo.mp4" controls muted style="width:100%;height:100%;object-fit:contain"></video>
                 </div>
                 <div class="video-bar">
                     <span class="frame-num" id="frame-num">Frame 0</span>
@@ -536,11 +536,23 @@ function handleEvent(type, data) {
     else if (type === 'gesture') addEv('gesture', data);
     else if (type === 'status') {
         document.getElementById('agent-status').textContent = data.message || data.description || 'Ready';
-        if (data.description) addEv('status', data);
     }
     else if (type === 'analysis') {
         document.getElementById('frame-num').textContent = `Frame ${data.frame}`;
-        if (data.content && data.content !== `[Mock] Frame ${data.frame} analyzed`) addEv('analysis', {description: data.content});
+        // Show reasoning as the live status line, not as cards
+        if (data.content) {
+            document.getElementById('agent-status').textContent = data.content.substring(0, 120);
+        }
+        // Only add cards for actual tool calls, not no_call
+        if (data.tool_calls) {
+            data.tool_calls.forEach(tc => {
+                if (tc.name === 'no_call') {
+                    // Just update status text, don't add card
+                    document.getElementById('agent-status').textContent = tc.args?.description || 'Observing...';
+                }
+                // call/score/gesture cards are added by their own event handlers
+            });
+        }
     }
     else if (type === 'video') {
         const vid = document.getElementById('video');
@@ -601,21 +613,7 @@ function addEv(type, data) {
 
     card.innerHTML = `<div class="ev-top"><span class="ev-badge ${type}">${type}</span></div><div class="ev-body">${body}</div>`;
     el.insertBefore(card, el.firstChild);
-
-    // Auto-collapse old reasoning, keep calls/scores visible
-    const allCards = el.querySelectorAll('.ev');
-    allCards.forEach((c, i) => {
-        if (i > 3 && !c.classList.contains('ev-highlight')) {
-            c.style.maxHeight = '0';
-            c.style.overflow = 'hidden';
-            c.style.padding = '0';
-            c.style.margin = '0';
-            c.style.border = 'none';
-            c.style.opacity = '0';
-        }
-    });
-
-    while (el.children.length > 60) el.removeChild(el.lastChild);
+    while (el.children.length > 30) el.removeChild(el.lastChild);
 }
 
 function startDemo() {

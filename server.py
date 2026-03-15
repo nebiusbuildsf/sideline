@@ -72,7 +72,7 @@ async def websocket_endpoint(ws: WebSocket):
                 fps = msg.get("fps", 1.0)
                 asyncio.create_task(run_analysis(video, fps))
             elif msg.get("action") == "start_demo" and not is_running:
-                asyncio.create_task(run_analysis("video/clips/tennis_short.mp4", 0.5))
+                asyncio.create_task(run_analysis("video/clips/tennis_demo.mp4", 0.5))
     except WebSocketDisconnect:
         ws_clients.remove(ws)
 

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sideline — Future Vision</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <style>
         :root {
             --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
@@ -70,6 +71,8 @@
         }
         .tl-card:hover { border-color: #333; }
         .tl-card .icon { font-size: 24px; margin-bottom: 10px; }
+        .tl-card .icon .material-symbols-outlined { font-size: inherit; }
+        .ref-icon .material-symbols-outlined { font-size: inherit; }
         .tl-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
         .tl-card p { font-size: 12px; color: var(--dim); line-height: 1.5; }
         .tl-card .ref { font-family: var(--mono); font-size: 10px; color: var(--dim); margin-top: 8px; opacity: 0.7; }
@@ -119,9 +122,9 @@
                 <div class="tl-title">Agentic Referee MVP</div>
                 <div class="tl-desc">Cloud VLM inference via Nebius Token Factory. Single camera. Tennis. Tool calling for score, calls, and robot gestures. MCP + A2A protocols. Dashboard + MentorPi robot.</div>
                 <div class="tl-cards">
-                    <div class="tl-card"><div class="icon">🧠</div><h4>Cloud Inference</h4><p>Nebius Token Factory VLMs. 1-2s per frame. Good enough for between-point calls.</p></div>
-                    <div class="tl-card"><div class="icon">🤖</div><h4>Single Robot</h4><p>MentorPi speaks calls, gestures with arm, tracks play with camera.</p></div>
-                    <div class="tl-card"><div class="icon">🎾</div><h4>Tennis First</h4><p>Clear rules, visible calls, structured scoring. Perfect proving ground.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">psychology</span></div><h4>Cloud Inference</h4><p>Nebius Token Factory VLMs. 1-2s per frame. Good enough for between-point calls.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">smart_toy</span></div><h4>Single Robot</h4><p>MentorPi speaks calls, gestures with arm, tracks play with camera.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">sports_tennis</span></div><h4>Tennis First</h4><p>Clear rules, visible calls, structured scoring. Perfect proving ground.</p></div>
                 </div>
             </div>
 
@@ -132,9 +135,9 @@
                 <div class="tl-title">Real-time on-device inference</div>
                 <div class="tl-desc">Move inference to edge hardware. Sub-100ms latency for in-rally tracking. NVIDIA Jetson AGX Orin running quantized models. No cloud dependency during gameplay.</div>
                 <div class="tl-cards">
-                    <div class="tl-card"><div class="icon">⚡</div><h4>Jetson AGX Orin</h4><p>Run Cosmos Reason 2 locally. 3-18s full reasoning, sub-100ms for tracking-only mode.</p></div>
-                    <div class="tl-card"><div class="icon">📱</div><h4>Phone as Referee</h4><p>Camera in, voice out. No hardware needed. Just point your phone at the court.</p></div>
-                    <div class="tl-card"><div class="icon">🔄</div><h4>Hybrid Mode</h4><p>Edge for tracking, cloud for deep reasoning on disputed calls. Best of both.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">bolt</span></div><h4>Jetson AGX Orin</h4><p>Run Cosmos Reason 2 locally. 3-18s full reasoning, sub-100ms for tracking-only mode.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">phone_iphone</span></div><h4>Phone as Referee</h4><p>Camera in, voice out. No hardware needed. Just point your phone at the court.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">sync</span></div><h4>Hybrid Mode</h4><p>Edge for tracking, cloud for deep reasoning on disputed calls. Best of both.</p></div>
                 </div>
             </div>
 
@@ -145,9 +148,9 @@
                 <div class="tl-title">Zero-shot referee policies from video</div>
                 <div class="tl-desc">Train a World Action Model (like NVIDIA's DreamZero) that jointly predicts future game states and referee actions from video. The model learns physics, rules, and judgment from watching thousands of matches — then referees new sports zero-shot.</div>
                 <div class="tl-cards">
-                    <div class="tl-card"><div class="icon">🌐</div><h4>DreamZero-style WAM</h4><p>Video diffusion backbone jointly predicting world states + actions. 14B parameter model achieving 7Hz real-time control.</p><div class="ref">NVIDIA Research, 2026</div></div>
-                    <div class="tl-card"><div class="icon">🎯</div><h4>Zero-shot Transfer</h4><p>Train on tennis, deploy on badminton — no retraining. The model understands physics, not just rules.</p></div>
-                    <div class="tl-card"><div class="icon">🏋️</div><h4>NVIDIA Osmo</h4><p>Orchestrate training: synthetic data → model training → RL fine-tuning → hardware-in-the-loop testing.</p><div class="ref">developer.nvidia.com/osmo</div></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">public</span></div><h4>DreamZero-style WAM</h4><p>Video diffusion backbone jointly predicting world states + actions. 14B parameter model achieving 7Hz real-time control.</p><div class="ref">NVIDIA Research, 2026</div></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">target</span></div><h4>Zero-shot Transfer</h4><p>Train on tennis, deploy on badminton — no retraining. The model understands physics, not just rules.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">fitness_center</span></div><h4>NVIDIA Osmo</h4><p>Orchestrate training: synthetic data → model training → RL fine-tuning → hardware-in-the-loop testing.</p><div class="ref">developer.nvidia.com/osmo</div></div>
                 </div>
             </div>
 
@@ -158,10 +161,10 @@
                 <div class="tl-title">The humanoid referee walks the court</div>
                 <div class="tl-desc">A fully autonomous humanoid referee that perceives the game, walks the court, makes calls, explains decisions, and communicates with players. Multi-agent coordination across cameras, robots, and cloud. Every amateur match, every sport, everywhere.</div>
                 <div class="tl-cards">
-                    <div class="tl-card"><div class="icon">🏃</div><h4>Humanoid Referee</h4><p>Unitree G1 or similar. Walks sideline, signals with arms, announces with voice, tracks ball with head.</p></div>
-                    <div class="tl-card"><div class="icon">🔗</div><h4>Multi-Agent Mesh</h4><p>3+ camera agents, coordinator, robot agent, commentary agent — all via A2A. Autonomous VAR.</p></div>
-                    <div class="tl-card"><div class="icon">🌍</div><h4>Every Sport</h4><p>Cricket, pickleball, badminton, table tennis, soccer. Same platform, sport-specific rules engine.</p></div>
-                    <div class="tl-card"><div class="icon">📊</div><h4>Sports Analytics</h4><p>Every call generates data. Player analytics, performance trends, coaching insights — built in.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">directions_run</span></div><h4>Humanoid Referee</h4><p>Unitree G1 or similar. Walks sideline, signals with arms, announces with voice, tracks ball with head.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">hub</span></div><h4>Multi-Agent Mesh</h4><p>3+ camera agents, coordinator, robot agent, commentary agent — all via A2A. Autonomous VAR.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">public</span></div><h4>Every Sport</h4><p>Cricket, pickleball, badminton, table tennis, soccer. Same platform, sport-specific rules engine.</p></div>
+                    <div class="tl-card"><div class="icon"><span class="material-symbols-outlined">analytics</span></div><h4>Sports Analytics</h4><p>Every call generates data. Player analytics, performance trends, coaching insights — built in.</p></div>
                 </div>
             </div>
         </div>
@@ -171,7 +174,7 @@
             <h2>Research & References</h2>
             <div class="ref-grid">
                 <div class="ref-item">
-                    <div class="ref-icon">📄</div>
+                    <div class="ref-icon"><span class="material-symbols-outlined">description</span></div>
                     <div>
                         <h4>DreamZero: World Action Models are Zero-shot Policies</h4>
                         <p>NVIDIA. 14B video diffusion model for robotic manipulation. 2x improvement in generalization. Real-time control at 7Hz.</p>
@@ -179,7 +182,7 @@
                     </div>
                 </div>
                 <div class="ref-item">
-                    <div class="ref-icon">📄</div>
+                    <div class="ref-icon"><span class="material-symbols-outlined">description</span></div>
                     <div>
                         <h4>NVIDIA Osmo: Physical AI Orchestrator</h4>
                         <p>Cloud-native orchestrator for physical AI workflows. YAML-defined pipelines for training, simulation, and deployment.</p>
@@ -187,7 +190,7 @@
                     </div>
                 </div>
                 <div class="ref-item">
-                    <div class="ref-icon">📄</div>
+                    <div class="ref-icon"><span class="material-symbols-outlined">description</span></div>
                     <div>
                         <h4>ROSA: Robot Operating System Agent (NASA JPL)</h4>
                         <p>AI-powered natural language interface for ROS1/ROS2 robotics systems. LLM-agnostic design.</p>
@@ -195,7 +198,7 @@
                     </div>
                 </div>
                 <div class="ref-item">
-                    <div class="ref-icon">📄</div>
+                    <div class="ref-icon"><span class="material-symbols-outlined">description</span></div>
                     <div>
                         <h4>A2A: Agent-to-Agent Protocol (Google)</h4>
                         <p>Open protocol for agent interoperability. AgentCards, tasks, JSON-RPC 2.0, streaming, multi-agent coordination.</p>
@@ -203,7 +206,7 @@
                     </div>
                 </div>
                 <div class="ref-item">
-                    <div class="ref-icon">📄</div>
+                    <div class="ref-icon"><span class="material-symbols-outlined">description</span></div>
                     <div>
                         <h4>MCP: Model Context Protocol (Anthropic)</h4>
                         <p>Open standard for connecting AI to external tools and data. Supported by Claude, ChatGPT, VS Code, Cursor.</p>
@@ -211,7 +214,7 @@
                     </div>
                 </div>
                 <div class="ref-item">
-                    <div class="ref-icon">📄</div>
+                    <div class="ref-icon"><span class="material-symbols-outlined">description</span></div>
                     <div>
                         <h4>LeRobot SO-101 (HuggingFace)</h4>
                         <p>Open-source 6-DOF robotic arm with Feetech servos. Leader-follower teleoperation and policy learning.</p>
