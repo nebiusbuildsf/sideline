@@ -168,7 +168,12 @@ app.mount("/static", StaticFiles(directory="dashboard"), name="static")
 
 
 @app.get("/")
-async def dashboard():
+async def homepage():
+    return FileResponse("dashboard/home.html")
+
+
+@app.get("/referee")
+async def referee_dashboard():
     return FileResponse("dashboard/index.html")
 
 
