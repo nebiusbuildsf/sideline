@@ -107,13 +107,13 @@
 
         /* Call announcement overlay */
         .call-overlay {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%) scale(0.8);
             z-index: 200; pointer-events: none; opacity: 0;
             transition: opacity 0.3s, transform 0.3s;
             text-align: center;
         }
         .call-overlay.show {
-            opacity: 1; transform: translate(-50%, -50%) scale(1);
+            opacity: 1; transform: translateX(-50%) scale(1.05);
         }
         .call-overlay .call-text {
             font-size: 48px; font-weight: 800; letter-spacing: -1px;
@@ -646,7 +646,7 @@ const armGestures = {
 
 // Target rotations for humanoid joints per gesture
 const humanoidGestures = {
-    idle: { shoulderL: [0,0,0.15], shoulderR: [0,0,-0.15], elbowL: [0,0,0], elbowR: [0,0,0], head: [0,0,0], torso: [0,0,0] },
+    idle: { shoulderL: [0,0,0], shoulderR: [0,0,0], elbowL: [0,0,0], elbowR: [0,0,0], head: [0,0,0], torso: [0,0,0] },
     point_right: { shoulderL: [0,0,0.15], shoulderR: [-1.5,0,0], elbowR: [0,0,0], elbowL: [0,0,0], head: [0,0.3,0], torso: [0,0,0] },
     arm_raise: { shoulderL: [-2.8,0,0], shoulderR: [-2.8,0,0], elbowL: [0,0,0], elbowR: [0,0,0], head: [-0.2,0,0], torso: [0,0,0] },
     fault: { shoulderL: [-1.2,0,0.4], shoulderR: [-1.2,0,-0.4], elbowL: [-1.2,0,0], elbowR: [-1.2,0,0], head: [0,0,0], torso: [0,0,0] },
