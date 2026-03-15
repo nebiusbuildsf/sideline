@@ -150,24 +150,60 @@ Google's open protocol for agents to discover and communicate with each other. E
 | Tier | Hardware | Capability | Status |
 |------|----------|------------|--------|
 | 0 | Dashboard only | Video + reasoning + scoreboard | Always works |
-| 1 | MentorPi (HiWonder) | Camera, speaker, mecanum wheels, servos, ROS2 | Confirmed at event |
-| 2 | SO-101 (LeRobot/HuggingFace) | 6-DOF arm, Feetech servos, leader-follower | Available at event |
-| 3 | Unitree G1 Humanoid | Full body, walking, gestures | Request at event |
+| 1 | SO-101 in Isaac Sim (LeIsaac) | 6-DOF arm, gesture control, simulated | Primary target |
+| 2 | SO-101 Physical (LeRobot/HuggingFace) | 6-DOF arm, Feetech servos, leader-follower | If hardware available |
+| 3 | Unitree G1 Humanoid | Full body, walking, gestures | Stretch goal |
 
-### MentorPi (Tier 1)
-- Tracked chassis with mecanum wheels
-- Camera module (Pi Camera or similar)
-- Speaker grille for TTS
-- Lidar + depth camera
-- ROS2 + Python control
-- Docs: https://docs.hiwonder.com/projects/MentorPi/en/latest/
+### SO-101 in Isaac Sim — LeIsaac (Tier 1, Primary)
 
-### SO-101 Robotic Arm (Tier 2)
+Simulated SO-101 arm in NVIDIA Isaac Sim via [LeIsaac](https://wiki.seeedstudio.com/simulate_soarm101_by_leisaac/). Scene-agnostic — blank scene with `so101_follower.usd` asset, focused on referee gesture execution.
+
+**Stack:**
+- Isaac Lab (IsaacSim 4.5.0) + LeIsaac extension
+- Python 3.10, CUDA 11.8, PyTorch 2.5.1
+- ZMQ client-server architecture (port 5555) for action commands
+- USD asset: `robots/so101_follower.usd`
+- Scene: blank (no environment needed — gestures only)
+
+**Communication:**
+- Sideline agent acts as ZMQ client
+- Isaac Sim runs the ZMQ server with the simulated SO-101
+- Agent sends joint configurations for referee gestures
+- 5000ms timeout, `policy_action_horizon=16`
+
+**Gesture Action Space:**
+```python
+REFEREE_GESTURES = {
+    "fault":           "arm_raise_right",      # right arm straight up
+    "out":             "arm_point_out",         # point toward sideline
+    "in":              "arm_point_down",        # point at court
+    "score_point":     "arm_raise_left",        # left arm raise
+    "second_serve":    "two_fingers_up",        # two fingers raised
+    "let":             "arm_wave",              # wave to replay
+    "ready":           "arms_at_sides",         # neutral position
+}
+```
+
+**Data pipeline (if training custom gestures):**
+1. Collect teleoperation data in HDF5 via LeIsaac
+2. Convert to LeRobot format: `isaaclab2lerobot.py` → `~/.cache/huggingface/lerobot/`
+3. Train with GR00T N1.5 (optional — can use direct joint control for gestures)
+4. Deploy via ZMQ inference server
+
+**Integration flow:**
+```
+SidelineAgent → decision ("fault")
+  → gesture mapping → joint configuration
+  → ZMQ client → Isaac Sim SO-101 follower
+  → simulated arm executes gesture
+```
+
+### SO-101 Physical (Tier 2)
 - 6x STS3215 Feetech servo motors
 - Leader-follower teleoperation
 - LeRobot SDK: `pip install lerobot[feetech]`
 - Calibration: `lerobot-calibrate`
-- Can signal calls with arm gestures (point out, raise for goal, etc.)
+- Same gesture action space as simulated — swap adapter, not logic
 
 ### Unitree G1 Humanoid (Tier 3)
 - Full body humanoid — walking, gesturing, head tracking
@@ -277,9 +313,9 @@ sideline/
 │   ├── tts.py             # Text-to-speech (MiniMax / system)
 │   └── robot/
 │       ├── base.py        # Robot interface
-│       ├── mentorpi.py    # MentorPi controller
-│       ├── so101.py       # SO-101 arm controller
-│       └── mock.py        # Mock robot for testing
+│       ├── isaac_so101.py  # SO-101 Isaac Sim controller (ZMQ client)
+│       ├── so101.py        # SO-101 physical arm controller
+│       └── mock.py         # Mock robot for testing
 ├── dashboard/
 │   └── index.html         # Video + reasoning + scoreboard UI
 ├── video/
@@ -300,7 +336,7 @@ sideline/
 ```bash
 # Setup
 uv init
-uv add openai fastapi uvicorn httpx opencv-python websockets
+uv add openai fastapi uvicorn httpx opencv-python websockets pyzmq
 
 # Run server
 export NEBIUS_API_KEY="..."
@@ -334,9 +370,13 @@ OPENROUTER_API_KEY=         # Multi-model commentary
 TAVILY_API_KEY=             # Rules search
 MINIMAX_API_KEY=            # TTS for robot voice
 
-# Optional — robot
-MENTORPI_HOST=              # MentorPi IP address
-SO101_PORT=                 # SO-101 serial port
+# Optional — robot (Isaac Sim)
+ISAAC_SIM_ZMQ_HOST=         # Isaac Sim ZMQ server host (default: localhost)
+ISAAC_SIM_ZMQ_PORT=         # Isaac Sim ZMQ server port (default: 5555)
+SO101_USD_PATH=             # Path to so101_follower.usd asset
+
+# Optional — robot (physical)
+SO101_PORT=                 # SO-101 serial port (for physical arm)
 ```
 
 ## Team
@@ -389,7 +429,7 @@ Detailed implementation code and examples are in the sub-docs:
 |-----|----------|
 | `docs/AGENT.md` | Agent loop, game state, tool calling, MCP server, A2A protocol, multi-agent design |
 | `docs/MODELS.md` | Nebius API config, all model IDs, vision + tool calling code, budget estimation |
-| `docs/ROBOTS.md` | MentorPi (ROSA/ROS2), SO-101 arm (LeRobot), Unitree G1, robot interface abstraction |
+| `docs/ROBOTS.md` | SO-101 Isaac Sim (LeIsaac/ZMQ), SO-101 physical (LeRobot), Unitree G1, robot interface abstraction |
 | `docs/PLAN.md` | Timeline, work split, model decision matrix, fallback plan |
 | `docs/DEMO.md` | 3-min pitch script, Q&A prep, 1-min video script, failure recovery |
 | `docs/HACKATHON.md` | Schedule, rules, judging criteria, partner credits, submission link |
