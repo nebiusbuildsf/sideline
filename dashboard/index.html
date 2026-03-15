@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sideline — AI Referee Agent</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <style>
         :root {
             --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
@@ -305,7 +306,7 @@
             <div class="reasoning">
                 <div class="reasoning-header">
                     <div class="reasoning-title">
-                        <div class="icon">🧠</div>
+                        <div class="icon"><span class="material-symbols-outlined" style="font-size:14px">psychology</span></div>
                         Agent Reasoning
                     </div>
                     <div class="reasoning-count" id="ev-count">0 events</div>
@@ -329,32 +330,32 @@
 
             <div class="arch-grid">
                 <div class="arch-card blue">
-                    <div class="arch-card-icon blue">👁</div>
+                    <div class="arch-card-icon blue"><span class="material-symbols-outlined" style="font-size:20px">visibility</span></div>
                     <h3>Observe</h3>
                     <p>Extract frames from live video or recordings at configurable FPS. Each frame becomes input for the vision model.</p>
                 </div>
                 <div class="arch-card purple">
-                    <div class="arch-card-icon purple">🧠</div>
+                    <div class="arch-card-icon purple"><span class="material-symbols-outlined" style="font-size:20px">psychology</span></div>
                     <h3>Perceive</h3>
                     <p>Nebius Token Factory VLM analyzes each frame with game context. <code>Qwen2-VL-72B</code> or <code>Cosmos Reason 2</code>.</p>
                 </div>
                 <div class="arch-card green">
-                    <div class="arch-card-icon green">⚖️</div>
+                    <div class="arch-card-icon green"><span class="material-symbols-outlined" style="font-size:20px">balance</span></div>
                     <h3>Reason</h3>
                     <p>Chain-of-thought reasoning: what happened → which rule applies → what's the correct call → confidence level.</p>
                 </div>
                 <div class="arch-card yellow">
-                    <div class="arch-card-icon yellow">🎯</div>
+                    <div class="arch-card-icon yellow"><span class="material-symbols-outlined" style="font-size:20px">target</span></div>
                     <h3>Decide</h3>
                     <p>The model selects tools to call: <code>update_score</code>, <code>announce_call</code>, <code>robot_gesture</code>, or <code>no_call</code>.</p>
                 </div>
                 <div class="arch-card red">
-                    <div class="arch-card-icon red">🤖</div>
+                    <div class="arch-card-icon red"><span class="material-symbols-outlined" style="font-size:20px">smart_toy</span></div>
                     <h3>Act</h3>
                     <p>Execute actions through three protocols: Function Calls, MCP servers, and A2A agent communication.</p>
                 </div>
                 <div class="arch-card blue">
-                    <div class="arch-card-icon blue">💾</div>
+                    <div class="arch-card-icon blue"><span class="material-symbols-outlined" style="font-size:20px">memory</span></div>
                     <h3>Remember</h3>
                     <p>Maintain game state across the entire match. Score, rally context, call history — the agent never forgets.</p>
                 </div>
@@ -573,7 +574,7 @@ function addEv(type, data) {
             body += `<div class="ev-confidence"><div class="ev-confidence-fill" style="width:${pct}%;background:${c}"></div></div>`;
         }
     } else if (type === 'score') body = `<strong>Point:</strong> ${data.player} — ${data.reason||''}`;
-    else if (type === 'gesture') body = `🤖 <strong>${data.gesture}</strong> ${data.direction||''}`;
+    else if (type === 'gesture') body = `<span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle">smart_toy</span> <strong>${data.gesture}</strong> ${data.direction||''}`;
     else body = data.description || data.message || '';
 
     card.innerHTML = `<div class="ev-top"><span class="ev-badge ${type}">${type}</span></div><div class="ev-body">${body}</div>`;
