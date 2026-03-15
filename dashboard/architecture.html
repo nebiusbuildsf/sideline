@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sideline — Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
+            --border: #27272a; --text: #fafafa; --secondary: #a1a1aa; --dim: #71717a;
+            --accent: #3b82f6; --purple: #a855f7; --green: #22c55e;
+            --yellow: #eab308; --red: #ef4444; --teal: #14b8a6; --pink: #ec4899;
+            --font: 'Inter', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; }
+        a { color: inherit; text-decoration: none; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 56px;
+            background: rgba(9,9,11,0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 10px; }
+        .nav-logo { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; }
+        .nav-name { font-size: 15px; font-weight: 700; }
+        .nav-name span { color: var(--secondary); font-weight: 400; font-size: 13px; margin-left: 6px; }
+        .nav-links { display: flex; gap: 4px; }
+        .nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--secondary); transition: all 0.15s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--elevated); }
+
+        .content { max-width: 1100px; margin: 0 auto; padding: 48px 32px 100px; }
+
+        /* Hero */
+        .hero { text-align: center; margin-bottom: 64px; }
+        .hero h1 { font-size: 40px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 12px; }
+        .hero h1 span { background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 16px; color: var(--secondary); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+        /* Section */
+        .section { margin-bottom: 64px; }
+        .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 10px; }
+        .section h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 8px; }
+        .section .desc { font-size: 14px; color: var(--secondary); margin-bottom: 28px; max-width: 600px; line-height: 1.6; }
+
+        /* Architecture Diagram */
+        .arch-diagram {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+            padding: 40px; position: relative; overflow: hidden;
+        }
+        .arch-diagram::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--purple), var(--green));
+            opacity: 0.5;
+        }
+
+        .arch-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 20px; }
+        .arch-node {
+            background: var(--elevated); border: 1px solid var(--border); border-radius: 14px;
+            padding: 16px 20px; text-align: center; min-width: 140px;
+            transition: all 0.2s; position: relative;
+        }
+        .arch-node:hover { border-color: #444; transform: translateY(-2px); }
+        .arch-node .icon { font-size: 24px; margin-bottom: 6px; }
+        .arch-node .name { font-size: 13px; font-weight: 700; }
+        .arch-node .sub { font-size: 10px; color: var(--dim); font-family: var(--mono); margin-top: 2px; }
+        .arch-node.highlight { border-color: var(--accent); box-shadow: 0 0 20px #3b82f615; }
+        .arch-node.green { border-color: #22c55e40; }
+        .arch-node.purple { border-color: #a855f740; }
+        .arch-node.yellow { border-color: #eab30840; }
+
+        .arch-arrow { color: var(--dim); font-size: 20px; }
+        .arch-arrow-down { text-align: center; color: var(--dim); font-size: 20px; margin: 8px 0; }
+        .arch-label {
+            font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--dim); text-align: center; margin: 16px 0 8px;
+        }
+
+        .arch-bracket {
+            display: flex; justify-content: center; gap: 16px;
+            padding: 20px; background: var(--bg); border-radius: 14px;
+            border: 1px dashed var(--border); margin-top: 12px;
+        }
+
+        /* Protocol Deep Dives */
+        .proto-deep {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+        .proto-panel {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            overflow: hidden;
+        }
+        .proto-panel.full { grid-column: 1 / -1; }
+        .proto-header {
+            padding: 20px 24px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .proto-icon {
+            width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; font-size: 18px; flex-shrink: 0;
+        }
+        .proto-icon.blue { background: #3b82f620; }
+        .proto-icon.purple { background: #a855f720; }
+        .proto-icon.green { background: #22c55e20; }
+        .proto-title { font-size: 16px; font-weight: 700; }
+        .proto-subtitle { font-size: 12px; color: var(--dim); }
+        .proto-body { padding: 24px; }
+
+        .code-block {
+            background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+            padding: 16px 20px; font-family: var(--mono); font-size: 12px;
+            color: var(--secondary); line-height: 1.7; overflow-x: auto;
+            white-space: pre; margin-bottom: 16px;
+        }
+        .code-block .kw { color: var(--purple); }
+        .code-block .fn { color: var(--accent); }
+        .code-block .str { color: var(--green); }
+        .code-block .cm { color: var(--dim); }
+        .code-block .num { color: var(--yellow); }
+
+        .flow-list { list-style: none; }
+        .flow-item {
+            display: flex; align-items: flex-start; gap: 12px; padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .flow-item:last-child { border-bottom: none; }
+        .flow-num {
+            width: 24px; height: 24px; border-radius: 8px; background: var(--elevated);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0;
+        }
+        .flow-text { font-size: 13px; color: var(--secondary); line-height: 1.5; }
+        .flow-text strong { color: var(--text); }
+
+        /* Robot Actions */
+        .robot-flow {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+        }
+        .robot-step {
+            background: var(--elevated); border: 1px solid var(--border); border-radius: 12px;
+            padding: 16px; text-align: center; position: relative;
+        }
+        .robot-step .step-icon { font-size: 28px; margin-bottom: 8px; }
+        .robot-step h4 { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+        .robot-step p { font-size: 10px; color: var(--dim); line-height: 1.4; }
+        .robot-step .arrow { position: absolute; right: -16px; top: 50%; transform: translateY(-50%); color: var(--dim); font-size: 14px; z-index: 2; }
+
+        /* Future */
+        .future-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .future-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 28px; position: relative; overflow: hidden;
+        }
+        .future-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.5;
+        }
+        .future-card.blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+        .future-card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
+        .future-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
+        .future-card .icon { font-size: 28px; margin-bottom: 12px; }
+        .future-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .future-card p { font-size: 13px; color: var(--secondary); line-height: 1.6; }
+        .future-card .ref { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo">S</div>
+            <div class="nav-name">sideline <span>Architecture</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/referee">Referee</a>
+            <a href="/playground">Playground</a>
+            <a href="/architecture" class="active">Architecture</a>
+            <a href="/future">Future</a>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="hero">
+            <h1>How <span>Sideline</span> thinks and acts</h1>
+            <p>From video frame to physical robot gesture — every step of the agentic pipeline, every protocol, every action.</p>
+        </div>
+
+        <!-- Full Architecture Diagram -->
+        <div class="section">
+            <div class="section-label">System Overview</div>
+            <h2>End-to-end pipeline</h2>
+            <div class="desc">Video enters the system. The agent reasons. Actions flow through three protocols to any output — screen, speaker, or robot.</div>
+
+            <div class="arch-diagram">
+                <div class="arch-label">Input</div>
+                <div class="arch-row">
+                    <div class="arch-node highlight">
+                        <div class="icon">📹</div>
+                        <div class="name">Video Feed</div>
+                        <div class="sub">camera / file / stream</div>
+                    </div>
+                    <div class="arch-arrow">→</div>
+                    <div class="arch-node">
+                        <div class="icon">🖼</div>
+                        <div class="name">Frame Extractor</div>
+                        <div class="sub">1 fps · JPEG · base64</div>
+                    </div>
+                </div>
+
+                <div class="arch-arrow-down">↓</div>
+                <div class="arch-label">Agent Brain — Nebius Token Factory</div>
+
+                <div class="arch-row">
+                    <div class="arch-node highlight" style="min-width: 300px; border-color: var(--purple);">
+                        <div class="icon">🧠</div>
+                        <div class="name">Sideline Agent</div>
+                        <div class="sub">VLM + CoT Reasoning + Game State + Tool Definitions</div>
+                    </div>
+                </div>
+
+                <div class="arch-row" style="margin-top: 8px;">
+                    <div class="arch-node" style="min-width: 120px;">
+                        <div class="sub">Qwen2-VL-72B</div>
+                    </div>
+                    <div class="arch-node" style="min-width: 120px;">
+                        <div class="sub">Cosmos R2</div>
+                    </div>
+                    <div class="arch-node" style="min-width: 120px;">
+                        <div class="sub">Nemotron VL</div>
+                    </div>
+                    <div class="arch-node" style="min-width: 120px;">
+                        <div class="sub">DeepSeek R1</div>
+                    </div>
+                </div>
+
+                <div class="arch-arrow-down">↓</div>
+                <div class="arch-label">Three Action Protocols</div>
+
+                <div class="arch-row">
+                    <div class="arch-node" style="border-color: #3b82f640;">
+                        <div class="icon">⚡</div>
+                        <div class="name">Function Calls</div>
+                        <div class="sub">OpenAI tool_use</div>
+                    </div>
+                    <div class="arch-node purple">
+                        <div class="icon">🔌</div>
+                        <div class="name">MCP</div>
+                        <div class="sub">Model Context Protocol</div>
+                    </div>
+                    <div class="arch-node green">
+                        <div class="icon">🔗</div>
+                        <div class="name">A2A</div>
+                        <div class="sub">Agent-to-Agent</div>
+                    </div>
+                </div>
+
+                <div class="arch-arrow-down">↓</div>
+                <div class="arch-label">Actions → Physical World</div>
+
+                <div class="arch-bracket">
+                    <div class="arch-node yellow">
+                        <div class="icon">📊</div>
+                        <div class="name">Dashboard</div>
+                        <div class="sub">WebSocket</div>
+                    </div>
+                    <div class="arch-node yellow">
+                        <div class="icon">🔊</div>
+                        <div class="name">Voice</div>
+                        <div class="sub">TTS / Speaker</div>
+                    </div>
+                    <div class="arch-node yellow">
+                        <div class="icon">🏆</div>
+                        <div class="name">Scoreboard</div>
+                        <div class="sub">auto-update</div>
+                    </div>
+                    <div class="arch-node yellow">
+                        <div class="icon">🤖</div>
+                        <div class="name">MentorPi</div>
+                        <div class="sub">ROSA / ROS2</div>
+                    </div>
+                    <div class="arch-node yellow">
+                        <div class="icon">🦾</div>
+                        <div class="name">SO-101 Arm</div>
+                        <div class="sub">LeRobot / Feetech</div>
+                    </div>
+                    <div class="arch-node yellow">
+                        <div class="icon">🏃</div>
+                        <div class="name">Unitree G1</div>
+                        <div class="sub">Humanoid SDK</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Robot Action Flow -->
+        <div class="section">
+            <div class="section-label">Action Pipeline</div>
+            <h2>From call to physical gesture</h2>
+            <div class="desc">When the agent decides "Out!", here's exactly what happens to make the robot signal it.</div>
+
+            <div class="robot-flow">
+                <div class="robot-step">
+                    <div class="step-icon">🧠</div>
+                    <h4>Agent Decides</h4>
+                    <p>VLM returns tool_call: robot_gesture("point_out", "right")</p>
+                    <span class="arrow">→</span>
+                </div>
+                <div class="robot-step">
+                    <div class="step-icon">⚡</div>
+                    <h4>Tool Dispatch</h4>
+                    <p>Function call routed to RobotController interface</p>
+                    <span class="arrow">→</span>
+                </div>
+                <div class="robot-step">
+                    <div class="step-icon">🔌</div>
+                    <h4>MCP / ROSA</h4>
+                    <p>Natural language: "Point arm right to signal out"</p>
+                    <span class="arrow">→</span>
+                </div>
+                <div class="robot-step">
+                    <div class="step-icon">📡</div>
+                    <h4>ROS2 Command</h4>
+                    <p>/servo topic: shoulder=60°, elbow=30°, wrist=45°</p>
+                    <span class="arrow">→</span>
+                </div>
+                <div class="robot-step">
+                    <div class="step-icon">🤖</div>
+                    <h4>Robot Acts</h4>
+                    <p>Arm extends right. Speaker: "Out!" Wheels turn toward play.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Protocol Deep Dives -->
+        <div class="section">
+            <div class="section-label">Protocol Details</div>
+            <h2>Three protocols in depth</h2>
+            <div class="desc">Each protocol serves a different purpose. Together they make the agent truly agentic.</div>
+
+            <div class="proto-deep">
+                <!-- Function Calls -->
+                <div class="proto-panel">
+                    <div class="proto-header">
+                        <div class="proto-icon blue">⚡</div>
+                        <div>
+                            <div class="proto-title">Function Calls</div>
+                            <div class="proto-subtitle">Native tool use via Nebius API</div>
+                        </div>
+                    </div>
+                    <div class="proto-body">
+                        <ul class="flow-list">
+                            <li class="flow-item"><div class="flow-num">1</div><div class="flow-text"><strong>Define tools</strong> — update_score, announce_call, robot_gesture, no_call</div></li>
+                            <li class="flow-item"><div class="flow-num">2</div><div class="flow-text"><strong>Send frame + tools</strong> to Nebius VLM with tool_choice="auto"</div></li>
+                            <li class="flow-item"><div class="flow-num">3</div><div class="flow-text"><strong>Model decides</strong> which tools to call based on what it sees</div></li>
+                            <li class="flow-item"><div class="flow-num">4</div><div class="flow-text"><strong>Execute</strong> — parse tool_calls, run each function</div></li>
+                        </ul>
+                        <div class="code-block"><span class="cm">// Model response</span>
+tool_calls: [
+  {<span class="str">"name"</span>: <span class="str">"announce_call"</span>,
+   <span class="str">"args"</span>: {<span class="str">"call_type"</span>: <span class="str">"out"</span>,
+           <span class="str">"announcement"</span>: <span class="str">"Out!"</span>,
+           <span class="str">"confidence"</span>: <span class="num">0.92</span>}},
+  {<span class="str">"name"</span>: <span class="str">"update_score"</span>,
+   <span class="str">"args"</span>: {<span class="str">"player"</span>: <span class="str">"p2"</span>,
+           <span class="str">"reason"</span>: <span class="str">"out"</span>}},
+  {<span class="str">"name"</span>: <span class="str">"robot_gesture"</span>,
+   <span class="str">"args"</span>: {<span class="str">"gesture"</span>: <span class="str">"point_out"</span>,
+           <span class="str">"direction"</span>: <span class="str">"right"</span>}}
+]</div>
+                    </div>
+                </div>
+
+                <!-- MCP -->
+                <div class="proto-panel">
+                    <div class="proto-header">
+                        <div class="proto-icon purple">🔌</div>
+                        <div>
+                            <div class="proto-title">MCP</div>
+                            <div class="proto-subtitle">Model Context Protocol — external tools</div>
+                        </div>
+                    </div>
+                    <div class="proto-body">
+                        <ul class="flow-list">
+                            <li class="flow-item"><div class="flow-num">1</div><div class="flow-text"><strong>MCP Server</strong> exposes tools: analyze_frame, get_score, lookup_rule, robot_action</div></li>
+                            <li class="flow-item"><div class="flow-num">2</div><div class="flow-text"><strong>Any MCP client</strong> (Claude, ChatGPT, Cursor) connects and discovers tools</div></li>
+                            <li class="flow-item"><div class="flow-num">3</div><div class="flow-text"><strong>Client calls tool</strong> — e.g. "Was that ball out?" → analyze_frame()</div></li>
+                            <li class="flow-item"><div class="flow-num">4</div><div class="flow-text"><strong>Swap backends</strong> — change robot, change rules DB, agent code stays the same</div></li>
+                        </ul>
+                        <div class="code-block"><span class="cm"># MCP Server topology</span>
+<span class="kw">sideline-referee</span>  stdio://localhost
+  ├── <span class="fn">analyze_frame</span>(image, sport)
+  ├── <span class="fn">get_score</span>()
+  ├── <span class="fn">get_call_history</span>(last_n)
+  ├── <span class="fn">lookup_rule</span>(sport, situation)
+  └── <span class="fn">robot_action</span>(action, params)
+
+<span class="kw">tavily-search</span>     api.tavily.com
+  └── <span class="fn">search</span>(query)
+
+<span class="kw">robot-control</span>     ros2://mentorpi
+  ├── <span class="fn">speak</span>(text)
+  ├── <span class="fn">gesture</span>(type, direction)
+  └── <span class="fn">move</span>(direction, speed)</div>
+                    </div>
+                </div>
+
+                <!-- A2A -->
+                <div class="proto-panel full">
+                    <div class="proto-header">
+                        <div class="proto-icon green">🔗</div>
+                        <div>
+                            <div class="proto-title">A2A — Agent-to-Agent Protocol</div>
+                            <div class="proto-subtitle">Multi-agent coordination via JSON-RPC 2.0</div>
+                        </div>
+                    </div>
+                    <div class="proto-body">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div>
+                                <ul class="flow-list">
+                                    <li class="flow-item"><div class="flow-num">1</div><div class="flow-text"><strong>AgentCard</strong> published at /.well-known/agent.json — skills, capabilities, endpoint</div></li>
+                                    <li class="flow-item"><div class="flow-num">2</div><div class="flow-text"><strong>Discovery</strong> — agents find each other, read capabilities</div></li>
+                                    <li class="flow-item"><div class="flow-num">3</div><div class="flow-text"><strong>tasks/send</strong> — create a task, agent processes it (submitted → working → completed)</div></li>
+                                    <li class="flow-item"><div class="flow-num">4</div><div class="flow-text"><strong>Streaming</strong> — SSE for real-time updates as tasks progress</div></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="code-block"><span class="cm">// Multi-agent referee system</span>
+
+<span class="kw">Camera Agent 1</span> ──┐
+                  ├──▶ <span class="fn">Coordinator Agent</span>
+<span class="kw">Camera Agent 2</span> ──┘         │
+                           ├──▶ <span class="kw">Commentary Agent</span>
+   <span class="cm">// majority vote</span>  │         <span class="str">"Brilliant ace!"</span>
+   <span class="cm">// on calls</span>      │
+                           └──▶ <span class="kw">Robot Agent</span>
+                                  <span class="str">gesture: arm_up</span>
+                                  <span class="str">speak: "Ace!"</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Stack -->
+        <div class="section">
+            <div class="section-label">Stack</div>
+            <h2>Built with</h2>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
+                    <div style="font-size:24px;margin-bottom:8px">🧠</div>
+                    <div style="font-size:13px;font-weight:700">Nebius Token Factory</div>
+                    <div style="font-size:11px;color:var(--dim);margin-top:4px">VLM inference + tool calling</div>
+                </div>
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
+                    <div style="font-size:24px;margin-bottom:8px">⚡</div>
+                    <div style="font-size:13px;font-weight:700">FastAPI + WebSocket</div>
+                    <div style="font-size:11px;color:var(--dim);margin-top:4px">Real-time server</div>
+                </div>
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
+                    <div style="font-size:24px;margin-bottom:8px">🤖</div>
+                    <div style="font-size:13px;font-weight:700">ROSA (NASA JPL)</div>
+                    <div style="font-size:11px;color:var(--dim);margin-top:4px">Natural language → ROS2</div>
+                </div>
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
+                    <div style="font-size:24px;margin-bottom:8px">🔗</div>
+                    <div style="font-size:13px;font-weight:700">MCP + A2A</div>
+                    <div style="font-size:11px;color:var(--dim);margin-top:4px">Standard agent protocols</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

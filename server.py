@@ -182,6 +182,16 @@ async def playground():
     return FileResponse("dashboard/playground.html")
 
 
+@app.get("/architecture")
+async def architecture():
+    return FileResponse("dashboard/architecture.html")
+
+
+@app.get("/future")
+async def future():
+    return FileResponse("dashboard/future.html")
+
+
 # --- A2A Agent Card ---
 
 @app.get("/.well-known/agent.json")

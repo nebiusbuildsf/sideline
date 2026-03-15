@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sideline — Future Vision</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
+            --border: #27272a; --text: #fafafa; --secondary: #a1a1aa; --dim: #71717a;
+            --accent: #3b82f6; --purple: #a855f7; --green: #22c55e;
+            --yellow: #eab308; --red: #ef4444; --teal: #14b8a6; --pink: #ec4899;
+            --font: 'Inter', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; }
+        a { color: inherit; text-decoration: none; }
+
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 56px;
+            background: rgba(9,9,11,0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 10px; }
+        .nav-logo { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; }
+        .nav-name { font-size: 15px; font-weight: 700; }
+        .nav-name span { color: var(--secondary); font-weight: 400; font-size: 13px; margin-left: 6px; }
+        .nav-links { display: flex; gap: 4px; }
+        .nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--secondary); transition: all 0.15s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--elevated); }
+
+        .content { max-width: 1100px; margin: 0 auto; padding: 48px 32px 100px; }
+
+        .hero { text-align: center; margin-bottom: 64px; }
+        .hero h1 { font-size: 44px; font-weight: 900; letter-spacing: -2px; margin-bottom: 16px; line-height: 1.1; }
+        .hero h1 span { background: linear-gradient(135deg, var(--purple), var(--pink), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 17px; color: var(--secondary); max-width: 640px; margin: 0 auto; line-height: 1.7; }
+
+        .timeline { position: relative; padding-left: 40px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 15px; top: 0; bottom: 0;
+            width: 2px; background: linear-gradient(180deg, var(--accent), var(--purple), var(--green), var(--yellow));
+        }
+        .tl-item { position: relative; margin-bottom: 48px; }
+        .tl-dot {
+            position: absolute; left: -33px; top: 4px;
+            width: 12px; height: 12px; border-radius: 50%;
+            border: 2px solid var(--bg);
+        }
+        .tl-dot.blue { background: var(--accent); box-shadow: 0 0 10px #3b82f640; }
+        .tl-dot.purple { background: var(--purple); box-shadow: 0 0 10px #a855f740; }
+        .tl-dot.green { background: var(--green); box-shadow: 0 0 10px #22c55e40; }
+        .tl-dot.yellow { background: var(--yellow); box-shadow: 0 0 10px #eab30840; }
+        .tl-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .tl-label.blue { color: var(--accent); }
+        .tl-label.purple { color: var(--purple); }
+        .tl-label.green { color: var(--green); }
+        .tl-label.yellow { color: var(--yellow); }
+        .tl-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .tl-desc { font-size: 14px; color: var(--secondary); line-height: 1.7; margin-bottom: 20px; max-width: 700px; }
+
+        .tl-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .tl-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+            padding: 20px; transition: border-color 0.2s;
+        }
+        .tl-card:hover { border-color: #333; }
+        .tl-card .icon { font-size: 24px; margin-bottom: 10px; }
+        .tl-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+        .tl-card p { font-size: 12px; color: var(--dim); line-height: 1.5; }
+        .tl-card .ref { font-family: var(--mono); font-size: 10px; color: var(--dim); margin-top: 8px; opacity: 0.7; }
+
+        .research-refs {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 32px; margin-top: 64px;
+        }
+        .research-refs h2 { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+        .ref-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .ref-item {
+            background: var(--elevated); border: 1px solid var(--border); border-radius: 12px;
+            padding: 16px; display: flex; gap: 12px; align-items: flex-start;
+        }
+        .ref-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+        .ref-item h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+        .ref-item p { font-size: 11px; color: var(--dim); line-height: 1.5; }
+        .ref-item a { color: var(--accent); font-size: 11px; font-family: var(--mono); }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo">S</div>
+            <div class="nav-name">sideline <span>Future</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/referee">Referee</a>
+            <a href="/playground">Playground</a>
+            <a href="/architecture">Architecture</a>
+            <a href="/future" class="active">Future</a>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="hero">
+            <h1>Where <span>Sideline</span> goes next</h1>
+            <p>Today it's a hackathon prototype. Here's the roadmap from AI referee to autonomous sports intelligence platform.</p>
+        </div>
+
+        <div class="timeline">
+            <!-- Phase 1: Now -->
+            <div class="tl-item">
+                <div class="tl-dot blue"></div>
+                <div class="tl-label blue">Phase 1 — Today</div>
+                <div class="tl-title">Agentic Referee MVP</div>
+                <div class="tl-desc">Cloud VLM inference via Nebius Token Factory. Single camera. Tennis. Tool calling for score, calls, and robot gestures. MCP + A2A protocols. Dashboard + MentorPi robot.</div>
+                <div class="tl-cards">
+                    <div class="tl-card"><div class="icon">🧠</div><h4>Cloud Inference</h4><p>Nebius Token Factory VLMs. 1-2s per frame. Good enough for between-point calls.</p></div>
+                    <div class="tl-card"><div class="icon">🤖</div><h4>Single Robot</h4><p>MentorPi speaks calls, gestures with arm, tracks play with camera.</p></div>
+                    <div class="tl-card"><div class="icon">🎾</div><h4>Tennis First</h4><p>Clear rules, visible calls, structured scoring. Perfect proving ground.</p></div>
+                </div>
+            </div>
+
+            <!-- Phase 2: Edge -->
+            <div class="tl-item">
+                <div class="tl-dot purple"></div>
+                <div class="tl-label purple">Phase 2 — Edge Deployment</div>
+                <div class="tl-title">Real-time on-device inference</div>
+                <div class="tl-desc">Move inference to edge hardware. Sub-100ms latency for in-rally tracking. NVIDIA Jetson AGX Orin running quantized models. No cloud dependency during gameplay.</div>
+                <div class="tl-cards">
+                    <div class="tl-card"><div class="icon">⚡</div><h4>Jetson AGX Orin</h4><p>Run Cosmos Reason 2 locally. 3-18s full reasoning, sub-100ms for tracking-only mode.</p></div>
+                    <div class="tl-card"><div class="icon">📱</div><h4>Phone as Referee</h4><p>Camera in, voice out. No hardware needed. Just point your phone at the court.</p></div>
+                    <div class="tl-card"><div class="icon">🔄</div><h4>Hybrid Mode</h4><p>Edge for tracking, cloud for deep reasoning on disputed calls. Best of both.</p></div>
+                </div>
+            </div>
+
+            <!-- Phase 3: World Models -->
+            <div class="tl-item">
+                <div class="tl-dot green"></div>
+                <div class="tl-label green">Phase 3 — World Action Models</div>
+                <div class="tl-title">Zero-shot referee policies from video</div>
+                <div class="tl-desc">Train a World Action Model (like NVIDIA's DreamZero) that jointly predicts future game states and referee actions from video. The model learns physics, rules, and judgment from watching thousands of matches — then referees new sports zero-shot.</div>
+                <div class="tl-cards">
+                    <div class="tl-card"><div class="icon">🌐</div><h4>DreamZero-style WAM</h4><p>Video diffusion backbone jointly predicting world states + actions. 14B parameter model achieving 7Hz real-time control.</p><div class="ref">NVIDIA Research, 2026</div></div>
+                    <div class="tl-card"><div class="icon">🎯</div><h4>Zero-shot Transfer</h4><p>Train on tennis, deploy on badminton — no retraining. The model understands physics, not just rules.</p></div>
+                    <div class="tl-card"><div class="icon">🏋️</div><h4>NVIDIA Osmo</h4><p>Orchestrate training: synthetic data → model training → RL fine-tuning → hardware-in-the-loop testing.</p><div class="ref">developer.nvidia.com/osmo</div></div>
+                </div>
+            </div>
+
+            <!-- Phase 4: Autonomous -->
+            <div class="tl-item">
+                <div class="tl-dot yellow"></div>
+                <div class="tl-label yellow">Phase 4 — Autonomous Sports Intelligence</div>
+                <div class="tl-title">The humanoid referee walks the court</div>
+                <div class="tl-desc">A fully autonomous humanoid referee that perceives the game, walks the court, makes calls, explains decisions, and communicates with players. Multi-agent coordination across cameras, robots, and cloud. Every amateur match, every sport, everywhere.</div>
+                <div class="tl-cards">
+                    <div class="tl-card"><div class="icon">🏃</div><h4>Humanoid Referee</h4><p>Unitree G1 or similar. Walks sideline, signals with arms, announces with voice, tracks ball with head.</p></div>
+                    <div class="tl-card"><div class="icon">🔗</div><h4>Multi-Agent Mesh</h4><p>3+ camera agents, coordinator, robot agent, commentary agent — all via A2A. Autonomous VAR.</p></div>
+                    <div class="tl-card"><div class="icon">🌍</div><h4>Every Sport</h4><p>Cricket, pickleball, badminton, table tennis, soccer. Same platform, sport-specific rules engine.</p></div>
+                    <div class="tl-card"><div class="icon">📊</div><h4>Sports Analytics</h4><p>Every call generates data. Player analytics, performance trends, coaching insights — built in.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Research References -->
+        <div class="research-refs">
+            <h2>Research & References</h2>
+            <div class="ref-grid">
+                <div class="ref-item">
+                    <div class="ref-icon">📄</div>
+                    <div>
+                        <h4>DreamZero: World Action Models are Zero-shot Policies</h4>
+                        <p>NVIDIA. 14B video diffusion model for robotic manipulation. 2x improvement in generalization. Real-time control at 7Hz.</p>
+                        <a href="https://dreamzero0.github.io/" target="_blank">dreamzero0.github.io</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-icon">📄</div>
+                    <div>
+                        <h4>NVIDIA Osmo: Physical AI Orchestrator</h4>
+                        <p>Cloud-native orchestrator for physical AI workflows. YAML-defined pipelines for training, simulation, and deployment.</p>
+                        <a href="https://developer.nvidia.com/osmo" target="_blank">developer.nvidia.com/osmo</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-icon">📄</div>
+                    <div>
+                        <h4>ROSA: Robot Operating System Agent (NASA JPL)</h4>
+                        <p>AI-powered natural language interface for ROS1/ROS2 robotics systems. LLM-agnostic design.</p>
+                        <a href="https://github.com/nasa-jpl/rosa" target="_blank">github.com/nasa-jpl/rosa</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-icon">📄</div>
+                    <div>
+                        <h4>A2A: Agent-to-Agent Protocol (Google)</h4>
+                        <p>Open protocol for agent interoperability. AgentCards, tasks, JSON-RPC 2.0, streaming, multi-agent coordination.</p>
+                        <a href="https://github.com/a2aproject/A2A" target="_blank">github.com/a2aproject/A2A</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-icon">📄</div>
+                    <div>
+                        <h4>MCP: Model Context Protocol (Anthropic)</h4>
+                        <p>Open standard for connecting AI to external tools and data. Supported by Claude, ChatGPT, VS Code, Cursor.</p>
+                        <a href="https://modelcontextprotocol.io" target="_blank">modelcontextprotocol.io</a>
+                    </div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-icon">📄</div>
+                    <div>
+                        <h4>LeRobot SO-101 (HuggingFace)</h4>
+                        <p>Open-source 6-DOF robotic arm with Feetech servos. Leader-follower teleoperation and policy learning.</p>
+                        <a href="https://huggingface.co/docs/lerobot/en/so101" target="_blank">huggingface.co/docs/lerobot</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
