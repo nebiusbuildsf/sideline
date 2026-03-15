@@ -8,11 +8,12 @@ build/
 .env
 .env.*
 
-# Video assets (too large for git)
-video/clips/*.mp4
+# Video assets (too large for git) — except demo clips
 video/clips/*.avi
 video/clips/*.mov
 video/clips/*.mkv
+# Allow specific demo clips:
+!video/clips/tennis_short.mp4
 assets/
 
 # Eval outputs
