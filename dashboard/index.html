@@ -3,350 +3,512 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sideline — AI Referee</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Sideline — AI Referee Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #09090b;
-            --surface: #111114;
-            --elevated: #1a1a1f;
-            --border: #27272a;
-            --text: #fafafa;
-            --muted: #a1a1aa;
-            --dim: #71717a;
-            --accent: #3b82f6;
-            --green: #22c55e;
-            --yellow: #eab308;
-            --red: #ef4444;
+            --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
+            --border: #27272a; --border-subtle: #1c1c1f;
+            --text: #fafafa; --secondary: #a1a1aa; --dim: #71717a; --disabled: #52525b;
+            --accent: #3b82f6; --accent-glow: #3b82f630;
+            --green: #22c55e; --green-muted: #22c55e18;
+            --yellow: #eab308; --yellow-muted: #eab30818;
+            --red: #ef4444; --red-muted: #ef444418;
+            --purple: #a855f7; --purple-muted: #a855f720;
             --font: 'Inter', -apple-system, sans-serif;
-            --mono: 'SF Mono', 'JetBrains Mono', monospace;
+            --mono: 'JetBrains Mono', monospace;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--font);
-            font-size: 14px;
-            min-height: 100vh;
-        }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; min-height: 100vh; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-        /* Header */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
+        /* Nav */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 56px;
+            background: rgba(9,9,11,0.8); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            background: rgba(9,9,11,0.9);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 50;
         }
-        .logo {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .nav-logo {
+            width: 32px; height: 32px; border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 800; color: white;
         }
-        .logo span { color: var(--accent); }
-        .header-meta { color: var(--dim); font-size: 12px; }
-        .header-actions { display: flex; gap: 8px; }
-        .btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text);
-            font-family: var(--font);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s;
+        .nav-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+        .nav-title span { color: var(--secondary); font-weight: 400; margin-left: 6px; font-size: 13px; }
+        .nav-links { display: flex; gap: 4px; }
+        .nav-links a {
+            padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500;
+            color: var(--secondary); text-decoration: none; transition: all 0.15s;
         }
-        .btn:hover { background: var(--elevated); border-color: #333; }
-        .btn-primary { background: var(--accent); border-color: var(--accent); }
-        .btn-primary:hover { background: #2563eb; }
+        .nav-links a:hover { color: var(--text); background: var(--elevated); }
+        .nav-links a.active { color: var(--text); background: var(--elevated); }
+        .nav-status { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dim); }
+        .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); }
+        .nav-dot.on { background: var(--green); box-shadow: 0 0 8px #22c55e40; }
 
-        /* Layout */
-        .main {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            grid-template-rows: auto 1fr;
-            gap: 16px;
-            padding: 16px 24px;
-            max-width: 1600px;
-            margin: 0 auto;
-            height: calc(100vh - 65px);
+        /* Pages */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* === REFEREE PAGE === */
+        .referee-layout {
+            display: grid; grid-template-columns: 1fr 420px; grid-template-rows: auto 1fr;
+            gap: 20px; padding: 24px 32px; height: calc(100vh - 56px);
         }
 
         /* Scoreboard */
         .scoreboard {
             grid-column: 1 / -1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 48px;
-            padding: 20px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 24px 40px;
+            display: flex; align-items: center; justify-content: center; gap: 0;
+            position: relative; overflow: hidden;
         }
-        .player-score {
-            text-align: center;
+        .scoreboard::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.5;
         }
-        .player-name {
-            font-size: 13px;
-            color: var(--muted);
-            font-weight: 500;
-            margin-bottom: 4px;
+        .sb-player { flex: 1; text-align: center; }
+        .sb-name { font-size: 12px; font-weight: 600; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .sb-name.serving { color: var(--green); }
+        .sb-name.serving::after { content: ' ●'; font-size: 8px; }
+        .sb-points { font-family: var(--mono); font-size: 64px; font-weight: 700; letter-spacing: -3px; line-height: 1; }
+        .sb-meta { font-family: var(--mono); font-size: 12px; color: var(--dim); margin-top: 8px; }
+        .sb-divider { width: 1px; height: 60px; background: var(--border); margin: 0 40px; }
+        .sb-center { text-align: center; padding: 0 32px; }
+        .sb-set { font-family: var(--mono); font-size: 28px; font-weight: 600; color: var(--secondary); }
+        .sb-set-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .sb-call {
+            margin-top: 12px; padding: 6px 16px; border-radius: 20px;
+            font-size: 12px; font-weight: 600; display: inline-block;
+            background: var(--accent-glow); color: var(--accent); border: 1px solid #3b82f630;
+            min-height: 28px; transition: all 0.3s;
         }
-        .player-points {
-            font-size: 48px;
-            font-weight: 700;
-            font-family: var(--mono);
-            letter-spacing: -2px;
-        }
-        .score-detail {
-            font-family: var(--mono);
-            font-size: 12px;
-            color: var(--dim);
-            margin-top: 4px;
-        }
-        .score-separator {
-            font-size: 32px;
-            color: var(--dim);
-            font-weight: 300;
-        }
-        .serving { color: var(--green); }
+        .sb-call.fault { background: var(--red-muted); color: var(--red); border-color: #ef444430; }
+        .sb-call.score { background: var(--green-muted); color: var(--green); border-color: #22c55e30; }
 
-        /* Video Area */
-        .video-area {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+        /* Video */
+        .video-section {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            display: flex; flex-direction: column; overflow: hidden;
         }
-        .video-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
-            min-height: 300px;
-            position: relative;
+        .video-frame {
+            flex: 1; background: #000; display: flex; align-items: center; justify-content: center;
+            min-height: 300px; position: relative;
         }
-        .video-container video {
-            max-width: 100%;
-            max-height: 100%;
+        .video-frame video { width: 100%; height: 100%; object-fit: contain; }
+        .video-frame img { max-width: 100%; max-height: 100%; }
+        .video-empty { color: var(--disabled); font-size: 13px; text-align: center; line-height: 1.6; }
+        .video-bar {
+            padding: 14px 20px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; gap: 16px;
         }
-        .video-placeholder {
-            color: var(--dim);
-            font-size: 13px;
+        .video-bar .frame-num { font-family: var(--mono); font-size: 12px; color: var(--dim); min-width: 80px; }
+        .video-progress { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+        .video-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--purple)); width: 0%; transition: width 0.4s; border-radius: 2px; }
+        .video-bar .controls { display: flex; gap: 8px; }
+        .btn {
+            padding: 8px 18px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--elevated); color: var(--text); font-family: var(--font);
+            font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s;
         }
-        .video-controls {
-            padding: 12px 16px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .frame-counter {
-            font-family: var(--mono);
-            font-size: 12px;
-            color: var(--dim);
-        }
-        .progress-bar {
-            flex: 1;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-            transition: width 0.3s;
-        }
+        .btn:hover { border-color: #444; background: #222; }
+        .btn-accent { background: var(--accent); border-color: var(--accent); color: white; }
+        .btn-accent:hover { background: #2563eb; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
         /* Reasoning Panel */
-        .reasoning-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        .reasoning {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            display: flex; flex-direction: column; overflow: hidden;
         }
-        .panel-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .reasoning-header {
+            padding: 18px 20px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
         }
-        .panel-header .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--green);
+        .reasoning-title { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .reasoning-title .icon {
+            width: 28px; height: 28px; border-radius: 8px; background: var(--purple-muted);
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
         }
-        .events-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px;
+        .reasoning-count { font-family: var(--mono); font-size: 11px; color: var(--dim); padding: 3px 8px; background: var(--elevated); border-radius: 6px; }
+        .events {
+            flex: 1; overflow-y: auto; padding: 12px;
+            display: flex; flex-direction: column; gap: 8px;
         }
-        .event-card {
-            padding: 12px;
-            background: var(--elevated);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 8px;
+        .ev {
+            padding: 14px 16px; background: var(--elevated); border: 1px solid var(--border);
+            border-radius: 12px; transition: border-color 0.2s; animation: fadeIn 0.3s;
         }
-        .event-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 6px;
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .ev:hover { border-color: #333; }
+        .ev-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .ev-badge {
+            font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+            padding: 3px 10px; border-radius: 6px;
         }
-        .event-type {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 2px 8px;
-            border-radius: 4px;
+        .ev-badge.call { background: var(--accent-glow); color: var(--accent); }
+        .ev-badge.score { background: var(--green-muted); color: var(--green); }
+        .ev-badge.gesture { background: var(--yellow-muted); color: var(--yellow); }
+        .ev-badge.status { background: #52525b20; color: var(--dim); }
+        .ev-badge.analysis { background: var(--purple-muted); color: var(--purple); }
+        .ev-frame { font-family: var(--mono); font-size: 10px; color: var(--disabled); }
+        .ev-body { font-size: 13px; color: var(--secondary); line-height: 1.6; }
+        .ev-body strong { color: var(--text); font-weight: 600; }
+        .ev-confidence { height: 3px; background: var(--border); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+        .ev-confidence-fill { height: 100%; border-radius: 2px; }
+        .reasoning-footer {
+            padding: 12px 20px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dim);
         }
-        .event-type.call { background: #3b82f620; color: var(--accent); }
-        .event-type.score { background: #22c55e20; color: var(--green); }
-        .event-type.status { background: #71717a20; color: var(--dim); }
-        .event-type.gesture { background: #eab30820; color: var(--yellow); }
-        .event-frame {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--dim);
+        .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); }
+        .pulse.on { background: var(--green); animation: blink 2s infinite; }
+        @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+        /* === ARCHITECTURE PAGE === */
+        .arch-page { padding: 48px 32px; max-width: 1100px; margin: 0 auto; }
+        .arch-hero { text-align: center; margin-bottom: 48px; }
+        .arch-hero h1 { font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+        .arch-hero h1 span { background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .arch-hero p { font-size: 16px; color: var(--secondary); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+        .arch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+        .arch-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 28px; position: relative; overflow: hidden; transition: border-color 0.2s;
         }
-        .event-body {
-            font-size: 13px;
-            color: var(--muted);
-            line-height: 1.5;
+        .arch-card:hover { border-color: #333; }
+        .arch-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; opacity: 0.5;
         }
-        .event-body strong { color: var(--text); }
-        .confidence-bar {
-            height: 3px;
-            background: var(--border);
-            border-radius: 2px;
-            margin-top: 8px;
-            overflow: hidden;
+        .arch-card.blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+        .arch-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
+        .arch-card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
+        .arch-card.yellow::before { background: linear-gradient(90deg, var(--yellow), transparent); }
+        .arch-card.red::before { background: linear-gradient(90deg, var(--red), transparent); }
+        .arch-card-icon {
+            width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; margin-bottom: 16px;
         }
-        .confidence-fill {
-            height: 100%;
-            border-radius: 2px;
-            transition: width 0.3s;
+        .arch-card-icon.blue { background: var(--accent-glow); }
+        .arch-card-icon.green { background: var(--green-muted); }
+        .arch-card-icon.purple { background: var(--purple-muted); }
+        .arch-card-icon.yellow { background: var(--yellow-muted); }
+        .arch-card-icon.red { background: var(--red-muted); }
+        .arch-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+        .arch-card p { font-size: 13px; color: var(--secondary); line-height: 1.6; }
+        .arch-card code { font-family: var(--mono); font-size: 11px; background: var(--elevated); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
+
+        .arch-flow {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 32px; margin-bottom: 40px;
+        }
+        .arch-flow h2 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+        .arch-flow pre {
+            font-family: var(--mono); font-size: 13px; color: var(--secondary);
+            line-height: 1.8; overflow-x: auto;
         }
 
-        .status-bar {
-            padding: 8px 16px;
-            border-top: 1px solid var(--border);
-            font-size: 12px;
-            color: var(--dim);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .protocol-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+        .protocol-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 24px; text-align: center;
         }
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--dim);
-        }
-        .status-dot.active { background: var(--green); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .protocol-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .protocol-card .sub { font-size: 11px; color: var(--dim); margin-bottom: 12px; }
+        .protocol-card p { font-size: 13px; color: var(--secondary); line-height: 1.5; }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        /* === ABOUT PAGE === */
+        .about-page { padding: 48px 32px; max-width: 900px; margin: 0 auto; }
+        .about-page h1 { font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
+        .about-page .subtitle { font-size: 16px; color: var(--secondary); margin-bottom: 40px; }
+        .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .team-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            padding: 24px; display: flex; gap: 16px; align-items: flex-start;
+        }
+        .team-avatar {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 700; color: white; flex-shrink: 0;
+        }
+        .team-info h3 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+        .team-info .role { font-size: 12px; color: var(--accent); font-weight: 500; margin-bottom: 6px; }
+        .team-info p { font-size: 13px; color: var(--secondary); line-height: 1.5; }
+        .team-info a { color: var(--accent); text-decoration: none; font-size: 12px; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo"><span>sideline</span> referee</div>
-        <div class="header-meta" id="header-meta">Disconnected</div>
-        <div class="header-actions">
-            <button class="btn" onclick="resetGame()">Reset</button>
-            <button class="btn btn-primary" id="start-btn" onclick="startAnalysis()">Start</button>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo">S</div>
+            <div class="nav-title">sideline <span>AI Referee</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="#" onclick="showPage('referee')" class="active" id="nav-referee">Referee</a>
+            <a href="#" onclick="showPage('arch')" id="nav-arch">Architecture</a>
+            <a href="#" onclick="showPage('about')" id="nav-about">About</a>
+        </div>
+        <div class="nav-status">
+            <div class="nav-dot" id="nav-dot"></div>
+            <span id="nav-status">Connecting...</span>
+        </div>
+    </nav>
+
+    <!-- REFEREE PAGE -->
+    <div class="page active" id="page-referee">
+        <div class="referee-layout">
+            <div class="scoreboard">
+                <div class="sb-player">
+                    <div class="sb-name serving" id="p1-name">Player 1</div>
+                    <div class="sb-points" id="p1-pts">0</div>
+                    <div class="sb-meta" id="p1-meta">0 games · 0 sets</div>
+                </div>
+                <div class="sb-center">
+                    <div class="sb-set" id="sb-games">0 – 0</div>
+                    <div class="sb-set-label">Games</div>
+                    <div class="sb-call" id="sb-call">Ready</div>
+                </div>
+                <div class="sb-player">
+                    <div class="sb-name" id="p2-name">Player 2</div>
+                    <div class="sb-points" id="p2-pts">0</div>
+                    <div class="sb-meta" id="p2-meta">0 games · 0 sets</div>
+                </div>
+            </div>
+
+            <div class="video-section">
+                <div class="video-frame">
+                    <video id="video" controls muted style="display:none"></video>
+                    <div class="video-empty" id="video-empty">
+                        Drop a tennis video here<br>or click <strong>Start</strong> for mock mode
+                    </div>
+                </div>
+                <div class="video-bar">
+                    <span class="frame-num" id="frame-num">Frame 0</span>
+                    <div class="video-progress"><div class="video-progress-fill" id="progress-fill"></div></div>
+                    <div class="controls">
+                        <button class="btn" onclick="resetGame()">Reset</button>
+                        <button class="btn btn-accent" id="start-btn" onclick="startGame()">Start</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reasoning">
+                <div class="reasoning-header">
+                    <div class="reasoning-title">
+                        <div class="icon">🧠</div>
+                        Agent Reasoning
+                    </div>
+                    <div class="reasoning-count" id="ev-count">0 events</div>
+                </div>
+                <div class="events" id="events"></div>
+                <div class="reasoning-footer">
+                    <div class="pulse" id="agent-pulse"></div>
+                    <span id="agent-status">Waiting</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="main">
-        <!-- Scoreboard -->
-        <div class="scoreboard">
-            <div class="player-score">
-                <div class="player-name" id="p1-name">Player 1</div>
-                <div class="player-points" id="p1-points">0</div>
-                <div class="score-detail" id="p1-detail">Games: 0 | Sets: 0</div>
+    <!-- ARCHITECTURE PAGE -->
+    <div class="page" id="page-arch">
+        <div class="arch-page">
+            <div class="arch-hero">
+                <h1>How <span>Sideline</span> Works</h1>
+                <p>An agentic AI referee that watches sports video, reasons about every play using chain-of-thought, and acts through any physical form — from dashboards to robots.</p>
             </div>
-            <div class="score-separator">:</div>
-            <div class="player-score">
-                <div class="player-name" id="p2-name">Player 2</div>
-                <div class="player-points" id="p2-points">0</div>
-                <div class="score-detail" id="p2-detail">Games: 0 | Sets: 0</div>
+
+            <div class="arch-grid">
+                <div class="arch-card blue">
+                    <div class="arch-card-icon blue">👁</div>
+                    <h3>Observe</h3>
+                    <p>Extract frames from live video or recordings at configurable FPS. Each frame becomes input for the vision model.</p>
+                </div>
+                <div class="arch-card purple">
+                    <div class="arch-card-icon purple">🧠</div>
+                    <h3>Perceive</h3>
+                    <p>Nebius Token Factory VLM analyzes each frame with game context. <code>Qwen2-VL-72B</code> or <code>Cosmos Reason 2</code>.</p>
+                </div>
+                <div class="arch-card green">
+                    <div class="arch-card-icon green">⚖️</div>
+                    <h3>Reason</h3>
+                    <p>Chain-of-thought reasoning: what happened → which rule applies → what's the correct call → confidence level.</p>
+                </div>
+                <div class="arch-card yellow">
+                    <div class="arch-card-icon yellow">🎯</div>
+                    <h3>Decide</h3>
+                    <p>The model selects tools to call: <code>update_score</code>, <code>announce_call</code>, <code>robot_gesture</code>, or <code>no_call</code>.</p>
+                </div>
+                <div class="arch-card red">
+                    <div class="arch-card-icon red">🤖</div>
+                    <h3>Act</h3>
+                    <p>Execute actions through three protocols: Function Calls, MCP servers, and A2A agent communication.</p>
+                </div>
+                <div class="arch-card blue">
+                    <div class="arch-card-icon blue">💾</div>
+                    <h3>Remember</h3>
+                    <p>Maintain game state across the entire match. Score, rally context, call history — the agent never forgets.</p>
+                </div>
+            </div>
+
+            <div class="arch-flow">
+                <h2>Agent Pipeline</h2>
+                <pre>
+Video Feed ──▶ Frame Extraction (1 fps)
+                    │
+                    ▼
+            Nebius VLM + Tool Definitions
+            (vision + game state context)
+                    │
+                    ▼
+            ┌── Tool Calls ──────────────────────┐
+            │                                     │
+     ┌──────┴──────┐  ┌──────────┐  ┌───────────┴───────┐
+     │ Function     │  │   MCP    │  │       A2A         │
+     │ Calls        │  │  Server  │  │  Agent-to-Agent   │
+     │ (internal)   │  │(external)│  │  (multi-agent)    │
+     └──────┬──────┘  └────┬─────┘  └───────────┬───────┘
+            │              │                     │
+            ▼              ▼                     ▼
+     ┌─────────────────────────────────────────────────┐
+     │  Score Update · Voice · Dashboard · Robot · API  │
+     └─────────────────────────────────────────────────┘</pre>
+            </div>
+
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:16px">Three Action Protocols</h2>
+            <div class="protocol-grid">
+                <div class="protocol-card">
+                    <h3>Function Calls</h3>
+                    <div class="sub">Internal Tools</div>
+                    <p>The VLM model decides which tools to invoke. Score updates, announcements, and robot gestures — all through native tool calling.</p>
+                </div>
+                <div class="protocol-card">
+                    <h3>MCP</h3>
+                    <div class="sub">Model Context Protocol</div>
+                    <p>Expose referee capabilities as standardized MCP tools. Any MCP client — Claude, ChatGPT, Cursor — can use Sideline as a referee tool.</p>
+                </div>
+                <div class="protocol-card">
+                    <h3>A2A</h3>
+                    <div class="sub">Agent-to-Agent Protocol</div>
+                    <p>Multiple Sideline agents covering different cameras coordinate decisions via Google's A2A protocol. Like VAR, but autonomous.</p>
+                </div>
+            </div>
+
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:16px">Physical Embodiment</h2>
+            <div class="arch-grid" style="grid-template-columns: repeat(4,1fr)">
+                <div class="arch-card blue">
+                    <h3>Dashboard</h3>
+                    <p>Video + reasoning + scoreboard. Always works, zero hardware needed.</p>
+                </div>
+                <div class="arch-card green">
+                    <h3>MentorPi</h3>
+                    <p>Tank bot with camera, speaker, lidar. Powered by NASA JPL's ROSA framework.</p>
+                </div>
+                <div class="arch-card purple">
+                    <h3>SO-101 Arm</h3>
+                    <p>6-DOF robotic arm via HuggingFace LeRobot. Signals calls with physical gestures.</p>
+                </div>
+                <div class="arch-card yellow">
+                    <h3>Unitree G1</h3>
+                    <p>Humanoid referee. Walks the court, gestures, speaks. The end goal.</p>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Video -->
-        <div class="video-area">
-            <div class="video-container">
-                <video id="video" controls muted></video>
-                <div class="video-placeholder" id="video-placeholder">Drop a video or click Start for mock mode</div>
-            </div>
-            <div class="video-controls">
-                <span class="frame-counter" id="frame-counter">Frame 0</span>
-                <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-            </div>
-        </div>
+    <!-- ABOUT PAGE -->
+    <div class="page" id="page-about">
+        <div class="about-page">
+            <h1>Team Sideline</h1>
+            <p class="subtitle">Built at Nebius.Build SF — March 15, 2026</p>
 
-        <!-- Reasoning Panel -->
-        <div class="reasoning-panel">
-            <div class="panel-header">
-                <div class="dot" id="agent-dot"></div>
-                Agent Reasoning
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">RJ</div>
+                    <div class="team-info">
+                        <h3>Ravinder Jilkapally</h3>
+                        <div class="role">Agent Pipeline + Dashboard</div>
+                        <p>Edge AI, full-stack, inference optimization. Built the end-to-end agentic pipeline.</p>
+                        <a href="https://linkedin.com/in/jravinder" target="_blank">LinkedIn →</a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar" style="background:linear-gradient(135deg,#22c55e,#14b8a6)">VR</div>
+                    <div class="team-info">
+                        <h3>Vivek Gopal Ramaswamy</h3>
+                        <div class="role">Robotics + Architecture</div>
+                        <p>CMU Robotics, AI PM. Self-driving systems, VLA models, embodied AI hackathon mentor.</p>
+                        <a href="https://linkedin.com/in/vivekgr" target="_blank">LinkedIn →</a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar" style="background:linear-gradient(135deg,#eab308,#f59e0b)">KH</div>
+                    <div class="team-info">
+                        <h3>Kruthik Hulisandra</h3>
+                        <div class="role">Domain Rules + Agent Logic</div>
+                        <p>Actual sports referee. Managed 14 leagues, 6000 participants. AI engineer with MCP expertise.</p>
+                        <a href="https://linkedin.com/in/kruthik-hulisandra" target="_blank">LinkedIn →</a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar" style="background:linear-gradient(135deg,#ef4444,#ec4899)">VB</div>
+                    <div class="team-info">
+                        <h3>Visshwa Balasubramanian</h3>
+                        <div class="role">Backend Engine + Model Work</div>
+                        <p>Palantir, USACO Gold, NeurIPS workshop paper. CS heavy hitter.</p>
+                        <a href="https://linkedin.com/in/visshbala" target="_blank">LinkedIn →</a>
+                    </div>
+                </div>
             </div>
-            <div class="events-list" id="events"></div>
-            <div class="status-bar">
-                <div class="status-dot" id="status-dot"></div>
-                <span id="status-text">Ready</span>
+
+            <div style="margin-top:40px;padding:32px;background:var(--surface);border:1px solid var(--border);border-radius:16px">
+                <h2 style="font-size:18px;font-weight:700;margin-bottom:12px">Tech Stack</h2>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;font-size:13px;color:var(--secondary)">
+                    <div><strong style="color:var(--text)">Inference</strong><br>Nebius Token Factory</div>
+                    <div><strong style="color:var(--text)">Backend</strong><br>Python + FastAPI</div>
+                    <div><strong style="color:var(--text)">Frontend</strong><br>Vanilla JS + WebSocket</div>
+                    <div><strong style="color:var(--text)">Protocols</strong><br>Tool Calling + MCP + A2A</div>
+                    <div><strong style="color:var(--text)">Robot</strong><br>MentorPi + ROSA (NASA JPL)</div>
+                    <div><strong style="color:var(--text)">Models</strong><br>Qwen2-VL-72B / Cosmos R2</div>
+                </div>
             </div>
         </div>
     </div>
 
 <script>
-let ws = null;
-let connected = false;
+let ws, connected = false, evCount = 0;
+
+function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.getElementById('nav-' + name).classList.add('active');
+}
 
 function connect() {
     const proto = location.protocol === 'https:' ? 'wss' : 'ws';
     ws = new WebSocket(`${proto}://${location.host}/ws`);
-
     ws.onopen = () => {
         connected = true;
-        document.getElementById('header-meta').textContent = 'Connected';
-        document.getElementById('status-dot').classList.add('active');
-        document.getElementById('status-text').textContent = 'Connected — ready';
+        document.getElementById('nav-dot').classList.add('on');
+        document.getElementById('nav-status').textContent = 'Connected';
+        document.getElementById('agent-pulse').classList.add('on');
+        document.getElementById('agent-status').textContent = 'Ready';
     };
-
     ws.onclose = () => {
         connected = false;
-        document.getElementById('header-meta').textContent = 'Disconnected';
-        document.getElementById('status-dot').classList.remove('active');
+        document.getElementById('nav-dot').classList.remove('on');
+        document.getElementById('nav-status').textContent = 'Disconnected';
+        document.getElementById('agent-pulse').classList.remove('on');
         setTimeout(connect, 2000);
     };
-
     ws.onmessage = (e) => {
         const msg = JSON.parse(e.data);
         handleEvent(msg.type, msg.data);
@@ -354,100 +516,89 @@ function connect() {
 }
 
 function handleEvent(type, data) {
-    if (type === 'state') {
-        updateScore(data.score);
-    } else if (type === 'score') {
-        updateScore(data.score);
-        addEvent('score', data);
-    } else if (type === 'call') {
-        addEvent('call', data);
-    } else if (type === 'gesture') {
-        addEvent('gesture', data);
-    } else if (type === 'status') {
-        document.getElementById('status-text').textContent = data.message || data.description || 'Ready';
-        if (data.description) addEvent('status', data);
-    } else if (type === 'analysis') {
-        document.getElementById('frame-counter').textContent = `Frame ${data.frame}`;
-        if (data.content) {
-            addEvent('analysis', { description: data.content });
-        }
-    } else if (type === 'progress') {
+    if (type === 'state') updateScore(data.score);
+    else if (type === 'score') { updateScore(data.score); addEv('score', data); }
+    else if (type === 'call') {
+        addEv('call', data);
+        const el = document.getElementById('sb-call');
+        el.textContent = data.announcement || data.call_type;
+        el.className = 'sb-call' + (['fault','double_fault','out'].includes(data.call_type) ? ' fault' : ['ace','winner'].includes(data.call_type) ? ' score' : '');
+    }
+    else if (type === 'gesture') addEv('gesture', data);
+    else if (type === 'status') {
+        document.getElementById('agent-status').textContent = data.message || data.description || 'Ready';
+        if (data.description) addEv('status', data);
+    }
+    else if (type === 'analysis') {
+        document.getElementById('frame-num').textContent = `Frame ${data.frame}`;
+        if (data.content && data.content !== `[Mock] Frame ${data.frame} analyzed`) addEv('analysis', {description: data.content});
+    }
+    else if (type === 'progress') {
         const pct = (data.frame / data.total * 100).toFixed(1);
-        document.getElementById('progress').style.width = pct + '%';
-        document.getElementById('frame-counter').textContent = `Frame ${data.frame} / ${data.total}`;
-    } else if (type === 'error') {
-        document.getElementById('status-text').textContent = 'Error: ' + data.message;
+        document.getElementById('progress-fill').style.width = pct + '%';
+        document.getElementById('frame-num').textContent = `Frame ${data.frame} / ${data.total}`;
+    }
+    else if (type === 'error') {
+        document.getElementById('agent-status').textContent = '⚠ ' + data.message;
     }
 }
 
-function updateScore(score) {
-    if (!score) return;
-    document.getElementById('p1-points').textContent = score.points?.p1 || '0';
-    document.getElementById('p2-points').textContent = score.points?.p2 || '0';
-    document.getElementById('p1-detail').textContent =
-        `Games: ${score.games?.p1 || 0} | Sets: ${score.sets?.p1 || 0}`;
-    document.getElementById('p2-detail').textContent =
-        `Games: ${score.games?.p2 || 0} | Sets: ${score.sets?.p2 || 0}`;
-
-    // Highlight server
-    const server = score.server || 'p1';
-    document.getElementById('p1-name').className = 'player-name' + (server === 'p1' ? ' serving' : '');
-    document.getElementById('p2-name').className = 'player-name' + (server === 'p2' ? ' serving' : '');
+function updateScore(s) {
+    if (!s) return;
+    document.getElementById('p1-pts').textContent = s.points?.p1 || '0';
+    document.getElementById('p2-pts').textContent = s.points?.p2 || '0';
+    document.getElementById('p1-meta').textContent = `${s.games?.p1||0} games · ${s.sets?.p1||0} sets`;
+    document.getElementById('p2-meta').textContent = `${s.games?.p2||0} games · ${s.sets?.p2||0} sets`;
+    document.getElementById('sb-games').textContent = `${s.games?.p1||0} – ${s.games?.p2||0}`;
+    const srv = s.server || 'p1';
+    document.getElementById('p1-name').className = 'sb-name' + (srv==='p1'?' serving':'');
+    document.getElementById('p2-name').className = 'sb-name' + (srv==='p2'?' serving':'');
 }
 
-function addEvent(type, data) {
+function addEv(type, data) {
+    evCount++;
+    document.getElementById('ev-count').textContent = evCount + ' events';
     const el = document.getElementById('events');
     const card = document.createElement('div');
-    card.className = 'event-card';
+    card.className = 'ev';
 
-    let typeClass = type;
     let body = '';
-
     if (type === 'call') {
-        body = `<strong>${data.call_type?.toUpperCase()}</strong> — ${data.announcement || ''}`;
+        body = `<strong>${(data.call_type||'').toUpperCase()}</strong> — ${data.announcement||''}`;
         if (data.confidence) {
-            const pct = (data.confidence * 100).toFixed(0);
-            const color = data.confidence > 0.8 ? 'var(--green)' : data.confidence > 0.6 ? 'var(--yellow)' : 'var(--red)';
-            body += `<div class="confidence-bar"><div class="confidence-fill" style="width:${pct}%;background:${color}"></div></div>`;
+            const pct = (data.confidence*100).toFixed(0);
+            const c = data.confidence > 0.8 ? 'var(--green)' : data.confidence > 0.6 ? 'var(--yellow)' : 'var(--red)';
+            body += `<div class="ev-confidence"><div class="ev-confidence-fill" style="width:${pct}%;background:${c}"></div></div>`;
         }
-    } else if (type === 'score') {
-        body = `<strong>Point:</strong> ${data.player} — ${data.reason}`;
-    } else if (type === 'gesture') {
-        body = `Robot: <strong>${data.gesture}</strong> ${data.direction || ''}`;
-    } else if (type === 'status' || type === 'analysis') {
-        typeClass = 'status';
-        body = data.description || '';
-    }
+    } else if (type === 'score') body = `<strong>Point:</strong> ${data.player} — ${data.reason||''}`;
+    else if (type === 'gesture') body = `🤖 <strong>${data.gesture}</strong> ${data.direction||''}`;
+    else body = data.description || data.message || '';
 
-    card.innerHTML = `
-        <div class="event-header">
-            <span class="event-type ${typeClass}">${type}</span>
-        </div>
-        <div class="event-body">${body}</div>
-    `;
-
+    card.innerHTML = `<div class="ev-top"><span class="ev-badge ${type}">${type}</span></div><div class="ev-body">${body}</div>`;
     el.insertBefore(card, el.firstChild);
-
-    // Keep max 50 events
-    while (el.children.length > 50) el.removeChild(el.lastChild);
+    while (el.children.length > 60) el.removeChild(el.lastChild);
 }
 
-function startAnalysis() {
+function startGame() {
     if (!connected) return;
-    ws.send(JSON.stringify({ action: 'start', video: '' }));
+    ws.send(JSON.stringify({action:'start', video:''}));
     document.getElementById('start-btn').textContent = 'Running...';
     document.getElementById('start-btn').disabled = true;
-    document.getElementById('status-text').textContent = 'Analyzing...';
-    document.getElementById('status-dot').classList.add('active');
+    document.getElementById('agent-status').textContent = 'Analyzing...';
+    document.getElementById('agent-pulse').classList.add('on');
 }
 
 function resetGame() {
-    fetch('/reset', { method: 'POST' }).then(() => {
+    fetch('/reset', {method:'POST'}).then(() => {
         document.getElementById('events').innerHTML = '';
+        evCount = 0;
+        document.getElementById('ev-count').textContent = '0 events';
         document.getElementById('start-btn').textContent = 'Start';
         document.getElementById('start-btn').disabled = false;
-        document.getElementById('progress').style.width = '0%';
-        document.getElementById('frame-counter').textContent = 'Frame 0';
+        document.getElementById('progress-fill').style.width = '0%';
+        document.getElementById('frame-num').textContent = 'Frame 0';
+        document.getElementById('sb-call').textContent = 'Ready';
+        document.getElementById('sb-call').className = 'sb-call';
     });
 }
 
