@@ -13,7 +13,6 @@ import numpy as np
 
 try:
     import mujoco
-    import mujoco.viewer
     HAS_MUJOCO = True
 except ImportError:
     HAS_MUJOCO = False
@@ -48,7 +47,7 @@ class MuJoCoSO101Adapter(RobotAdapter):
         mujoco.mj_forward(self.model, self.data)
 
         if not self.headless:
-            # Launch passive viewer in background thread
+            import mujoco.viewer
             self.viewer_handle = mujoco.viewer.launch_passive(self.model, self.data)
 
         logger.info(f"MuJoCo SO-101 loaded: {self.scene_path} (headless={self.headless})")
