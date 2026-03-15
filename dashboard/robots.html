@@ -126,13 +126,18 @@
         .call-overlay.fault .call-text { color: #ff6666; text-shadow: 0 0 40px rgba(239,68,68,0.6); }
         .call-overlay.score .call-text { color: #55ffaa; text-shadow: 0 0 40px rgba(34,197,94,0.6); }
 
-        /* Embed mode — hide everything except the 3D canvas and call overlay */
+        /* Embed mode — only 3D canvas, robot selector, call overlay */
         body.embed nav,
-        body.embed .robot-panel,
         body.embed .gesture-panel,
         body.embed .log-panel,
         body.embed .status-panel { display: none !important; }
         body.embed #three-canvas { top: 0 !important; }
+        body.embed .robot-panel { top: 8px; left: 8px; width: 200px; }
+        body.embed .robot-panel .panel-title { display: none; }
+        body.embed .robot-btn { padding: 8px 12px; font-size: 11px; margin-bottom: 4px; }
+        body.embed .robot-btn .tier { display: none; }
+        body.embed .call-overlay .call-text { font-size: 28px; }
+        body.embed .call-overlay .call-sub { font-size: 11px; }
     </style>
 </head>
 <body>
@@ -671,24 +676,28 @@ window.playGesture = function(name) {
     currentGesture = name;
     gestureTime = 0;
     gestureActive = true;
-    document.getElementById('gesture-label').textContent = name;
-    addLog(name, currentRobot);
+
+    const gl = document.getElementById('gesture-label');
+    if (gl) gl.textContent = name;
+
+    const lb = document.getElementById('log-body');
+    if (lb) addLog(name, currentRobot);
 
     // Highlight button
     document.querySelectorAll('.gesture-btn').forEach(b => b.classList.remove('playing'));
-    if (event && event.target) event.target.closest('.gesture-btn')?.classList.add('playing');
 
     // Show call overlay
     showCallOverlay(name);
 
-    // Reset to idle after hold
+    // Reset to idle after 3s
     clearTimeout(window._gestureTimer);
     if (name !== 'idle') {
         window._gestureTimer = setTimeout(() => {
             currentGesture = 'idle';
-            document.getElementById('gesture-label').textContent = 'idle';
+            gestureTime = 0;
+            if (gl) gl.textContent = 'idle';
             document.querySelectorAll('.gesture-btn').forEach(b => b.classList.remove('playing'));
-        }, 2500);
+        }, 3000);
     }
 };
 
@@ -801,18 +810,10 @@ function connectWS() {
     ws.onopen = () => { document.getElementById('ws-status').textContent = 'connected'; };
     ws.onmessage = (e) => {
         const msg = JSON.parse(e.data);
-        if (msg.type === 'analysis' || msg.type === 'call') {
-            const data = msg.data;
-            (data.tool_calls || []).forEach(tc => {
-                if (tc.name === 'robot_gesture') {
-                    const g = tc.args.gesture || 'point_right';
-                    const mapped = Object.keys(armGestures).includes(g) ? g : 'point_right';
-                    playGesture(mapped);
-                }
-                if (tc.name === 'announce_call') {
-                    playGesture('arm_raise');
-                }
-            });
+        if (msg.type === 'gesture') {
+            const g = msg.data.gesture || 'point_right';
+            const mapped = Object.keys(armGestures).includes(g) ? g : 'point_right';
+            playGesture(mapped);
         }
     };
     ws.onclose = () => {
