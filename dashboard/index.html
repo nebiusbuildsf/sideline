@@ -288,10 +288,7 @@
 
             <div class="video-section">
                 <div class="video-frame">
-                    <video id="video" controls muted style="width:100%;height:100%;object-fit:contain;display:none"></video>
-                    <div class="video-empty" id="video-empty">
-                        Click <strong>Start Demo</strong> to analyze the tennis clip<br>or <strong>Start Mock</strong> for simulated data
-                    </div>
+                    <video id="video" src="/clips/videoplayback.mp4" controls muted style="width:100%;height:100%;object-fit:contain"></video>
                 </div>
                 <div class="video-bar">
                     <span class="frame-num" id="frame-num">Frame 0</span>
@@ -538,11 +535,8 @@ function handleEvent(type, data) {
         if (data.content && data.content !== `[Mock] Frame ${data.frame} analyzed`) addEv('analysis', {description: data.content});
     }
     else if (type === 'video') {
-        // Load and show the video
         const vid = document.getElementById('video');
-        vid.src = data.src;
-        vid.style.display = 'block';
-        document.getElementById('video-empty').style.display = 'none';
+        if (data.src && vid.src !== location.origin + data.src) vid.src = data.src;
         vid.play();
     }
     else if (type === 'progress') {

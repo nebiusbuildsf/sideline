@@ -91,7 +91,7 @@ async def run_analysis(video_path: str, fps: float = 1.0):
             extractor = VideoExtractor(video_path, fps=fps)
             frame_count = extractor.get_frame_count()
             await ws_broadcast("video", {
-                "src": f"/static/clips/{os.path.basename(video_path)}",
+                "src": f"/clips/{os.path.basename(video_path)}",
                 "total_frames": frame_count,
                 "fps": fps,
             })
@@ -193,8 +193,16 @@ async def reset():
 
 # --- Dashboard ---
 
-app.mount("/static/clips", StaticFiles(directory="video/clips"), name="clips")
+app.mount("/clips", StaticFiles(directory="video/clips"), name="clips")
 app.mount("/static", StaticFiles(directory="dashboard"), name="static")
+
+
+@app.get("/api/demo-video")
+async def demo_video_info():
+    """Return info about available demo videos."""
+    import glob
+    clips = glob.glob("video/clips/*.mp4")
+    return {"clips": [os.path.basename(c) for c in clips]}
 
 
 @app.get("/")
