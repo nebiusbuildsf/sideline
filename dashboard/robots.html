@@ -141,7 +141,15 @@
     </style>
 </head>
 <body>
-<script>if (location.search.includes('embed=1')) document.body.classList.add('embed');</script>
+<script>
+if (location.search.includes('embed=1')) {
+    document.body.classList.add('embed');
+    // Also hide panels that CSS might miss
+    document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.add('embed');
+    });
+}
+</script>
     <nav>
         <div class="nav-brand">
             <div class="nav-logo">S</div>
