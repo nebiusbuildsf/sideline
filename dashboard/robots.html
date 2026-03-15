@@ -104,6 +104,27 @@
         .log-time { color: var(--dim); min-width: 36px; }
         .log-action { color: var(--accent); }
         .log-detail { color: var(--secondary); }
+
+        /* Call announcement overlay */
+        .call-overlay {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+            z-index: 200; pointer-events: none; opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            text-align: center;
+        }
+        .call-overlay.show {
+            opacity: 1; transform: translate(-50%, -50%) scale(1);
+        }
+        .call-overlay .call-text {
+            font-size: 48px; font-weight: 800; letter-spacing: -1px;
+            text-transform: uppercase; color: #fff;
+            text-shadow: 0 0 40px rgba(59,130,246,0.6), 0 0 80px rgba(59,130,246,0.3);
+        }
+        .call-overlay .call-sub {
+            font-size: 16px; font-weight: 500; color: var(--secondary); margin-top: 8px;
+        }
+        .call-overlay.fault .call-text { color: #ff6666; text-shadow: 0 0 40px rgba(239,68,68,0.6); }
+        .call-overlay.score .call-text { color: #55ffaa; text-shadow: 0 0 40px rgba(34,197,94,0.6); }
     </style>
 </head>
 <body>
@@ -123,6 +144,12 @@
     </nav>
 
     <div id="three-canvas"></div>
+
+    <!-- Call Announcement Overlay -->
+    <div class="call-overlay" id="call-overlay">
+        <div class="call-text" id="call-text"></div>
+        <div class="call-sub" id="call-sub"></div>
+    </div>
 
     <!-- Robot Selector -->
     <div class="panel robot-panel">
@@ -216,8 +243,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // ─── Scene Setup ───
 const container = document.getElementById('three-canvas');
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x09090b);
-scene.fog = new THREE.Fog(0x09090b, 15, 35);
+scene.background = new THREE.Color(0x0d0d1a);
+scene.fog = new THREE.Fog(0x0d0d1a, 20, 45);
 
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / (window.innerHeight - 56), 0.1, 100);
 camera.position.set(4, 3, 6);
@@ -228,7 +255,7 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;
+renderer.toneMappingExposure = 1.8;
 container.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -237,10 +264,10 @@ controls.dampingFactor = 0.08;
 controls.target.set(0, 1.2, 0);
 
 // ─── Lighting ───
-const ambient = new THREE.AmbientLight(0x404060, 0.6);
+const ambient = new THREE.AmbientLight(0x8888bb, 1.0);
 scene.add(ambient);
 
-const key = new THREE.DirectionalLight(0xffffff, 1.2);
+const key = new THREE.DirectionalLight(0xffffff, 2.0);
 key.position.set(5, 8, 4);
 key.castShadow = true;
 key.shadow.mapSize.set(1024, 1024);
@@ -252,35 +279,39 @@ key.shadow.camera.top = 5;
 key.shadow.camera.bottom = -5;
 scene.add(key);
 
-const fill = new THREE.DirectionalLight(0x8888ff, 0.3);
+const fill = new THREE.DirectionalLight(0xaabbff, 0.8);
 fill.position.set(-3, 4, -2);
 scene.add(fill);
 
-const rim = new THREE.PointLight(0x3b82f6, 0.5, 15);
+const rim = new THREE.PointLight(0x3b82f6, 1.0, 15);
 rim.position.set(-2, 3, -4);
 scene.add(rim);
 
+const front = new THREE.PointLight(0xffffff, 0.6, 12);
+front.position.set(0, 2, 5);
+scene.add(front);
+
 // ─── Ground ───
 const groundGeo = new THREE.PlaneGeometry(30, 30);
-const groundMat = new THREE.MeshStandardMaterial({ color: 0x111114, roughness: 0.9 });
+const groundMat = new THREE.MeshStandardMaterial({ color: 0x12121e, roughness: 0.85 });
 const ground = new THREE.Mesh(groundGeo, groundMat);
 ground.rotation.x = -Math.PI / 2;
 ground.receiveShadow = true;
 scene.add(ground);
 
 // Grid
-const grid = new THREE.GridHelper(20, 40, 0x222228, 0x18181b);
+const grid = new THREE.GridHelper(20, 40, 0x334455, 0x252540);
 grid.position.y = 0.01;
 scene.add(grid);
 
 // ─── Materials ───
-const metalMat = new THREE.MeshStandardMaterial({ color: 0x555566, metalness: 0.8, roughness: 0.3 });
-const darkMat = new THREE.MeshStandardMaterial({ color: 0x222233, metalness: 0.6, roughness: 0.4 });
-const accentMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 0.5, roughness: 0.3 });
-const greenMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, metalness: 0.5, roughness: 0.3 });
-const redMat = new THREE.MeshStandardMaterial({ color: 0xef4444, metalness: 0.5, roughness: 0.3 });
-const bodyMat = new THREE.MeshStandardMaterial({ color: 0x333344, metalness: 0.7, roughness: 0.35 });
-const jointMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 0.6, roughness: 0.3, emissive: 0x1a3a6a, emissiveIntensity: 0.2 });
+const metalMat = new THREE.MeshStandardMaterial({ color: 0xccccdd, metalness: 0.6, roughness: 0.2 });
+const darkMat = new THREE.MeshStandardMaterial({ color: 0x2a2a3a, metalness: 0.4, roughness: 0.3 });
+const accentMat = new THREE.MeshStandardMaterial({ color: 0x66bbff, metalness: 0.3, roughness: 0.2, emissive: 0x3388ff, emissiveIntensity: 0.5 });
+const greenMat = new THREE.MeshStandardMaterial({ color: 0x55ffaa, metalness: 0.3, roughness: 0.2, emissive: 0x22cc66, emissiveIntensity: 0.5 });
+const redMat = new THREE.MeshStandardMaterial({ color: 0xff7777, metalness: 0.3, roughness: 0.2, emissive: 0xcc3333, emissiveIntensity: 0.5 });
+const bodyMat = new THREE.MeshStandardMaterial({ color: 0xeeeef4, metalness: 0.3, roughness: 0.35 });
+const jointMat = new THREE.MeshStandardMaterial({ color: 0x77ccff, metalness: 0.4, roughness: 0.2, emissive: 0x3399ff, emissiveIntensity: 0.6 });
 
 // ─── SO-101 Robot Arm (6-DOF) ───
 const armGroup = new THREE.Group();
@@ -508,6 +539,7 @@ function buildHumanoid() {
     handR.position.y = -0.3; handR.castShadow = true;
     elbowR.add(handR);
 
+    humanoidGroup.rotation.y = Math.PI;
     humanoidGroup.visible = false;
     scene.add(humanoidGroup);
 }
@@ -614,12 +646,12 @@ const armGestures = {
 
 // Target rotations for humanoid joints per gesture
 const humanoidGestures = {
-    idle: { shoulderL: [0,0,0], shoulderR: [0,0,0], elbowL: [0,0,0], elbowR: [0,0,0], head: [0,0,0], torso: [0,0,0] },
-    point_right: { shoulderL: [0,0,0], shoulderR: [0,0,-1.5], elbowR: [0,0,0], elbowL: [0,0,0], head: [0,0.3,0], torso: [0,0,0] },
-    arm_raise: { shoulderL: [0,0,0.3], shoulderR: [0,0,0.3], elbowL: [0,0,0], elbowR: [0,0,0], head: [-0.2,0,0], torso: [0,0,0] },
-    fault: { shoulderL: [-0.5,0,0.8], shoulderR: [-0.5,0,-0.8], elbowL: [-0.3,0,0], elbowR: [-0.3,0,0], head: [0,0,0], torso: [0,0,0] },
-    safe: { shoulderL: [0,0,1.2], shoulderR: [0,0,-1.2], elbowL: [0,0,0], elbowR: [0,0,0], head: [0,0,0], torso: [0,0,0] },
-    wave: { shoulderL: [0,0,0], shoulderR: [0,0,0.8], elbowR: [-1.0,0,0], elbowL: [0,0,0], head: [0,0.2,0], torso: [0,0,0] },
+    idle: { shoulderL: [0,0,0.15], shoulderR: [0,0,-0.15], elbowL: [0,0,0], elbowR: [0,0,0], head: [0,0,0], torso: [0,0,0] },
+    point_right: { shoulderL: [0,0,0.15], shoulderR: [-1.5,0,0], elbowR: [0,0,0], elbowL: [0,0,0], head: [0,0.3,0], torso: [0,0,0] },
+    arm_raise: { shoulderL: [-2.8,0,0], shoulderR: [-2.8,0,0], elbowL: [0,0,0], elbowR: [0,0,0], head: [-0.2,0,0], torso: [0,0,0] },
+    fault: { shoulderL: [-1.2,0,0.4], shoulderR: [-1.2,0,-0.4], elbowL: [-1.2,0,0], elbowR: [-1.2,0,0], head: [0,0,0], torso: [0,0,0] },
+    safe: { shoulderL: [-1.5,0,0.8], shoulderR: [-1.5,0,-0.8], elbowL: [0,0,0], elbowR: [0,0,0], head: [0,0,0], torso: [0,0,0] },
+    wave: { shoulderL: [0,0,0.15], shoulderR: [-2.5,0,0], elbowR: [-1.0,0,0], elbowL: [0,0,0], head: [0,0.2,0], torso: [0,0,0] },
 };
 
 function lerpAngle(current, target, factor) {
@@ -635,11 +667,48 @@ window.playGesture = function(name) {
 
     // Highlight button
     document.querySelectorAll('.gesture-btn').forEach(b => b.classList.remove('playing'));
-    event.target.closest('.gesture-btn').classList.add('playing');
-    setTimeout(() => {
-        document.querySelectorAll('.gesture-btn').forEach(b => b.classList.remove('playing'));
-    }, 2000);
+    if (event && event.target) event.target.closest('.gesture-btn')?.classList.add('playing');
+
+    // Show call overlay
+    showCallOverlay(name);
+
+    // Reset to idle after hold
+    clearTimeout(window._gestureTimer);
+    if (name !== 'idle') {
+        window._gestureTimer = setTimeout(() => {
+            currentGesture = 'idle';
+            document.getElementById('gesture-label').textContent = 'idle';
+            document.querySelectorAll('.gesture-btn').forEach(b => b.classList.remove('playing'));
+        }, 2500);
+    }
 };
+
+const callLabels = {
+    point_right: ['OUT!', 'Ball landed outside the line'],
+    arm_raise: ['CALL', 'Referee signal'],
+    fault: ['FAULT!', 'Service fault — second serve'],
+    safe: ['IN!', 'Ball is good — play continues'],
+    wave: ['ATTENTION', 'Referee signaling players'],
+    idle: ['', ''],
+};
+
+function showCallOverlay(gesture) {
+    const overlay = document.getElementById('call-overlay');
+    const labels = callLabels[gesture] || ['', ''];
+    if (!labels[0]) return;
+
+    document.getElementById('call-text').textContent = labels[0];
+    document.getElementById('call-sub').textContent = labels[1];
+
+    overlay.className = 'call-overlay show';
+    if (gesture === 'fault') overlay.classList.add('fault');
+    else if (gesture === 'safe') overlay.classList.add('score');
+
+    clearTimeout(window._overlayTimer);
+    window._overlayTimer = setTimeout(() => {
+        overlay.className = 'call-overlay';
+    }, 2000);
+}
 
 function animateArm(dt) {
     const targets = armGestures[currentGesture] || armGestures.idle;
@@ -679,7 +748,7 @@ function animateHumanoid(dt) {
 
     // Wave — oscillate right forearm
     if (currentGesture === 'wave') {
-        hJoints.elbowR.rotation.x = -1.0 + Math.sin(gestureTime * 6) * 0.5;
+        hJoints.elbowR.rotation.x = -1.0 + Math.sin(gestureTime * 5) * 0.6;
     }
 
     // Subtle idle sway
