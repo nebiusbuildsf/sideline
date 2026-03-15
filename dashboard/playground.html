@@ -263,11 +263,17 @@
                 <div class="panel-title"><div class="icon" style="background:#3b82f620"><span class="material-symbols-outlined" style="font-size:12px">videocam</span></div> Input</div>
                 <div class="panel-body">
                     <div class="frame-preview" id="frame-preview">
-                        <div class="empty" id="frame-empty">Drop an image or click to upload</div>
+                        <div class="empty" id="frame-empty">Drop a video or image</div>
+                        <video id="frame-video" style="display:none;width:100%;height:100%;object-fit:contain" controls muted></video>
                         <img id="frame-img" style="display:none">
                     </div>
-                    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this)">
-                    <button class="btn" onclick="document.getElementById('file-input').click()" style="margin-bottom:16px">Upload Frame</button>
+                    <canvas id="frame-canvas" style="display:none"></canvas>
+                    <input type="file" id="file-input" accept="video/*,image/*" style="display:none" onchange="handleFile(this)">
+                    <div style="display:flex;gap:8px;margin-bottom:16px">
+                        <button class="btn" onclick="document.getElementById('file-input').click()" style="flex:1">Upload Video / Image</button>
+                        <button class="btn" id="use-demo-btn" onclick="loadDemoVideo()" style="flex:1">Use Demo Clip</button>
+                    </div>
+                    <div id="video-info" style="font-size:11px;color:var(--dim);margin-bottom:12px"></div>
 
                     <div class="form-group">
                         <label class="form-label">Nebius API Key</label>
@@ -443,17 +449,66 @@ function showFlow(name) {
     document.getElementById('flow-' + name).classList.add('active');
 }
 
+let videoFile = null;
+let videoFrames = [];
+
 function handleFile(input) {
     const file = input.files[0];
     if (!file) return;
+
+    if (file.type.startsWith('video/')) {
+        handleVideo(file);
+    } else {
+        handleImage(file);
+    }
+}
+
+function handleImage(file) {
+    videoFile = null;
+    videoFrames = [];
     const reader = new FileReader();
     reader.onload = (e) => {
         frameB64 = e.target.result.split(',')[1];
         document.getElementById('frame-img').src = e.target.result;
         document.getElementById('frame-img').style.display = 'block';
+        document.getElementById('frame-video').style.display = 'none';
         document.getElementById('frame-empty').style.display = 'none';
+        document.getElementById('video-info').textContent = 'Image loaded';
     };
     reader.readAsDataURL(file);
+}
+
+function handleVideo(file) {
+    videoFile = file;
+    frameB64 = null;
+    const url = URL.createObjectURL(file);
+    const video = document.getElementById('frame-video');
+    video.src = url;
+    video.style.display = 'block';
+    document.getElementById('frame-img').style.display = 'none';
+    document.getElementById('frame-empty').style.display = 'none';
+    document.getElementById('video-info').textContent = `Video: ${file.name} (${(file.size/1024/1024).toFixed(1)} MB)`;
+    document.getElementById('analyze-btn').textContent = 'Analyze Video';
+}
+
+function loadDemoVideo() {
+    const video = document.getElementById('frame-video');
+    video.src = '/static/clips/videoplayback.mp4';
+    video.style.display = 'block';
+    document.getElementById('frame-img').style.display = 'none';
+    document.getElementById('frame-empty').style.display = 'none';
+    document.getElementById('video-info').textContent = 'Demo clip loaded';
+    document.getElementById('analyze-btn').textContent = 'Analyze Video';
+    videoFile = 'demo';
+    frameB64 = null;
+}
+
+function captureFrame(video) {
+    const canvas = document.getElementById('frame-canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    return canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
 }
 
 async function analyzeFrame() {
@@ -476,33 +531,63 @@ async function analyzeFrame() {
         document.getElementById('key-status').innerHTML = '<span style="color:var(--green)">● Key set</span>';
     }
 
-    // Simulate tool call flow
-    addToolCall('fn', 'VLM Inference', 'analyze_frame', {
-        model: model,
-        sport: sport,
-        frame: frameB64 ? '(base64 image)' : '(mock frame)',
-    }, null);
-
-    // Send to server or mock
     try {
-        if (frameB64) {
+        if (videoFile) {
+            // Video mode — extract frames and analyze each
+            const video = document.getElementById('frame-video');
+            const duration = video.duration;
+            const fps = 1;
+            const totalFrames = Math.min(Math.floor(duration * fps), 30);
+
+            btn.textContent = `Analyzing 0/${totalFrames}...`;
+            addOutput('status', `Extracting ${totalFrames} frames at ${fps} fps from ${Math.round(duration)}s video`);
+
+            for (let i = 0; i < totalFrames; i++) {
+                const time = i / fps;
+                video.currentTime = time;
+                await new Promise(r => { video.onseeked = r; });
+
+                const b64 = captureFrame(video);
+                btn.textContent = `Analyzing ${i+1}/${totalFrames}...`;
+
+                addToolCall('fn', 'VLM Inference', 'analyze_frame', {
+                    model: model, sport: sport, frame: `frame_${i+1} (${time.toFixed(1)}s)`,
+                }, null);
+
+                const blob = await fetch(`data:image/jpeg;base64,${b64}`).then(r => r.blob());
+                const formData = new FormData();
+                formData.append('file', blob, `frame_${i}.jpg`);
+                const t0 = Date.now();
+                const resp = await fetch('/analyze', { method: 'POST', body: formData });
+                const result = await resp.json();
+                processResult(result, Date.now() - t0);
+            }
+            addOutput('status', `Analysis complete — ${totalFrames} frames processed`);
+
+        } else if (frameB64) {
+            // Single image mode
+            addToolCall('fn', 'VLM Inference', 'analyze_frame', {
+                model: model, sport: sport, frame: '(image)',
+            }, null);
+
             const blob = await fetch(`data:image/jpeg;base64,${frameB64}`).then(r => r.blob());
             const formData = new FormData();
             formData.append('file', blob, 'frame.jpg');
             const resp = await fetch('/analyze', { method: 'POST', body: formData });
             const result = await resp.json();
             processResult(result, Date.now() - start);
+
         } else {
             // Mock mode
+            addOutput('status', 'No input — running mock analysis');
             await fetch('/start', { method: 'POST' });
-            await new Promise(r => setTimeout(r, 1500));
         }
     } catch (e) {
         addOutput('error', 'Error: ' + e.message);
     }
 
     btn.disabled = false;
-    btn.textContent = 'Analyze Frame';
+    btn.textContent = videoFile ? 'Analyze Video' : 'Analyze Frame';
 }
 
 function processResult(result, latency) {

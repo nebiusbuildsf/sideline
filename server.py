@@ -182,6 +182,7 @@ async def reset():
 
 # --- Dashboard ---
 
+app.mount("/static/clips", StaticFiles(directory="video/clips"), name="clips")
 app.mount("/static", StaticFiles(directory="dashboard"), name="static")
 
 
