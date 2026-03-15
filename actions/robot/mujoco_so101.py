@@ -101,22 +101,28 @@ class MuJoCoSO101Adapter(RobotAdapter):
         logger.info("MuJoCo SO-101 disconnected")
 
     async def render_frame(self) -> bytes | None:
-        """Render a frame as PNG bytes (for streaming to dashboard). Headless only."""
+        """Render a frame as PNG bytes (for streaming to dashboard)."""
         if self.model is None:
             return None
-        renderer = mujoco.Renderer(self.model, width=640, height=480)
-        renderer.update_scene(self.data)
-        pixels = renderer.render()
-        renderer.close()
+
+        try:
+            renderer = mujoco.Renderer(self.model, width=640, height=480)
+            # Use the referee_cam if it exists, otherwise default free camera
+            cam_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "referee_cam")
+            if cam_id >= 0:
+                renderer.update_scene(self.data, camera=cam_id)
+            else:
+                renderer.update_scene(self.data)
+            pixels = renderer.render()
+            renderer.close()
+        except Exception as e:
+            logger.error(f"Render error: {e}")
+            return None
 
         # Convert to PNG
         from io import BytesIO
-        try:
-            from PIL import Image
-            img = Image.fromarray(pixels)
-            buf = BytesIO()
-            img.save(buf, format="PNG")
-            return buf.getvalue()
-        except ImportError:
-            # Return raw pixels if PIL not available
-            return pixels.tobytes()
+        from PIL import Image
+        img = Image.fromarray(pixels)
+        buf = BytesIO()
+        img.save(buf, format="PNG")
+        return buf.getvalue()
