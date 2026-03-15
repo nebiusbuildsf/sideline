@@ -64,10 +64,10 @@ VIEWER_HTML = """<!DOCTYPE html>
 <script>
 function poll() {
   fetch('/frame').then(r => r.json()).then(d => {
-    if (d.frame) document.getElementById('frame').src = 'data:image/png;base64,' + d.frame;
+    if (d.frame) document.getElementById('frame').src = 'data:image/jpeg;base64,' + d.frame;
     if (d.gesture) document.getElementById('gesture').textContent = d.gesture;
   }).catch(() => {});
-  setTimeout(poll, 200);
+  setTimeout(poll, 500);
 }
 function send(g) {
   fetch('/gesture', {method:'POST', headers:{'Content-Type':'application/json'},

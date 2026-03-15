@@ -51,7 +51,7 @@ class MuJoCoSO101Adapter(RobotAdapter):
             self.viewer_handle = mj_viewer.launch_passive(self.model, self.data)
 
         # Pre-create renderer and camera for offscreen rendering
-        self._renderer = mujoco.Renderer(self.model, width=640, height=480)
+        self._renderer = mujoco.Renderer(self.model, width=480, height=360)
         self._cam_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_CAMERA, "referee_cam")
 
         logger.info(f"MuJoCo SO-101 loaded: {self.scene_path} (headless={self.headless})")
@@ -128,5 +128,5 @@ class MuJoCoSO101Adapter(RobotAdapter):
         from PIL import Image
         img = Image.fromarray(pixels)
         buf = BytesIO()
-        img.save(buf, format="PNG")
+        img.save(buf, format="JPEG", quality=70)
         return buf.getvalue()
