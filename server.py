@@ -230,6 +230,11 @@ async def future():
     return FileResponse("dashboard/future.html")
 
 
+@app.get("/simulation")
+async def simulation():
+    return FileResponse("dashboard/simulation.html")
+
+
 # --- A2A Agent Card ---
 
 @app.get("/.well-known/agent.json")
