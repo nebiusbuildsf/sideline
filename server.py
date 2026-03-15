@@ -69,12 +69,13 @@ async def websocket_endpoint(ws: WebSocket):
             msg = json.loads(data)
             if msg.get("action") == "start" and not is_running:
                 video = msg.get("video", "")
-                fps = msg.get("fps", 1.0)
+                fps = float(msg.get("fps", 1.0))
                 asyncio.create_task(run_analysis(video, fps))
             elif msg.get("action") == "start_demo" and not is_running:
                 asyncio.create_task(run_analysis("video/clips/tennis_demo.mp4", 0.5))
             elif msg.get("action") == "start_cached":
-                asyncio.create_task(run_cached("video/clips/tennis_demo_cache.json"))
+                cache_path = msg.get("cache", "video/clips/tennis_demo_cache.json")
+                asyncio.create_task(run_cached(cache_path))
     except WebSocketDisconnect:
         ws_clients.remove(ws)
 

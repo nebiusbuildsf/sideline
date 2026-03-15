@@ -301,11 +301,15 @@
                 <div class="video-bar">
                     <span class="frame-num" id="frame-num">Frame 0</span>
                     <div class="video-progress"><div class="video-progress-fill" id="progress-fill"></div></div>
+                    <select id="clip-select" onchange="switchClip(this.value)" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--elevated);color:var(--text);font-family:var(--font);font-size:12px;cursor:pointer">
+                        <option value="tennis_demo" selected>Match Highlights</option>
+                        <option value="tennis_rally">Singles Rally</option>
+                        <option value="videoplayback">Full Match</option>
+                    </select>
                     <div class="controls">
                         <button class="btn" onclick="resetGame()">Reset</button>
-                        <button class="btn" onclick="startMock()">Mock</button>
                         <button class="btn" onclick="startDemo()">Live</button>
-                        <button class="btn btn-accent" id="start-btn" onclick="startCached()">Play Cached</button>
+                        <button class="btn btn-accent" id="start-btn" onclick="startCached()">Cached</button>
                     </div>
                 </div>
             </div>
@@ -617,30 +621,38 @@ function addEv(type, data) {
     while (el.children.length > 30) el.removeChild(el.lastChild);
 }
 
+const clipMap = {
+    'tennis_demo': { video: 'tennis_demo.mp4', cache: 'tennis_demo_cache.json', label: 'Match Highlights' },
+    'tennis_rally': { video: 'tennis_rally.mp4', cache: 'tennis_rally_cache.json', label: 'Singles Rally' },
+    'videoplayback': { video: 'videoplayback.mp4', cache: null, label: 'Full Match' },
+};
+let currentClip = 'tennis_demo';
+
+function switchClip(clipId) {
+    currentClip = clipId;
+    const clip = clipMap[clipId];
+    document.getElementById('video').src = '/clips/' + clip.video;
+    resetGame();
+}
+
 function startDemo() {
     if (!connected) return;
-    ws.send(JSON.stringify({action:'start_demo'}));
+    const clip = clipMap[currentClip];
+    ws.send(JSON.stringify({action:'start', video:'video/clips/' + clip.video, fps: 0.5}));
     document.getElementById('start-btn').textContent = 'Analyzing...';
     document.getElementById('start-btn').disabled = true;
-    document.getElementById('agent-status').textContent = 'Analyzing demo clip...';
+    document.getElementById('agent-status').textContent = 'Live: ' + clip.label;
     document.getElementById('agent-pulse').classList.add('on');
 }
 
 function startCached() {
     if (!connected) return;
-    ws.send(JSON.stringify({action:'start_cached'}));
+    const clip = clipMap[currentClip];
+    if (!clip.cache) { startDemo(); return; }
+    ws.send(JSON.stringify({action:'start_cached', cache:'video/clips/' + clip.cache}));
     document.getElementById('start-btn').textContent = 'Playing...';
     document.getElementById('start-btn').disabled = true;
-    document.getElementById('agent-status').textContent = 'Playing cached analysis...';
-    document.getElementById('agent-pulse').classList.add('on');
-}
-
-function startMock() {
-    if (!connected) return;
-    ws.send(JSON.stringify({action:'start', video:''}));
-    document.getElementById('start-btn').textContent = 'Mock...';
-    document.getElementById('start-btn').disabled = true;
-    document.getElementById('agent-status').textContent = 'Mock analysis...';
+    document.getElementById('agent-status').textContent = 'Cached: ' + clip.label;
     document.getElementById('agent-pulse').classList.add('on');
 }
 
