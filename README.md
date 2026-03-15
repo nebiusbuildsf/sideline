@@ -1,12 +1,14 @@
-# Sideline — AI Referee Agent
+# Sideline — Download a coach. Deploy a ref. Upgrade the game.
 
-An agentic AI that watches sports video, reasons about every play with chain-of-thought, and acts through any physical form — dashboards, robotic arms, or humanoid robots.
+Sideline is a modular AI sports robot designed to solve the growing shortage of coaches and referees in youth sports — a **$40B industry** growing ~10% annually as NIL money and private equity raise competition levels.
+
+Powered by a **Qwen vision-language model** on **Nebius Token Factory**, Sideline watches gameplay in real time, delivers technical coaching feedback, and can switch into referee mode to make unbiased calls. Users can download sport-specific modules like *Tennis Coach Pro* to get drill feedback, movement corrections, and automated officiating.
 
 **Built at Nebius.Build SF Hackathon — March 15, 2026**
 
-## What It Does
+## How It Works
 
-Sideline is not an image classifier. It's an agent. It observes video frames, reasons with chain-of-thought using Nebius Token Factory VLMs, decides on referee calls with confidence scores, and acts through three protocols: Function Calls, MCP, and A2A.
+Sideline is an agentic AI — not an image classifier. It observes video frames, reasons with chain-of-thought, decides on calls with confidence scores, and acts through three protocols: Function Calls, MCP, and A2A.
 
 ```
 Video → Frame Extraction → Nebius VLM (Qwen2.5-VL-72B)
