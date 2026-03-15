@@ -145,8 +145,16 @@
         }
         .ev {
             padding: 14px 16px; background: var(--elevated); border: 1px solid var(--border);
-            border-radius: 12px; transition: border-color 0.2s; animation: fadeIn 0.3s;
+            border-radius: 12px; animation: fadeIn 0.3s;
+            transition: all 0.3s;
         }
+        .ev-highlight {
+            border-color: #333; background: #1a1a2e;
+            box-shadow: 0 0 20px rgba(59,130,246,0.08);
+        }
+        .ev-highlight.ev:has(.ev-badge.score) { border-left: 3px solid var(--green); }
+        .ev-highlight.ev:has(.ev-badge.call) { border-left: 3px solid var(--accent); }
+        .ev-highlight.ev:has(.ev-badge.gesture) { border-left: 3px solid var(--yellow); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
         .ev:hover { border-color: #333; }
         .ev-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
@@ -569,7 +577,10 @@ function addEv(type, data) {
     document.getElementById('ev-count').textContent = evCount + ' events';
     const el = document.getElementById('events');
     const card = document.createElement('div');
-    card.className = 'ev';
+
+    // Calls and scores get highlighted treatment, reasoning stays subtle
+    const isHighlight = ['call', 'score', 'gesture'].includes(type);
+    card.className = 'ev' + (isHighlight ? ' ev-highlight' : '');
 
     let body = '';
     if (type === 'call') {
@@ -579,12 +590,31 @@ function addEv(type, data) {
             const c = data.confidence > 0.8 ? 'var(--green)' : data.confidence > 0.6 ? 'var(--yellow)' : 'var(--red)';
             body += `<div class="ev-confidence"><div class="ev-confidence-fill" style="width:${pct}%;background:${c}"></div></div>`;
         }
-    } else if (type === 'score') body = `<strong>Point:</strong> ${data.player} — ${data.reason||''}`;
-    else if (type === 'gesture') body = `<span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle">smart_toy</span> <strong>${data.gesture}</strong> ${data.direction||''}`;
-    else body = data.description || data.message || '';
+    } else if (type === 'score') {
+        body = `<strong>Point:</strong> ${data.player} — ${data.reason||''}`;
+    } else if (type === 'gesture') {
+        body = `<span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle">smart_toy</span> <strong>${data.gesture}</strong> ${data.direction||''}`;
+    } else {
+        // Reasoning/status — keep it but smaller and dimmer
+        body = `<span style="color:var(--dim);font-size:12px;line-height:1.5">${data.description || data.message || ''}</span>`;
+    }
 
     card.innerHTML = `<div class="ev-top"><span class="ev-badge ${type}">${type}</span></div><div class="ev-body">${body}</div>`;
     el.insertBefore(card, el.firstChild);
+
+    // Auto-collapse old reasoning, keep calls/scores visible
+    const allCards = el.querySelectorAll('.ev');
+    allCards.forEach((c, i) => {
+        if (i > 3 && !c.classList.contains('ev-highlight')) {
+            c.style.maxHeight = '0';
+            c.style.overflow = 'hidden';
+            c.style.padding = '0';
+            c.style.margin = '0';
+            c.style.border = 'none';
+            c.style.opacity = '0';
+        }
+    });
+
     while (el.children.length > 60) el.removeChild(el.lastChild);
 }
 
