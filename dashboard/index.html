@@ -304,7 +304,8 @@
                     <div class="controls">
                         <button class="btn" onclick="resetGame()">Reset</button>
                         <button class="btn" onclick="startMock()">Mock</button>
-                        <button class="btn btn-accent" id="start-btn" onclick="startDemo()">Start Demo</button>
+                        <button class="btn" onclick="startDemo()">Live</button>
+                        <button class="btn btn-accent" id="start-btn" onclick="startCached()">Play Cached</button>
                     </div>
                 </div>
             </div>
@@ -622,6 +623,15 @@ function startDemo() {
     document.getElementById('start-btn').textContent = 'Analyzing...';
     document.getElementById('start-btn').disabled = true;
     document.getElementById('agent-status').textContent = 'Analyzing demo clip...';
+    document.getElementById('agent-pulse').classList.add('on');
+}
+
+function startCached() {
+    if (!connected) return;
+    ws.send(JSON.stringify({action:'start_cached'}));
+    document.getElementById('start-btn').textContent = 'Playing...';
+    document.getElementById('start-btn').disabled = true;
+    document.getElementById('agent-status').textContent = 'Playing cached analysis...';
     document.getElementById('agent-pulse').classList.add('on');
 }
 

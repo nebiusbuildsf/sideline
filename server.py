@@ -73,6 +73,8 @@ async def websocket_endpoint(ws: WebSocket):
                 asyncio.create_task(run_analysis(video, fps))
             elif msg.get("action") == "start_demo" and not is_running:
                 asyncio.create_task(run_analysis("video/clips/tennis_demo.mp4", 0.5))
+            elif msg.get("action") == "start_cached":
+                asyncio.create_task(run_cached("video/clips/tennis_demo_cache.json"))
     except WebSocketDisconnect:
         ws_clients.remove(ws)
 
@@ -121,6 +123,62 @@ async def run_analysis(video_path: str, fps: float = 1.0):
     finally:
         is_running = False
         await ws_broadcast("status", {"message": "Analysis complete"})
+
+
+async def run_cached(cache_path: str):
+    """Replay pre-analyzed results from cache — instant demo."""
+    if not os.path.exists(cache_path):
+        await ws_broadcast("error", {"message": f"Cache not found: {cache_path}"})
+        return
+
+    with open(cache_path) as f:
+        cache = json.load(f)
+
+    video_file = cache.get("video", "")
+    frames = cache.get("frames", [])
+    fps = cache.get("fps", 0.5)
+
+    await ws_broadcast("video", {
+        "src": f"/clips/{video_file}",
+        "total_frames": len(frames),
+        "fps": fps,
+        "cached": True,
+    })
+    await ws_broadcast("status", {"message": f"Playing cached analysis ({len(frames)} frames)..."})
+
+    for i, result in enumerate(frames):
+        timestamp = result.get("timestamp", i * (1/fps))
+        await ws_broadcast("progress", {
+            "frame": i + 1,
+            "total": len(frames),
+            "timestamp": timestamp,
+        })
+
+        # Replay tool calls
+        for tc in result.get("tool_calls", []):
+            name = tc["name"]
+            args = tc["args"]
+            if name == "announce_call":
+                await ws_broadcast("call", args)
+            elif name == "update_score":
+                agent.state.update_score(args.get("player", "p1"), args.get("reason", ""))
+                await ws_broadcast("score", {
+                    "player": args.get("player"),
+                    "reason": args.get("reason", ""),
+                    "score": agent.state.score_dict(),
+                })
+            elif name == "robot_gesture":
+                await ws_broadcast("gesture", args)
+            elif name == "no_call":
+                await ws_broadcast("status", {"description": args.get("description", "Observing...")})
+
+        # Broadcast the full analysis
+        await ws_broadcast("analysis", result)
+
+        # Pace playback to match video timing
+        await asyncio.sleep(1.0 / fps)
+
+    await ws_broadcast("status", {"message": "Cached playback complete"})
 
 
 # --- REST API ---
