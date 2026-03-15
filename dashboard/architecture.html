@@ -20,13 +20,7 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-        nav {
-            position: sticky; top: 0; z-index: 100;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 32px; height: 56px;
-            background: rgba(9,9,11,0.8); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
+        nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 56px; background: rgba(9,9,11,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
         .nav-brand { display: flex; align-items: center; gap: 10px; }
         .nav-logo { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; }
         .nav-name { font-size: 15px; font-weight: 700; }
@@ -35,513 +29,407 @@
         .nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--secondary); transition: all 0.15s; }
         .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--elevated); }
 
-        .content { max-width: 1100px; margin: 0 auto; padding: 48px 32px 100px; }
-
-        /* Hero */
-        .hero { text-align: center; margin-bottom: 64px; }
+        .content { max-width: 1200px; margin: 0 auto; padding: 48px 32px 100px; }
+        .hero { text-align: center; margin-bottom: 48px; }
         .hero h1 { font-size: 40px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 12px; }
         .hero h1 span { background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero p { font-size: 16px; color: var(--secondary); max-width: 600px; margin: 0 auto; line-height: 1.7; }
 
-        /* Section */
         .section { margin-bottom: 64px; }
         .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 10px; }
         .section h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 8px; }
         .section .desc { font-size: 14px; color: var(--secondary); margin-bottom: 28px; max-width: 600px; line-height: 1.6; }
 
-        /* Architecture Diagram */
-        .arch-diagram {
+        /* DAG Container */
+        .dag-container {
             background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
-            padding: 40px; position: relative; overflow: hidden;
+            padding: 40px 24px; position: relative; overflow: hidden;
         }
-        .arch-diagram::before {
+        .dag-container::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, var(--accent), var(--purple), var(--green));
-            opacity: 0.5;
+            background: linear-gradient(90deg, var(--accent), var(--purple), var(--green)); opacity: 0.5;
         }
 
-        .arch-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 20px; }
-        .arch-node {
-            background: var(--elevated); border: 1px solid var(--border); border-radius: 14px;
-            padding: 16px 20px; text-align: center; min-width: 140px;
-            transition: all 0.2s; position: relative;
-        }
-        .arch-node:hover { border-color: #444; transform: translateY(-2px); }
-        .arch-node .icon { font-size: 24px; margin-bottom: 6px; }
-        .arch-node .name { font-size: 13px; font-weight: 700; }
-        .arch-node .sub { font-size: 10px; color: var(--dim); font-family: var(--mono); margin-top: 2px; }
-        .arch-node.highlight { border-color: var(--accent); box-shadow: 0 0 20px #3b82f615; }
-        .arch-node.green { border-color: #22c55e40; }
-        .arch-node.purple { border-color: #a855f740; }
-        .arch-node.yellow { border-color: #eab30840; }
+        /* SVG DAG */
+        .dag-svg { width: 100%; height: auto; display: block; }
+        .dag-svg .edge { stroke: var(--border); stroke-width: 1.5; fill: none; transition: stroke 0.3s, stroke-width 0.3s; }
+        .dag-svg .edge.active { stroke: var(--accent); stroke-width: 2.5; }
+        .dag-svg .edge-glow { stroke: none; fill: none; filter: url(#glow); }
+        .dag-svg .edge-arrow { fill: var(--border); transition: fill 0.3s; }
+        .dag-svg .edge-arrow.active { fill: var(--accent); }
 
-        .arch-arrow { color: var(--dim); font-size: 20px; }
-        .arch-arrow-down { text-align: center; color: var(--dim); font-size: 20px; margin: 8px 0; }
-        .arch-label {
-            font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
-            color: var(--dim); text-align: center; margin: 16px 0 8px;
+        /* DAG Nodes */
+        .dag-node {
+            position: absolute; border-radius: 14px; padding: 14px 18px;
+            background: var(--elevated); border: 1px solid var(--border);
+            cursor: pointer; transition: all 0.25s; text-align: center;
+            min-width: 110px;
+        }
+        .dag-node:hover, .dag-node.highlight { border-color: #444; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .dag-node .icon { font-size: 22px; margin-bottom: 6px; }
+        .dag-node .name { font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .dag-node .sub { font-size: 9px; color: var(--dim); font-family: var(--mono); margin-top: 2px; white-space: nowrap; }
+        .dag-node.layer-sensor { border-left: 3px solid var(--accent); }
+        .dag-node.layer-extract { border-left: 3px solid var(--teal); }
+        .dag-node.layer-agent { border-left: 3px solid var(--purple); }
+        .dag-node.layer-protocol { border-left: 3px solid var(--yellow); }
+        .dag-node.layer-action { border-left: 3px solid var(--green); }
+        .dag-node.layer-sim { border-left: 3px solid var(--pink); }
+
+        /* Layer Labels */
+        .layer-label {
+            position: absolute; font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 2px; writing-mode: vertical-rl; transform: rotate(180deg);
         }
 
-        .arch-bracket {
-            display: flex; justify-content: center; gap: 16px;
-            padding: 20px; background: var(--bg); border-radius: 14px;
-            border: 1px dashed var(--border); margin-top: 12px;
+        /* DAG Legend */
+        .dag-legend {
+            display: flex; gap: 20px; justify-content: center; margin-top: 24px; flex-wrap: wrap;
         }
+        .dag-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--dim); }
+        .dag-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
 
-        /* Protocol Deep Dives */
-        .proto-deep {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        /* Node Detail Panel */
+        .node-detail {
+            position: fixed; right: -400px; top: 56px; bottom: 0; width: 380px;
+            background: var(--surface); border-left: 1px solid var(--border);
+            z-index: 200; transition: right 0.3s; overflow-y: auto; padding: 28px;
         }
-        .proto-panel {
-            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-            overflow: hidden;
-        }
-        .proto-panel.full { grid-column: 1 / -1; }
-        .proto-header {
-            padding: 20px 24px; border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; gap: 12px;
-        }
-        .proto-icon {
-            width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center;
-            justify-content: center; font-size: 18px; flex-shrink: 0;
-        }
-        .proto-icon.blue { background: #3b82f620; }
-        .proto-icon.purple { background: #a855f720; }
-        .proto-icon.green { background: #22c55e20; }
-        .proto-title { font-size: 16px; font-weight: 700; }
-        .proto-subtitle { font-size: 12px; color: var(--dim); }
-        .proto-body { padding: 24px; }
+        .node-detail.open { right: 0; }
+        .node-detail .close { position: absolute; top: 16px; right: 16px; cursor: pointer; color: var(--dim); font-size: 18px; }
+        .node-detail h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .node-detail .tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 6px; display: inline-block; margin-bottom: 16px; }
+        .node-detail p { font-size: 13px; color: var(--secondary); line-height: 1.7; margin-bottom: 16px; }
+        .node-detail .code { font-family: var(--mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; color: var(--secondary); line-height: 1.6; white-space: pre-wrap; overflow-x: auto; margin-bottom: 16px; }
+        .node-detail .connections { margin-top: 12px; }
+        .node-detail .conn { font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+        .node-detail .conn:last-child { border-bottom: none; }
+        .node-detail .conn .dir { font-family: var(--mono); font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+        .node-detail .conn .dir.in { background: #3b82f615; color: var(--accent); }
+        .node-detail .conn .dir.out { background: #22c55e15; color: var(--green); }
 
-        .code-block {
-            background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
-            padding: 16px 20px; font-family: var(--mono); font-size: 12px;
-            color: var(--secondary); line-height: 1.7; overflow-x: auto;
-            white-space: pre; margin-bottom: 16px;
-        }
-        .code-block .kw { color: var(--purple); }
-        .code-block .fn { color: var(--accent); }
-        .code-block .str { color: var(--green); }
-        .code-block .cm { color: var(--dim); }
-        .code-block .num { color: var(--yellow); }
+        /* Protocol cards below DAG */
+        .proto-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .proto-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; position: relative; overflow: hidden; }
+        .proto-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.6; }
+        .proto-card.blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+        .proto-card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
+        .proto-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
+        .proto-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .proto-card .tag { font-size: 10px; color: var(--dim); font-family: var(--mono); margin-bottom: 12px; }
+        .proto-card p { font-size: 13px; color: var(--secondary); line-height: 1.6; }
+        .proto-card .code { font-family: var(--mono); font-size: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: var(--dim); line-height: 1.6; margin-top: 12px; white-space: pre; overflow-x: auto; }
 
-        .flow-list { list-style: none; }
-        .flow-item {
-            display: flex; align-items: flex-start; gap: 12px; padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .flow-item:last-child { border-bottom: none; }
-        .flow-num {
-            width: 24px; height: 24px; border-radius: 8px; background: var(--elevated);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0;
-        }
-        .flow-text { font-size: 13px; color: var(--secondary); line-height: 1.5; }
-        .flow-text strong { color: var(--text); }
-
-        /* Robot Actions */
-        .robot-flow {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
-        }
-        .robot-step {
-            background: var(--elevated); border: 1px solid var(--border); border-radius: 12px;
-            padding: 16px; text-align: center; position: relative;
-        }
-        .robot-step .step-icon { font-size: 28px; margin-bottom: 8px; }
-        .robot-step h4 { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
-        .robot-step p { font-size: 10px; color: var(--dim); line-height: 1.4; }
-        .robot-step .arrow { position: absolute; right: -16px; top: 50%; transform: translateY(-50%); color: var(--dim); font-size: 14px; z-index: 2; }
-
-        /* Future */
-        .future-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-        .future-card {
-            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-            padding: 28px; position: relative; overflow: hidden;
-        }
-        .future-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.5;
-        }
-        .future-card.blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
-        .future-card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
-        .future-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
-        .future-card .icon { font-size: 28px; margin-bottom: 12px; }
-        .future-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-        .future-card p { font-size: 13px; color: var(--secondary); line-height: 1.6; }
-        .future-card .ref { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-top: 10px; }
+        /* Hardware table */
+        .hw-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .hw-table th { padding: 14px 20px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
+        .hw-table td { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+        .hw-table tr:last-child td { border-bottom: none; }
+        .hw-table .platform { font-weight: 600; }
     </style>
 </head>
 <body>
     <nav>
-        <div class="nav-brand">
-            <div class="nav-logo">S</div>
-            <div class="nav-name">sideline <span>Architecture</span></div>
-        </div>
+        <div class="nav-brand"><div class="nav-logo">S</div><div class="nav-name">sideline <span>Architecture</span></div></div>
         <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/referee">Referee</a>
-            <a href="/playground">Playground</a>
-            <a href="/architecture" class="active">Architecture</a>
-            <a href="/future">Future</a>
+            <a href="/">Home</a><a href="/referee">Referee</a><a href="/playground">Playground</a>
+            <a href="/architecture" class="active">Architecture</a><a href="/future">Future</a>
         </div>
     </nav>
 
     <div class="content">
         <div class="hero">
-            <h1>How <span>Sideline</span> thinks and acts</h1>
-            <p>From video frame to physical robot gesture — every step of the agentic pipeline, every protocol, every action.</p>
+            <h1>The <span>Sideline</span> DAG</h1>
+            <p>A directed acyclic graph from sensors to actuators. Every node is a layer. Every edge carries data. Click any node to explore.</p>
         </div>
 
-        <!-- Full Architecture Diagram -->
+        <!-- Interactive DAG -->
         <div class="section">
-            <div class="section-label">System Overview</div>
-            <h2>Perception → Reasoning → Action</h2>
-            <div class="desc">Sensors observe the world. The agent reasons about what it sees. Effectors act on that reasoning — through screens, speakers, and robot actuators.</div>
+            <div class="dag-container" id="dag">
+                <svg class="dag-svg" viewBox="0 0 1100 720" id="dag-svg">
+                    <defs>
+                        <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#27272a"/></marker>
+                        <marker id="arrowhead-active" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/></marker>
+                    </defs>
 
-            <div class="arch-diagram">
-                <!-- PERCEPTION LAYER -->
-                <div class="arch-label">Perception Layer — Sensors & Observers</div>
-                <div class="arch-row">
-                    <div class="arch-node highlight">
-                        <div class="icon">📹</div>
-                        <div class="name">Court Camera</div>
-                        <div class="sub">wide-angle · fixed mount</div>
+                    <!-- Layer backgrounds -->
+                    <rect x="0" y="0" width="1100" height="110" rx="12" fill="#3b82f606" stroke="#3b82f615" stroke-width="1"/>
+                    <rect x="0" y="120" width="1100" height="90" rx="12" fill="#14b8a606" stroke="#14b8a615" stroke-width="1"/>
+                    <rect x="0" y="220" width="1100" height="110" rx="12" fill="#a855f706" stroke="#a855f715" stroke-width="1"/>
+                    <rect x="0" y="340" width="1100" height="90" rx="12" fill="#eab30806" stroke="#eab30815" stroke-width="1"/>
+                    <rect x="0" y="440" width="1100" height="110" rx="12" fill="#22c55e06" stroke="#22c55e15" stroke-width="1"/>
+                    <rect x="0" y="560" width="1100" height="110" rx="12" fill="#ec489906" stroke="#ec489915" stroke-width="1"/>
+
+                    <!-- Layer labels -->
+                    <text x="16" y="60" fill="#3b82f6" font-size="10" font-weight="700" letter-spacing="2" font-family="Inter">SENSORS</text>
+                    <text x="16" y="170" fill="#14b8a6" font-size="10" font-weight="700" letter-spacing="2" font-family="Inter">EXTRACTION</text>
+                    <text x="16" y="280" fill="#a855f7" font-size="10" font-weight="700" letter-spacing="2" font-family="Inter">REASONING</text>
+                    <text x="16" y="390" fill="#eab308" font-size="10" font-weight="700" letter-spacing="2" font-family="Inter">PROTOCOLS</text>
+                    <text x="16" y="500" fill="#22c55e" font-size="10" font-weight="700" letter-spacing="2" font-family="Inter">ACTUATORS</text>
+                    <text x="16" y="620" fill="#ec4899" font-size="10" font-weight="700" letter-spacing="2" font-family="Inter">SIMULATION</text>
+
+                    <!-- EDGES: Sensors → Extraction -->
+                    <path class="edge" d="M200,90 L350,150" marker-end="url(#arrowhead)" data-from="cam" data-to="extract"/>
+                    <path class="edge" d="M420,90 L430,150" marker-end="url(#arrowhead)" data-from="robot-cam" data-to="extract"/>
+                    <path class="edge" d="M640,90 L500,150" marker-end="url(#arrowhead)" data-from="depth" data-to="extract"/>
+                    <path class="edge" d="M860,90 L550,150" marker-end="url(#arrowhead)" data-from="mobile" data-to="extract"/>
+
+                    <!-- EDGES: Extraction → Agent -->
+                    <path class="edge" d="M470,200 L400,250" marker-end="url(#arrowhead)" data-from="extract" data-to="agent"/>
+                    <path class="edge" d="M470,200 L550,250" marker-end="url(#arrowhead)" data-from="extract" data-to="state"/>
+
+                    <!-- EDGES: Agent → Protocols -->
+                    <path class="edge" d="M350,320 L250,370" marker-end="url(#arrowhead)" data-from="agent" data-to="fn"/>
+                    <path class="edge" d="M450,320 L500,370" marker-end="url(#arrowhead)" data-from="agent" data-to="mcp"/>
+                    <path class="edge" d="M500,320 L750,370" marker-end="url(#arrowhead)" data-from="agent" data-to="a2a"/>
+
+                    <!-- EDGES: State ↔ Agent -->
+                    <path class="edge" d="M550,280 L450,280" marker-end="url(#arrowhead)" stroke-dasharray="4,4" data-from="state" data-to="agent"/>
+
+                    <!-- EDGES: Protocols → Actuators -->
+                    <path class="edge" d="M200,420 L150,470" marker-end="url(#arrowhead)" data-from="fn" data-to="dashboard"/>
+                    <path class="edge" d="M250,420 L300,470" marker-end="url(#arrowhead)" data-from="fn" data-to="score"/>
+                    <path class="edge" d="M500,420 L480,470" marker-end="url(#arrowhead)" data-from="mcp" data-to="speaker"/>
+                    <path class="edge" d="M520,420 L650,470" marker-end="url(#arrowhead)" data-from="mcp" data-to="arm"/>
+                    <path class="edge" d="M750,420 L820,470" marker-end="url(#arrowhead)" data-from="a2a" data-to="wheels"/>
+                    <path class="edge" d="M780,420 L960,470" marker-end="url(#arrowhead)" data-from="a2a" data-to="body"/>
+
+                    <!-- EDGES: Actuators → Simulation -->
+                    <path class="edge" d="M150,540 L300,590" marker-end="url(#arrowhead)" stroke-dasharray="4,4" data-from="dashboard" data-to="sim-viz"/>
+                    <path class="edge" d="M650,540 L550,590" marker-end="url(#arrowhead)" stroke-dasharray="4,4" data-from="arm" data-to="sim-physics"/>
+                    <path class="edge" d="M820,540 L750,590" marker-end="url(#arrowhead)" stroke-dasharray="4,4" data-from="wheels" data-to="sim-physics"/>
+                    <path class="edge" d="M960,540 L950,590" marker-end="url(#arrowhead)" stroke-dasharray="4,4" data-from="body" data-to="sim-digital"/>
+                </svg>
+
+                <!-- DAG Nodes (positioned absolutely over SVG) -->
+                <div style="position:relative;margin-top:-720px;height:720px;pointer-events:none;">
+                    <!-- Layer 1: Sensors -->
+                    <div class="dag-node layer-sensor" style="left:130px;top:30px;pointer-events:auto" data-id="cam" onclick="showDetail('cam')">
+                        <div class="icon">📹</div><div class="name">Court Camera</div><div class="sub">RGB · wide-angle</div>
                     </div>
-                    <div class="arch-node highlight">
-                        <div class="icon">🤖</div>
-                        <div class="name">Robot Vision</div>
-                        <div class="sub">MentorPi cam · depth · lidar</div>
+                    <div class="dag-node layer-sensor" style="left:340px;top:30px;pointer-events:auto" data-id="robot-cam" onclick="showDetail('robot-cam')">
+                        <div class="icon">🤖</div><div class="name">Robot Vision</div><div class="sub">MentorPi cam</div>
                     </div>
-                    <div class="arch-node highlight">
-                        <div class="icon">📱</div>
-                        <div class="name">Mobile Camera</div>
-                        <div class="sub">phone · handheld · courtside</div>
+                    <div class="dag-node layer-sensor" style="left:560px;top:30px;pointer-events:auto" data-id="depth" onclick="showDetail('depth')">
+                        <div class="icon">🔳</div><div class="name">Depth Sensor</div><div class="sub">stereo · point cloud</div>
                     </div>
-                    <div class="arch-node">
-                        <div class="icon">🎥</div>
-                        <div class="name">Recorded Video</div>
-                        <div class="sub">file upload · replay</div>
+                    <div class="dag-node layer-sensor" style="left:780px;top:30px;pointer-events:auto" data-id="mobile" onclick="showDetail('mobile')">
+                        <div class="icon">📱</div><div class="name">Mobile / File</div><div class="sub">phone · upload · replay</div>
+                    </div>
+
+                    <!-- Layer 2: Extraction -->
+                    <div class="dag-node layer-extract" style="left:360px;top:140px;pointer-events:auto;min-width:200px" data-id="extract" onclick="showDetail('extract')">
+                        <div class="icon">🖼</div><div class="name">Frame Extractor</div><div class="sub">1fps · JPEG · base64 · multi-source fusion</div>
+                    </div>
+
+                    <!-- Layer 3: Reasoning -->
+                    <div class="dag-node layer-agent" style="left:280px;top:250px;pointer-events:auto;min-width:180px" data-id="agent" onclick="showDetail('agent')">
+                        <div class="icon">🧠</div><div class="name">Sideline Agent</div><div class="sub">CoT · tools · Nebius VLM</div>
+                    </div>
+                    <div class="dag-node layer-agent" style="left:520px;top:250px;pointer-events:auto;min-width:160px" data-id="state" onclick="showDetail('state')">
+                        <div class="icon">💾</div><div class="name">Game State</div><div class="sub">score · history · context</div>
+                    </div>
+
+                    <!-- Layer 4: Protocols -->
+                    <div class="dag-node layer-protocol" style="left:140px;top:360px;pointer-events:auto" data-id="fn" onclick="showDetail('fn')">
+                        <div class="icon">⚡</div><div class="name">Function Calls</div><div class="sub">native tool_use</div>
+                    </div>
+                    <div class="dag-node layer-protocol" style="left:420px;top:360px;pointer-events:auto" data-id="mcp" onclick="showDetail('mcp')">
+                        <div class="icon">🔌</div><div class="name">MCP Server</div><div class="sub">external tools</div>
+                    </div>
+                    <div class="dag-node layer-protocol" style="left:680px;top:360px;pointer-events:auto" data-id="a2a" onclick="showDetail('a2a')">
+                        <div class="icon">🔗</div><div class="name">A2A Protocol</div><div class="sub">agent-to-agent</div>
+                    </div>
+
+                    <!-- Layer 5: Actuators -->
+                    <div class="dag-node layer-action" style="left:80px;top:465px;pointer-events:auto" data-id="dashboard" onclick="showDetail('dashboard')">
+                        <div class="icon">📊</div><div class="name">Dashboard</div><div class="sub">display · WebSocket</div>
+                    </div>
+                    <div class="dag-node layer-action" style="left:230px;top:465px;pointer-events:auto" data-id="score" onclick="showDetail('score')">
+                        <div class="icon">🏆</div><div class="name">Scoreboard</div><div class="sub">state machine</div>
+                    </div>
+                    <div class="dag-node layer-action" style="left:400px;top:465px;pointer-events:auto" data-id="speaker" onclick="showDetail('speaker')">
+                        <div class="icon">🔊</div><div class="name">Speaker</div><div class="sub">TTS · voice</div>
+                    </div>
+                    <div class="dag-node layer-action" style="left:570px;top:465px;pointer-events:auto" data-id="arm" onclick="showDetail('arm')">
+                        <div class="icon">🦾</div><div class="name">Arm Servos</div><div class="sub">gesture · signal</div>
+                    </div>
+                    <div class="dag-node layer-action" style="left:740px;top:465px;pointer-events:auto" data-id="wheels" onclick="showDetail('wheels')">
+                        <div class="icon">🛞</div><div class="name">Locomotion</div><div class="sub">wheels · navigation</div>
+                    </div>
+                    <div class="dag-node layer-action" style="left:900px;top:465px;pointer-events:auto" data-id="body" onclick="showDetail('body')">
+                        <div class="icon">🏃</div><div class="name">Full Body</div><div class="sub">humanoid joints</div>
+                    </div>
+
+                    <!-- Layer 6: Simulation -->
+                    <div class="dag-node layer-sim" style="left:220px;top:580px;pointer-events:auto" data-id="sim-viz" onclick="showDetail('sim-viz')">
+                        <div class="icon">🖥</div><div class="name">Visual Sim</div><div class="sub">browser · 3D replay</div>
+                    </div>
+                    <div class="dag-node layer-sim" style="left:470px;top:580px;pointer-events:auto" data-id="sim-physics" onclick="showDetail('sim-physics')">
+                        <div class="icon">⚙️</div><div class="name">Physics Sim</div><div class="sub">Isaac Sim · MuJoCo</div>
+                    </div>
+                    <div class="dag-node layer-sim" style="left:870px;top:580px;pointer-events:auto" data-id="sim-digital" onclick="showDetail('sim-digital')">
+                        <div class="icon">🌐</div><div class="name">Digital Twin</div><div class="sub">Osmo · training loop</div>
                     </div>
                 </div>
-                <div style="text-align:center;font-size:11px;color:var(--dim);margin:8px 0">Multiple observers → richer perception → better calls</div>
 
-                <div class="arch-arrow-down">↓</div>
-                <div style="text-align:center;font-size:11px;font-family:var(--mono);color:var(--accent);margin:4px 0">frames · depth maps · point clouds</div>
-
-                <!-- REASONING LAYER -->
-                <div class="arch-label">Reasoning Layer — Agent Brain</div>
-                <div class="arch-row">
-                    <div class="arch-node highlight" style="min-width: 420px; border-color: var(--purple);">
-                        <div class="icon">🧠</div>
-                        <div class="name">Sideline Agent</div>
-                        <div class="sub">Observe → Perceive → Reason (CoT) → Decide → Act → Remember</div>
-                    </div>
+                <div class="dag-legend">
+                    <div class="dag-legend-item"><div class="dag-legend-dot" style="background:var(--accent)"></div> Sensors</div>
+                    <div class="dag-legend-item"><div class="dag-legend-dot" style="background:var(--teal)"></div> Extraction</div>
+                    <div class="dag-legend-item"><div class="dag-legend-dot" style="background:var(--purple)"></div> Reasoning</div>
+                    <div class="dag-legend-item"><div class="dag-legend-dot" style="background:var(--yellow)"></div> Protocols</div>
+                    <div class="dag-legend-item"><div class="dag-legend-dot" style="background:var(--green)"></div> Actuators</div>
+                    <div class="dag-legend-item"><div class="dag-legend-dot" style="background:var(--pink)"></div> Simulation</div>
+                    <div class="dag-legend-item" style="margin-left:16px">── live path</div>
+                    <div class="dag-legend-item">╌╌ future / simulated</div>
                 </div>
-
-                <div class="arch-row" style="margin-top: 8px;">
-                    <div class="arch-node" style="min-width: 120px; border-color: #3b82f630;">
-                        <div class="sub" style="font-weight:600;color:var(--accent)">Qwen2-VL-72B</div>
-                        <div class="sub">vision + tools</div>
-                    </div>
-                    <div class="arch-node" style="min-width: 120px; border-color: #22c55e30;">
-                        <div class="sub" style="font-weight:600;color:var(--green)">Cosmos R2</div>
-                        <div class="sub">video reasoning</div>
-                    </div>
-                    <div class="arch-node" style="min-width: 120px; border-color: #a855f730;">
-                        <div class="sub" style="font-weight:600;color:var(--purple)">Nemotron VL</div>
-                        <div class="sub">multimodal</div>
-                    </div>
-                    <div class="arch-node" style="min-width: 120px;">
-                        <div class="sub" style="font-weight:600;color:var(--secondary)">DeepSeek R1</div>
-                        <div class="sub">commentary</div>
-                    </div>
-                </div>
-                <div style="text-align:center;font-size:11px;color:var(--dim);margin:8px 0">Powered by Nebius Token Factory · swap model with one env var</div>
-
-                <div class="arch-arrow-down">↓</div>
-                <div style="text-align:center;font-size:11px;font-family:var(--mono);color:var(--purple);margin:4px 0">tool_calls · decisions · confidence scores</div>
-
-                <!-- PROTOCOL LAYER -->
-                <div class="arch-label">Protocol Layer — Three Action Protocols</div>
-                <div class="arch-row">
-                    <div class="arch-node" style="border-color: #3b82f640;">
-                        <div class="icon">⚡</div>
-                        <div class="name">Function Calls</div>
-                        <div class="sub">native tool_use · internal</div>
-                    </div>
-                    <div class="arch-node purple">
-                        <div class="icon">🔌</div>
-                        <div class="name">MCP Server</div>
-                        <div class="sub">external tools · swappable</div>
-                    </div>
-                    <div class="arch-node green">
-                        <div class="icon">🔗</div>
-                        <div class="name">A2A Protocol</div>
-                        <div class="sub">agent-to-agent · multi-agent</div>
-                    </div>
-                </div>
-
-                <div class="arch-arrow-down">↓</div>
-                <div style="text-align:center;font-size:11px;font-family:var(--mono);color:var(--green);margin:4px 0">commands · gestures · speech · score updates</div>
-
-                <!-- ACTION LAYER -->
-                <div class="arch-label">Action Layer — Effectors & Actuators</div>
-                <div class="arch-bracket">
-                    <div class="arch-node yellow">
-                        <div class="icon">📊</div>
-                        <div class="name">Dashboard</div>
-                        <div class="sub">display · WebSocket</div>
-                    </div>
-                    <div class="arch-node yellow">
-                        <div class="icon">🔊</div>
-                        <div class="name">Speaker</div>
-                        <div class="sub">TTS · voice synthesis</div>
-                    </div>
-                    <div class="arch-node yellow">
-                        <div class="icon">🦾</div>
-                        <div class="name">Arm Actuators</div>
-                        <div class="sub">servos · gesture signals</div>
-                    </div>
-                    <div class="arch-node yellow">
-                        <div class="icon">🛞</div>
-                        <div class="name">Locomotion</div>
-                        <div class="sub">wheels · legs · navigation</div>
-                    </div>
-                    <div class="arch-node yellow">
-                        <div class="icon">🏆</div>
-                        <div class="name">Scoreboard</div>
-                        <div class="sub">state machine · auto</div>
-                    </div>
-                </div>
-                <div style="text-align:center;font-size:11px;color:var(--dim);margin:12px 0 0">Same brain, any body — dashboard, tank bot, robotic arm, or humanoid</div>
-            </div>
-        </div>
-
-        <!-- Perception → Action Flow -->
-        <div class="section">
-            <div class="section-label">Perception to Action</div>
-            <h2>How a sensor observation becomes a robot action</h2>
-            <div class="desc">When the MentorPi's camera sees a ball land out, here's the full chain from sensor to actuator.</div>
-
-            <div class="robot-flow">
-                <div class="robot-step">
-                    <div class="step-icon">👁</div>
-                    <h4>Sensor Captures</h4>
-                    <p>Camera sensor captures frame. Depth camera adds spatial context. Lidar maps court geometry.</p>
-                    <span class="arrow">→</span>
-                </div>
-                <div class="robot-step">
-                    <div class="step-icon">🧠</div>
-                    <h4>Agent Reasons</h4>
-                    <p>VLM: "Ball landed 3cm past baseline. Rule: ball outside line is out. Call: OUT. Confidence: 0.92"</p>
-                    <span class="arrow">→</span>
-                </div>
-                <div class="robot-step">
-                    <div class="step-icon">⚡</div>
-                    <h4>Tools Dispatched</h4>
-                    <p>announce_call("out", "Out!") + update_score("p2") + robot_gesture("point_out", "right")</p>
-                    <span class="arrow">→</span>
-                </div>
-                <div class="robot-step">
-                    <div class="step-icon">🔌</div>
-                    <h4>ROSA Translates</h4>
-                    <p>Natural language → ROS2: /speaker "Out!", /servo [60°, 30°, 45°], /cmd_vel toward play</p>
-                    <span class="arrow">→</span>
-                </div>
-                <div class="robot-step">
-                    <div class="step-icon">🤖</div>
-                    <h4>Actuators Execute</h4>
-                    <p>Speaker announces "Out!" Arm extends right. Wheels rotate toward the baseline.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Input/Output Matrix -->
-        <div class="section">
-            <div class="section-label">Hardware Matrix</div>
-            <h2>Sensors and actuators by platform</h2>
-            <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden">
-                <table style="width:100%;border-collapse:collapse;font-size:13px">
-                    <thead>
-                        <tr style="border-bottom:1px solid var(--border)">
-                            <th style="padding:16px 20px;text-align:left;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:1px">Platform</th>
-                            <th style="padding:16px 20px;text-align:left;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:1px">Sensors (Input)</th>
-                            <th style="padding:16px 20px;text-align:left;color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:1px">Actuators (Output)</th>
-                            <th style="padding:16px 20px;text-align:left;color:var(--purple);font-size:11px;text-transform:uppercase;letter-spacing:1px">Interface</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom:1px solid var(--border)">
-                            <td style="padding:14px 20px;font-weight:600">Dashboard</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">Video upload, webcam</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">Display, browser TTS</td>
-                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">WebSocket</td>
-                        </tr>
-                        <tr style="border-bottom:1px solid var(--border)">
-                            <td style="padding:14px 20px;font-weight:600">MentorPi</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">RGB camera, depth cam, lidar, IMU</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">Speaker, arm servos, mecanum wheels</td>
-                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">ROSA → ROS2</td>
-                        </tr>
-                        <tr style="border-bottom:1px solid var(--border)">
-                            <td style="padding:14px 20px;font-weight:600">SO-101 Arm</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">—</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">6-DOF arm (6x Feetech servos)</td>
-                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">LeRobot / Serial</td>
-                        </tr>
-                        <tr style="border-bottom:1px solid var(--border)">
-                            <td style="padding:14px 20px;font-weight:600">Unitree G1</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">Stereo cameras, IMU, force sensors</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">Full body joints, speakers, head tracking</td>
-                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">Unitree SDK</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:14px 20px;font-weight:600">Phone</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">Camera, microphone, gyroscope</td>
-                            <td style="padding:14px 20px;color:var(--secondary)">Speaker, haptics, display</td>
-                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">WebSocket / REST</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
 
         <!-- Protocol Deep Dives -->
         <div class="section">
-            <div class="section-label">Protocol Details</div>
-            <h2>Three protocols in depth</h2>
-            <div class="desc">Each protocol serves a different purpose. Together they make the agent truly agentic.</div>
-
-            <div class="proto-deep">
-                <!-- Function Calls -->
-                <div class="proto-panel">
-                    <div class="proto-header">
-                        <div class="proto-icon blue">⚡</div>
-                        <div>
-                            <div class="proto-title">Function Calls</div>
-                            <div class="proto-subtitle">Native tool use via Nebius API</div>
-                        </div>
-                    </div>
-                    <div class="proto-body">
-                        <ul class="flow-list">
-                            <li class="flow-item"><div class="flow-num">1</div><div class="flow-text"><strong>Define tools</strong> — update_score, announce_call, robot_gesture, no_call</div></li>
-                            <li class="flow-item"><div class="flow-num">2</div><div class="flow-text"><strong>Send frame + tools</strong> to Nebius VLM with tool_choice="auto"</div></li>
-                            <li class="flow-item"><div class="flow-num">3</div><div class="flow-text"><strong>Model decides</strong> which tools to call based on what it sees</div></li>
-                            <li class="flow-item"><div class="flow-num">4</div><div class="flow-text"><strong>Execute</strong> — parse tool_calls, run each function</div></li>
-                        </ul>
-                        <div class="code-block"><span class="cm">// Model response</span>
-tool_calls: [
-  {<span class="str">"name"</span>: <span class="str">"announce_call"</span>,
-   <span class="str">"args"</span>: {<span class="str">"call_type"</span>: <span class="str">"out"</span>,
-           <span class="str">"announcement"</span>: <span class="str">"Out!"</span>,
-           <span class="str">"confidence"</span>: <span class="num">0.92</span>}},
-  {<span class="str">"name"</span>: <span class="str">"update_score"</span>,
-   <span class="str">"args"</span>: {<span class="str">"player"</span>: <span class="str">"p2"</span>,
-           <span class="str">"reason"</span>: <span class="str">"out"</span>}},
-  {<span class="str">"name"</span>: <span class="str">"robot_gesture"</span>,
-   <span class="str">"args"</span>: {<span class="str">"gesture"</span>: <span class="str">"point_out"</span>,
-           <span class="str">"direction"</span>: <span class="str">"right"</span>}}
+            <div class="section-label">Protocol Layer</div>
+            <h2>Three ways to dispatch actions</h2>
+            <div class="desc">Each protocol adds a layer of capability. Function calls are fast and internal. MCP makes tools swappable. A2A enables multi-agent coordination.</div>
+            <div class="proto-grid">
+                <div class="proto-card blue">
+                    <h3>⚡ Function Calls</h3>
+                    <div class="tag">OpenAI tool_use · Nebius API</div>
+                    <p>VLM decides which tools to invoke. Score updates, announcements, gestures — all through native tool calling.</p>
+                    <div class="code">tool_calls: [
+  {name: "announce_call",
+   args: {call: "out",
+          text: "Out!",
+          confidence: 0.92}},
+  {name: "update_score",
+   args: {player: "p2"}},
+  {name: "robot_gesture",
+   args: {gesture: "point_out"}}
 ]</div>
-                    </div>
                 </div>
+                <div class="proto-card purple">
+                    <h3>🔌 MCP Server</h3>
+                    <div class="tag">Model Context Protocol</div>
+                    <p>Expose referee as MCP tools. Any client — Claude, ChatGPT, Cursor — can ask "was that ball out?" and get a referee analysis.</p>
+                    <div class="code">sideline-referee (stdio)
+├── analyze_frame(img, sport)
+├── get_score()
+├── lookup_rule(sport, situation)
+└── robot_action(cmd, params)
 
-                <!-- MCP -->
-                <div class="proto-panel">
-                    <div class="proto-header">
-                        <div class="proto-icon purple">🔌</div>
-                        <div>
-                            <div class="proto-title">MCP</div>
-                            <div class="proto-subtitle">Model Context Protocol — external tools</div>
-                        </div>
-                    </div>
-                    <div class="proto-body">
-                        <ul class="flow-list">
-                            <li class="flow-item"><div class="flow-num">1</div><div class="flow-text"><strong>MCP Server</strong> exposes tools: analyze_frame, get_score, lookup_rule, robot_action</div></li>
-                            <li class="flow-item"><div class="flow-num">2</div><div class="flow-text"><strong>Any MCP client</strong> (Claude, ChatGPT, Cursor) connects and discovers tools</div></li>
-                            <li class="flow-item"><div class="flow-num">3</div><div class="flow-text"><strong>Client calls tool</strong> — e.g. "Was that ball out?" → analyze_frame()</div></li>
-                            <li class="flow-item"><div class="flow-num">4</div><div class="flow-text"><strong>Swap backends</strong> — change robot, change rules DB, agent code stays the same</div></li>
-                        </ul>
-                        <div class="code-block"><span class="cm"># MCP Server topology</span>
-<span class="kw">sideline-referee</span>  stdio://localhost
-  ├── <span class="fn">analyze_frame</span>(image, sport)
-  ├── <span class="fn">get_score</span>()
-  ├── <span class="fn">get_call_history</span>(last_n)
-  ├── <span class="fn">lookup_rule</span>(sport, situation)
-  └── <span class="fn">robot_action</span>(action, params)
+tavily-search (https)
+└── search(query)
 
-<span class="kw">tavily-search</span>     api.tavily.com
-  └── <span class="fn">search</span>(query)
-
-<span class="kw">robot-control</span>     ros2://mentorpi
-  ├── <span class="fn">speak</span>(text)
-  ├── <span class="fn">gesture</span>(type, direction)
-  └── <span class="fn">move</span>(direction, speed)</div>
-                    </div>
+robot-control (ros2)
+├── speak(text)
+├── gesture(type)
+└── move(dir, speed)</div>
                 </div>
-
-                <!-- A2A -->
-                <div class="proto-panel full">
-                    <div class="proto-header">
-                        <div class="proto-icon green">🔗</div>
-                        <div>
-                            <div class="proto-title">A2A — Agent-to-Agent Protocol</div>
-                            <div class="proto-subtitle">Multi-agent coordination via JSON-RPC 2.0</div>
-                        </div>
-                    </div>
-                    <div class="proto-body">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                            <div>
-                                <ul class="flow-list">
-                                    <li class="flow-item"><div class="flow-num">1</div><div class="flow-text"><strong>AgentCard</strong> published at /.well-known/agent.json — skills, capabilities, endpoint</div></li>
-                                    <li class="flow-item"><div class="flow-num">2</div><div class="flow-text"><strong>Discovery</strong> — agents find each other, read capabilities</div></li>
-                                    <li class="flow-item"><div class="flow-num">3</div><div class="flow-text"><strong>tasks/send</strong> — create a task, agent processes it (submitted → working → completed)</div></li>
-                                    <li class="flow-item"><div class="flow-num">4</div><div class="flow-text"><strong>Streaming</strong> — SSE for real-time updates as tasks progress</div></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <div class="code-block"><span class="cm">// Multi-agent referee system</span>
-
-<span class="kw">Camera Agent 1</span> ──┐
-                  ├──▶ <span class="fn">Coordinator Agent</span>
-<span class="kw">Camera Agent 2</span> ──┘         │
-                           ├──▶ <span class="kw">Commentary Agent</span>
-   <span class="cm">// majority vote</span>  │         <span class="str">"Brilliant ace!"</span>
-   <span class="cm">// on calls</span>      │
-                           └──▶ <span class="kw">Robot Agent</span>
-                                  <span class="str">gesture: arm_up</span>
-                                  <span class="str">speak: "Ace!"</span></div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="proto-card green">
+                    <h3>🔗 A2A Protocol</h3>
+                    <div class="tag">Agent-to-Agent · JSON-RPC 2.0</div>
+                    <p>Multiple Sideline agents coordinate. Three cameras, three agents, one coordinator — autonomous VAR.</p>
+                    <div class="code">Camera-1 Agent ──┐
+                  ├─▶ Coordinator
+Camera-2 Agent ──┘     │
+                       ├─▶ Commentator
+  (majority vote)      │
+                       └─▶ Robot Agent
+                            → gesture
+                            → speak</div>
                 </div>
             </div>
         </div>
 
-        <!-- Tech Stack -->
+        <!-- Hardware Matrix -->
         <div class="section">
-            <div class="section-label">Stack</div>
-            <h2>Built with</h2>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
-                    <div style="font-size:24px;margin-bottom:8px">🧠</div>
-                    <div style="font-size:13px;font-weight:700">Nebius Token Factory</div>
-                    <div style="font-size:11px;color:var(--dim);margin-top:4px">VLM inference + tool calling</div>
-                </div>
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
-                    <div style="font-size:24px;margin-bottom:8px">⚡</div>
-                    <div style="font-size:13px;font-weight:700">FastAPI + WebSocket</div>
-                    <div style="font-size:11px;color:var(--dim);margin-top:4px">Real-time server</div>
-                </div>
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
-                    <div style="font-size:24px;margin-bottom:8px">🤖</div>
-                    <div style="font-size:13px;font-weight:700">ROSA (NASA JPL)</div>
-                    <div style="font-size:11px;color:var(--dim);margin-top:4px">Natural language → ROS2</div>
-                </div>
-                <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center">
-                    <div style="font-size:24px;margin-bottom:8px">🔗</div>
-                    <div style="font-size:13px;font-weight:700">MCP + A2A</div>
-                    <div style="font-size:11px;color:var(--dim);margin-top:4px">Standard agent protocols</div>
-                </div>
+            <div class="section-label">Hardware Matrix</div>
+            <h2>Sensors and actuators by platform</h2>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden">
+                <table class="hw-table">
+                    <thead><tr>
+                        <th style="color:var(--dim)">Platform</th>
+                        <th style="color:var(--accent)">Sensors (Input)</th>
+                        <th style="color:var(--green)">Actuators (Output)</th>
+                        <th style="color:var(--purple)">Interface</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr><td class="platform">Dashboard</td><td style="color:var(--secondary)">Video upload, webcam</td><td style="color:var(--secondary)">Display, browser TTS</td><td style="font-family:var(--mono);font-size:11px;color:var(--dim)">WebSocket</td></tr>
+                        <tr><td class="platform">MentorPi</td><td style="color:var(--secondary)">RGB cam, depth cam, lidar, IMU</td><td style="color:var(--secondary)">Speaker, arm servos, mecanum wheels</td><td style="font-family:var(--mono);font-size:11px;color:var(--dim)">ROSA → ROS2</td></tr>
+                        <tr><td class="platform">SO-101 Arm</td><td style="color:var(--secondary)">—</td><td style="color:var(--secondary)">6-DOF arm (6x Feetech servos)</td><td style="font-family:var(--mono);font-size:11px;color:var(--dim)">LeRobot / Serial</td></tr>
+                        <tr><td class="platform">Unitree G1</td><td style="color:var(--secondary)">Stereo cameras, IMU, force sensors</td><td style="color:var(--secondary)">Full body joints, speakers, head tracking</td><td style="font-family:var(--mono);font-size:11px;color:var(--dim)">Unitree SDK</td></tr>
+                        <tr><td class="platform">Phone</td><td style="color:var(--secondary)">Camera, microphone, gyroscope</td><td style="color:var(--secondary)">Speaker, haptics, display</td><td style="font-family:var(--mono);font-size:11px;color:var(--dim)">REST / WebSocket</td></tr>
+                        <tr><td class="platform">Simulation</td><td style="color:var(--secondary)">Virtual cameras, synthetic data</td><td style="color:var(--secondary)">Simulated joints, visual replay</td><td style="font-family:var(--mono);font-size:11px;color:var(--dim)">Isaac Sim / MuJoCo</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+
+    <!-- Node Detail Side Panel -->
+    <div class="node-detail" id="detail-panel">
+        <span class="close" onclick="closeDetail()">✕</span>
+        <div id="detail-content"></div>
+    </div>
+
+<script>
+const nodeData = {
+    'cam':        { name: 'Court Camera', layer: 'Sensor', color: '--accent', desc: 'Fixed wide-angle camera capturing the full court. Primary video input for the agent. Outputs RGB frames at native resolution.', inputs: [], outputs: ['Frame Extractor'], data: 'RGB frames · 30fps native · 1080p+' },
+    'robot-cam':  { name: 'Robot Vision', layer: 'Sensor', color: '--accent', desc: 'Onboard camera on the MentorPi robot. Provides a courtside perspective — closer to the action, different angle than the fixed camera.', inputs: [], outputs: ['Frame Extractor'], data: 'RGB + depth · courtside angle' },
+    'depth':      { name: 'Depth Sensor', layer: 'Sensor', color: '--accent', desc: 'Stereo depth camera providing 3D point cloud data. Enables spatial reasoning — how far is the ball from the line?', inputs: [], outputs: ['Frame Extractor'], data: 'Point cloud · depth map · spatial' },
+    'mobile':     { name: 'Mobile / File Upload', layer: 'Sensor', color: '--accent', desc: 'Phone camera for live courtside video, or pre-recorded video file upload. Bring your own footage — Sideline reasons about any input.', inputs: [], outputs: ['Frame Extractor'], data: 'Video file · live stream · any format' },
+    'extract':    { name: 'Frame Extractor', layer: 'Extraction', color: '--teal', desc: 'Fuses multiple sensor inputs. Extracts frames at configurable FPS (default 1fps). Encodes as JPEG base64 for VLM consumption. Handles multi-source synchronization.', inputs: ['Court Camera', 'Robot Vision', 'Depth Sensor', 'Mobile/File'], outputs: ['Sideline Agent', 'Game State'], data: 'base64 JPEG · 1fps · multi-source' },
+    'agent':      { name: 'Sideline Agent', layer: 'Reasoning', color: '--purple', desc: 'The core agentic loop. Observes frames, perceives with Nebius VLM (Qwen2-VL-72B / Cosmos R2 / Nemotron), reasons with chain-of-thought, decides on calls, executes tool calls. Maintains full game context.', inputs: ['Frame Extractor', 'Game State'], outputs: ['Function Calls', 'MCP Server', 'A2A Protocol'], data: 'CoT reasoning · tool_calls · decisions' },
+    'state':      { name: 'Game State', layer: 'Reasoning', color: '--purple', desc: 'Persistent game state across the entire match. Tennis scoring (points/games/sets/deuce/AD), rally context, call history, server tracking. The agent\'s memory.', inputs: ['Frame Extractor', 'Sideline Agent'], outputs: ['Sideline Agent'], data: 'Score · history · context · server' },
+    'fn':         { name: 'Function Calls', layer: 'Protocol', color: '--yellow', desc: 'Native OpenAI-compatible tool calling via Nebius API. The VLM decides which tools to invoke — update_score, announce_call, robot_gesture, no_call. Fast, internal, no network overhead.', inputs: ['Sideline Agent'], outputs: ['Dashboard', 'Scoreboard'], data: 'tool_calls JSON · immediate execution' },
+    'mcp':        { name: 'MCP Server', layer: 'Protocol', color: '--yellow', desc: 'Model Context Protocol server exposing referee tools. External clients (Claude, ChatGPT, Cursor) can connect and use Sideline as a tool. Also routes to Tavily for rules lookup and robot-control for physical actions.', inputs: ['Sideline Agent'], outputs: ['Speaker', 'Arm Servos'], data: 'stdio/SSE · standardized tools' },
+    'a2a':        { name: 'A2A Protocol', layer: 'Protocol', color: '--yellow', desc: 'Agent-to-Agent protocol for multi-agent coordination. Multiple Sideline agents cover different angles, a coordinator resolves conflicts (majority vote), then dispatches to commentary and robot agents.', inputs: ['Sideline Agent'], outputs: ['Locomotion', 'Full Body'], data: 'JSON-RPC 2.0 · AgentCard · tasks' },
+    'dashboard':  { name: 'Dashboard', layer: 'Actuator', color: '--green', desc: 'Real-time web dashboard via WebSocket. Shows video, reasoning chain, confidence scores, event timeline. The primary demo output.', inputs: ['Function Calls'], outputs: ['Visual Sim'], data: 'WebSocket events · real-time' },
+    'score':      { name: 'Scoreboard', layer: 'Actuator', color: '--green', desc: 'Auto-updating scoreboard driven by the agent\'s update_score tool calls. Full tennis scoring state machine.', inputs: ['Function Calls'], outputs: [], data: 'Score state · auto-update' },
+    'speaker':    { name: 'Speaker', layer: 'Actuator', color: '--green', desc: 'Text-to-speech output. Robot onboard speaker or browser TTS. Announces calls: "Fault!", "Out!", "15-Love".', inputs: ['MCP Server'], outputs: [], data: 'TTS · audio output' },
+    'arm':        { name: 'Arm Servos', layer: 'Actuator', color: '--green', desc: 'Robotic arm actuators — MentorPi arm or SO-101 6-DOF arm. Translates referee calls into physical gestures: point out, raise arm, signal fault.', inputs: ['MCP Server'], outputs: ['Physics Sim'], data: 'Joint angles · Feetech servos' },
+    'wheels':     { name: 'Locomotion', layer: 'Actuator', color: '--green', desc: 'Mecanum wheels (MentorPi) or legs (Unitree G1). Navigate toward the action, follow the ball, patrol the sideline.', inputs: ['A2A Protocol'], outputs: ['Physics Sim'], data: 'cmd_vel · Twist messages' },
+    'body':       { name: 'Full Body', layer: 'Actuator', color: '--green', desc: 'Humanoid full-body actuation — Unitree G1. Walking, arm gestures, head tracking, voice. The ultimate embodiment.', inputs: ['A2A Protocol'], outputs: ['Digital Twin'], data: 'Unitree SDK · full joint control' },
+    'sim-viz':    { name: 'Visual Simulation', layer: 'Simulation', color: '--pink', desc: 'Browser-based visual replay. Re-render the match with agent annotations overlaid. No physical hardware needed — software-simulated output.', inputs: ['Dashboard'], outputs: [], data: '3D replay · annotations · browser' },
+    'sim-physics':{ name: 'Physics Simulation', layer: 'Simulation', color: '--pink', desc: 'Isaac Sim or MuJoCo physics simulation. Test robot actions in simulation before deploying to real hardware. Train RL policies for better gesture execution.', inputs: ['Arm Servos', 'Locomotion'], outputs: [], data: 'Isaac Sim · MuJoCo · RL training' },
+    'sim-digital':{ name: 'Digital Twin', layer: 'Simulation', color: '--pink', desc: 'Full digital twin of the referee system via NVIDIA Osmo. Synthetic data generation → model training → evaluation loop. The path to zero-shot referee policies.', inputs: ['Full Body'], outputs: [], data: 'Osmo · DreamZero · training loop' },
+};
+
+function showDetail(id) {
+    const d = nodeData[id];
+    if (!d) return;
+    const panel = document.getElementById('detail-panel');
+    const colorVar = d.color;
+
+    let connectionsHtml = '';
+    d.inputs.forEach(i => { connectionsHtml += `<div class="conn"><span class="dir in">← in</span> ${i}</div>`; });
+    d.outputs.forEach(o => { connectionsHtml += `<div class="conn"><span class="dir out">→ out</span> ${o}</div>`; });
+
+    document.getElementById('detail-content').innerHTML = `
+        <h3>${d.name}</h3>
+        <span class="tag" style="background:var(${colorVar})20;color:var(${colorVar})">${d.layer}</span>
+        <p>${d.desc}</p>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--dim);padding:10px 14px;background:var(--bg);border-radius:8px;border:1px solid var(--border);margin-bottom:16px">${d.data}</div>
+        <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--secondary)">Connections</div>
+        <div class="connections">${connectionsHtml || '<div style="font-size:12px;color:var(--dim)">No connections</div>'}</div>
+    `;
+    panel.classList.add('open');
+
+    // Highlight edges
+    document.querySelectorAll('.edge').forEach(e => {
+        const from = e.dataset.from, to = e.dataset.to;
+        e.classList.toggle('active', from === id || to === id);
+    });
+    document.querySelectorAll('.dag-node').forEach(n => n.classList.remove('highlight'));
+    document.querySelector(`.dag-node[data-id="${id}"]`)?.classList.add('highlight');
+}
+
+function closeDetail() {
+    document.getElementById('detail-panel').classList.remove('open');
+    document.querySelectorAll('.edge').forEach(e => e.classList.remove('active'));
+    document.querySelectorAll('.dag-node').forEach(n => n.classList.remove('highlight'));
+}
+</script>
 </body>
 </html>
