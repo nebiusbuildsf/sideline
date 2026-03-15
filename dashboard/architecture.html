@@ -193,146 +193,214 @@
         <!-- Full Architecture Diagram -->
         <div class="section">
             <div class="section-label">System Overview</div>
-            <h2>End-to-end pipeline</h2>
-            <div class="desc">Video enters the system. The agent reasons. Actions flow through three protocols to any output — screen, speaker, or robot.</div>
+            <h2>Perception → Reasoning → Action</h2>
+            <div class="desc">Sensors observe the world. The agent reasons about what it sees. Effectors act on that reasoning — through screens, speakers, and robot actuators.</div>
 
             <div class="arch-diagram">
-                <div class="arch-label">Input</div>
+                <!-- PERCEPTION LAYER -->
+                <div class="arch-label">Perception Layer — Sensors & Observers</div>
                 <div class="arch-row">
                     <div class="arch-node highlight">
                         <div class="icon">📹</div>
-                        <div class="name">Video Feed</div>
-                        <div class="sub">camera / file / stream</div>
+                        <div class="name">Court Camera</div>
+                        <div class="sub">wide-angle · fixed mount</div>
                     </div>
-                    <div class="arch-arrow">→</div>
+                    <div class="arch-node highlight">
+                        <div class="icon">🤖</div>
+                        <div class="name">Robot Vision</div>
+                        <div class="sub">MentorPi cam · depth · lidar</div>
+                    </div>
+                    <div class="arch-node highlight">
+                        <div class="icon">📱</div>
+                        <div class="name">Mobile Camera</div>
+                        <div class="sub">phone · handheld · courtside</div>
+                    </div>
                     <div class="arch-node">
-                        <div class="icon">🖼</div>
-                        <div class="name">Frame Extractor</div>
-                        <div class="sub">1 fps · JPEG · base64</div>
+                        <div class="icon">🎥</div>
+                        <div class="name">Recorded Video</div>
+                        <div class="sub">file upload · replay</div>
                     </div>
                 </div>
+                <div style="text-align:center;font-size:11px;color:var(--dim);margin:8px 0">Multiple observers → richer perception → better calls</div>
 
                 <div class="arch-arrow-down">↓</div>
-                <div class="arch-label">Agent Brain — Nebius Token Factory</div>
+                <div style="text-align:center;font-size:11px;font-family:var(--mono);color:var(--accent);margin:4px 0">frames · depth maps · point clouds</div>
 
+                <!-- REASONING LAYER -->
+                <div class="arch-label">Reasoning Layer — Agent Brain</div>
                 <div class="arch-row">
-                    <div class="arch-node highlight" style="min-width: 300px; border-color: var(--purple);">
+                    <div class="arch-node highlight" style="min-width: 420px; border-color: var(--purple);">
                         <div class="icon">🧠</div>
                         <div class="name">Sideline Agent</div>
-                        <div class="sub">VLM + CoT Reasoning + Game State + Tool Definitions</div>
+                        <div class="sub">Observe → Perceive → Reason (CoT) → Decide → Act → Remember</div>
                     </div>
                 </div>
 
                 <div class="arch-row" style="margin-top: 8px;">
-                    <div class="arch-node" style="min-width: 120px;">
-                        <div class="sub">Qwen2-VL-72B</div>
+                    <div class="arch-node" style="min-width: 120px; border-color: #3b82f630;">
+                        <div class="sub" style="font-weight:600;color:var(--accent)">Qwen2-VL-72B</div>
+                        <div class="sub">vision + tools</div>
+                    </div>
+                    <div class="arch-node" style="min-width: 120px; border-color: #22c55e30;">
+                        <div class="sub" style="font-weight:600;color:var(--green)">Cosmos R2</div>
+                        <div class="sub">video reasoning</div>
+                    </div>
+                    <div class="arch-node" style="min-width: 120px; border-color: #a855f730;">
+                        <div class="sub" style="font-weight:600;color:var(--purple)">Nemotron VL</div>
+                        <div class="sub">multimodal</div>
                     </div>
                     <div class="arch-node" style="min-width: 120px;">
-                        <div class="sub">Cosmos R2</div>
-                    </div>
-                    <div class="arch-node" style="min-width: 120px;">
-                        <div class="sub">Nemotron VL</div>
-                    </div>
-                    <div class="arch-node" style="min-width: 120px;">
-                        <div class="sub">DeepSeek R1</div>
+                        <div class="sub" style="font-weight:600;color:var(--secondary)">DeepSeek R1</div>
+                        <div class="sub">commentary</div>
                     </div>
                 </div>
+                <div style="text-align:center;font-size:11px;color:var(--dim);margin:8px 0">Powered by Nebius Token Factory · swap model with one env var</div>
 
                 <div class="arch-arrow-down">↓</div>
-                <div class="arch-label">Three Action Protocols</div>
+                <div style="text-align:center;font-size:11px;font-family:var(--mono);color:var(--purple);margin:4px 0">tool_calls · decisions · confidence scores</div>
 
+                <!-- PROTOCOL LAYER -->
+                <div class="arch-label">Protocol Layer — Three Action Protocols</div>
                 <div class="arch-row">
                     <div class="arch-node" style="border-color: #3b82f640;">
                         <div class="icon">⚡</div>
                         <div class="name">Function Calls</div>
-                        <div class="sub">OpenAI tool_use</div>
+                        <div class="sub">native tool_use · internal</div>
                     </div>
                     <div class="arch-node purple">
                         <div class="icon">🔌</div>
-                        <div class="name">MCP</div>
-                        <div class="sub">Model Context Protocol</div>
+                        <div class="name">MCP Server</div>
+                        <div class="sub">external tools · swappable</div>
                     </div>
                     <div class="arch-node green">
                         <div class="icon">🔗</div>
-                        <div class="name">A2A</div>
-                        <div class="sub">Agent-to-Agent</div>
+                        <div class="name">A2A Protocol</div>
+                        <div class="sub">agent-to-agent · multi-agent</div>
                     </div>
                 </div>
 
                 <div class="arch-arrow-down">↓</div>
-                <div class="arch-label">Actions → Physical World</div>
+                <div style="text-align:center;font-size:11px;font-family:var(--mono);color:var(--green);margin:4px 0">commands · gestures · speech · score updates</div>
 
+                <!-- ACTION LAYER -->
+                <div class="arch-label">Action Layer — Effectors & Actuators</div>
                 <div class="arch-bracket">
                     <div class="arch-node yellow">
                         <div class="icon">📊</div>
                         <div class="name">Dashboard</div>
-                        <div class="sub">WebSocket</div>
+                        <div class="sub">display · WebSocket</div>
                     </div>
                     <div class="arch-node yellow">
                         <div class="icon">🔊</div>
-                        <div class="name">Voice</div>
-                        <div class="sub">TTS / Speaker</div>
+                        <div class="name">Speaker</div>
+                        <div class="sub">TTS · voice synthesis</div>
+                    </div>
+                    <div class="arch-node yellow">
+                        <div class="icon">🦾</div>
+                        <div class="name">Arm Actuators</div>
+                        <div class="sub">servos · gesture signals</div>
+                    </div>
+                    <div class="arch-node yellow">
+                        <div class="icon">🛞</div>
+                        <div class="name">Locomotion</div>
+                        <div class="sub">wheels · legs · navigation</div>
                     </div>
                     <div class="arch-node yellow">
                         <div class="icon">🏆</div>
                         <div class="name">Scoreboard</div>
-                        <div class="sub">auto-update</div>
-                    </div>
-                    <div class="arch-node yellow">
-                        <div class="icon">🤖</div>
-                        <div class="name">MentorPi</div>
-                        <div class="sub">ROSA / ROS2</div>
-                    </div>
-                    <div class="arch-node yellow">
-                        <div class="icon">🦾</div>
-                        <div class="name">SO-101 Arm</div>
-                        <div class="sub">LeRobot / Feetech</div>
-                    </div>
-                    <div class="arch-node yellow">
-                        <div class="icon">🏃</div>
-                        <div class="name">Unitree G1</div>
-                        <div class="sub">Humanoid SDK</div>
+                        <div class="sub">state machine · auto</div>
                     </div>
                 </div>
+                <div style="text-align:center;font-size:11px;color:var(--dim);margin:12px 0 0">Same brain, any body — dashboard, tank bot, robotic arm, or humanoid</div>
             </div>
         </div>
 
-        <!-- Robot Action Flow -->
+        <!-- Perception → Action Flow -->
         <div class="section">
-            <div class="section-label">Action Pipeline</div>
-            <h2>From call to physical gesture</h2>
-            <div class="desc">When the agent decides "Out!", here's exactly what happens to make the robot signal it.</div>
+            <div class="section-label">Perception to Action</div>
+            <h2>How a sensor observation becomes a robot action</h2>
+            <div class="desc">When the MentorPi's camera sees a ball land out, here's the full chain from sensor to actuator.</div>
 
             <div class="robot-flow">
                 <div class="robot-step">
+                    <div class="step-icon">👁</div>
+                    <h4>Sensor Captures</h4>
+                    <p>Camera sensor captures frame. Depth camera adds spatial context. Lidar maps court geometry.</p>
+                    <span class="arrow">→</span>
+                </div>
+                <div class="robot-step">
                     <div class="step-icon">🧠</div>
-                    <h4>Agent Decides</h4>
-                    <p>VLM returns tool_call: robot_gesture("point_out", "right")</p>
+                    <h4>Agent Reasons</h4>
+                    <p>VLM: "Ball landed 3cm past baseline. Rule: ball outside line is out. Call: OUT. Confidence: 0.92"</p>
                     <span class="arrow">→</span>
                 </div>
                 <div class="robot-step">
                     <div class="step-icon">⚡</div>
-                    <h4>Tool Dispatch</h4>
-                    <p>Function call routed to RobotController interface</p>
+                    <h4>Tools Dispatched</h4>
+                    <p>announce_call("out", "Out!") + update_score("p2") + robot_gesture("point_out", "right")</p>
                     <span class="arrow">→</span>
                 </div>
                 <div class="robot-step">
                     <div class="step-icon">🔌</div>
-                    <h4>MCP / ROSA</h4>
-                    <p>Natural language: "Point arm right to signal out"</p>
-                    <span class="arrow">→</span>
-                </div>
-                <div class="robot-step">
-                    <div class="step-icon">📡</div>
-                    <h4>ROS2 Command</h4>
-                    <p>/servo topic: shoulder=60°, elbow=30°, wrist=45°</p>
+                    <h4>ROSA Translates</h4>
+                    <p>Natural language → ROS2: /speaker "Out!", /servo [60°, 30°, 45°], /cmd_vel toward play</p>
                     <span class="arrow">→</span>
                 </div>
                 <div class="robot-step">
                     <div class="step-icon">🤖</div>
-                    <h4>Robot Acts</h4>
-                    <p>Arm extends right. Speaker: "Out!" Wheels turn toward play.</p>
+                    <h4>Actuators Execute</h4>
+                    <p>Speaker announces "Out!" Arm extends right. Wheels rotate toward the baseline.</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Input/Output Matrix -->
+        <div class="section">
+            <div class="section-label">Hardware Matrix</div>
+            <h2>Sensors and actuators by platform</h2>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden">
+                <table style="width:100%;border-collapse:collapse;font-size:13px">
+                    <thead>
+                        <tr style="border-bottom:1px solid var(--border)">
+                            <th style="padding:16px 20px;text-align:left;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:1px">Platform</th>
+                            <th style="padding:16px 20px;text-align:left;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:1px">Sensors (Input)</th>
+                            <th style="padding:16px 20px;text-align:left;color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:1px">Actuators (Output)</th>
+                            <th style="padding:16px 20px;text-align:left;color:var(--purple);font-size:11px;text-transform:uppercase;letter-spacing:1px">Interface</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid var(--border)">
+                            <td style="padding:14px 20px;font-weight:600">Dashboard</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">Video upload, webcam</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">Display, browser TTS</td>
+                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">WebSocket</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border)">
+                            <td style="padding:14px 20px;font-weight:600">MentorPi</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">RGB camera, depth cam, lidar, IMU</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">Speaker, arm servos, mecanum wheels</td>
+                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">ROSA → ROS2</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border)">
+                            <td style="padding:14px 20px;font-weight:600">SO-101 Arm</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">—</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">6-DOF arm (6x Feetech servos)</td>
+                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">LeRobot / Serial</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border)">
+                            <td style="padding:14px 20px;font-weight:600">Unitree G1</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">Stereo cameras, IMU, force sensors</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">Full body joints, speakers, head tracking</td>
+                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">Unitree SDK</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:14px 20px;font-weight:600">Phone</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">Camera, microphone, gyroscope</td>
+                            <td style="padding:14px 20px;color:var(--secondary)">Speaker, haptics, display</td>
+                            <td style="padding:14px 20px;font-family:var(--mono);font-size:11px;color:var(--dim)">WebSocket / REST</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
