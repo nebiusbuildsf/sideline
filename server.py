@@ -177,6 +177,11 @@ async def referee_dashboard():
     return FileResponse("dashboard/index.html")
 
 
+@app.get("/playground")
+async def playground():
+    return FileResponse("dashboard/playground.html")
+
+
 # --- A2A Agent Card ---
 
 @app.get("/.well-known/agent.json")

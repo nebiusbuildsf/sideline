@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sideline — Playground</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
+            --border: #27272a; --text: #fafafa; --secondary: #a1a1aa; --dim: #71717a;
+            --accent: #3b82f6; --purple: #a855f7; --green: #22c55e;
+            --yellow: #eab308; --red: #ef4444; --teal: #14b8a6;
+            --font: 'Inter', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; min-height: 100vh; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 56px;
+            background: rgba(9,9,11,0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 10px; }
+        .nav-logo { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; }
+        .nav-name { font-size: 15px; font-weight: 700; }
+        .nav-name span { color: var(--secondary); font-weight: 400; font-size: 13px; margin-left: 6px; }
+        .nav-links { display: flex; gap: 4px; }
+        .nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--secondary); text-decoration: none; transition: all 0.15s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--elevated); }
+
+        .page { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+
+        /* Playground Layout */
+        .pg-header { margin-bottom: 24px; }
+        .pg-header h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+        .pg-header p { font-size: 14px; color: var(--secondary); }
+
+        .pg-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr 360px;
+            grid-template-rows: 1fr;
+            gap: 16px;
+            height: calc(100vh - 130px);
+        }
+
+        /* Left: Input Panel */
+        .input-panel {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .panel-title {
+            padding: 16px 20px; border-bottom: 1px solid var(--border);
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+        }
+        .panel-title .icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .panel-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+        .panel-footer { padding: 12px 20px; border-top: 1px solid var(--border); }
+
+        .form-group { margin-bottom: 16px; }
+        .form-label { font-size: 12px; font-weight: 600; color: var(--secondary); margin-bottom: 6px; display: block; }
+        .form-select, .form-input {
+            width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--elevated); color: var(--text); font-family: var(--font); font-size: 13px;
+            outline: none; transition: border-color 0.15s;
+        }
+        .form-select:focus, .form-input:focus { border-color: var(--accent); }
+        .form-textarea {
+            width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--elevated); color: var(--text); font-family: var(--mono); font-size: 12px;
+            outline: none; resize: vertical; min-height: 80px; line-height: 1.5;
+        }
+
+        .frame-preview {
+            width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            margin-bottom: 16px; border: 1px solid var(--border);
+        }
+        .frame-preview img { max-width: 100%; max-height: 100%; }
+        .frame-preview .empty { color: var(--dim); font-size: 12px; }
+
+        .btn {
+            padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--elevated); color: var(--text); font-family: var(--font);
+            font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; width: 100%;
+        }
+        .btn:hover { border-color: #444; }
+        .btn-accent { background: var(--accent); border-color: var(--accent); color: white; }
+        .btn-accent:hover { background: #2563eb; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Center: Protocol Flow */
+        .flow-panel {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .flow-tabs {
+            display: flex; border-bottom: 1px solid var(--border);
+        }
+        .flow-tab {
+            flex: 1; padding: 14px; text-align: center; font-size: 12px; font-weight: 600;
+            color: var(--dim); cursor: pointer; transition: all 0.15s; border-bottom: 2px solid transparent;
+        }
+        .flow-tab:hover { color: var(--secondary); }
+        .flow-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+        .flow-content { flex: 1; overflow-y: auto; }
+        .flow-view { display: none; height: 100%; }
+        .flow-view.active { display: flex; flex-direction: column; }
+
+        /* Tool Calls View */
+        .tool-stream { flex: 1; overflow-y: auto; padding: 12px; }
+        .tool-card {
+            background: var(--elevated); border: 1px solid var(--border); border-radius: 12px;
+            margin-bottom: 10px; overflow: hidden; animation: slideIn 0.3s;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-header {
+            display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .tool-icon {
+            width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center;
+            justify-content: center; font-size: 13px; flex-shrink: 0;
+        }
+        .tool-icon.fn { background: #3b82f620; }
+        .tool-icon.mcp { background: #a855f720; }
+        .tool-icon.a2a { background: #22c55e20; }
+        .tool-name { font-size: 13px; font-weight: 600; }
+        .tool-protocol { font-family: var(--mono); font-size: 10px; color: var(--dim); padding: 2px 8px; background: var(--bg); border-radius: 4px; margin-left: auto; }
+        .tool-body { padding: 12px 16px; }
+        .tool-json {
+            font-family: var(--mono); font-size: 11px; color: var(--secondary);
+            line-height: 1.6; white-space: pre-wrap; word-break: break-all;
+        }
+        .tool-result {
+            margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border);
+            font-size: 12px; color: var(--green);
+        }
+        .tool-latency {
+            font-family: var(--mono); font-size: 10px; color: var(--dim);
+            margin-top: 6px;
+        }
+
+        /* MCP View */
+        .mcp-topology { padding: 20px; }
+        .mcp-server {
+            background: var(--elevated); border: 1px solid var(--border); border-radius: 12px;
+            margin-bottom: 12px; overflow: hidden;
+        }
+        .mcp-server-header {
+            padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .mcp-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .mcp-dot.on { background: var(--green); box-shadow: 0 0 6px #22c55e40; }
+        .mcp-dot.off { background: var(--dim); }
+        .mcp-server-name { font-size: 13px; font-weight: 600; }
+        .mcp-server-url { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-left: auto; }
+        .mcp-tools { padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .mcp-tool-pill {
+            padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 500;
+            background: var(--bg); border: 1px solid var(--border); color: var(--secondary);
+            font-family: var(--mono);
+        }
+        .mcp-tool-pill.active { border-color: var(--accent); color: var(--accent); background: #3b82f610; }
+        .mcp-log { padding: 12px 16px; border-top: 1px solid var(--border); }
+        .mcp-log-entry {
+            font-family: var(--mono); font-size: 11px; color: var(--dim); padding: 3px 0;
+            display: flex; gap: 8px;
+        }
+        .mcp-log-entry .time { color: var(--dim); min-width: 60px; }
+        .mcp-log-entry .method { color: var(--accent); }
+        .mcp-log-entry .result { color: var(--green); }
+
+        /* A2A View */
+        .a2a-agents { padding: 20px; }
+        .a2a-agent-card {
+            background: var(--elevated); border: 1px solid var(--border); border-radius: 12px;
+            margin-bottom: 12px; padding: 16px;
+        }
+        .a2a-agent-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .a2a-agent-icon {
+            width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; font-size: 16px;
+        }
+        .a2a-agent-name { font-size: 14px; font-weight: 600; }
+        .a2a-agent-status { font-size: 11px; margin-left: auto; padding: 3px 10px; border-radius: 6px; font-weight: 500; }
+        .a2a-agent-status.online { background: #22c55e18; color: var(--green); }
+        .a2a-agent-status.offline { background: #71717a18; color: var(--dim); }
+        .a2a-skills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+        .a2a-skill { font-size: 11px; padding: 3px 10px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); color: var(--secondary); }
+        .a2a-tasks { }
+        .a2a-task {
+            font-family: var(--mono); font-size: 11px; padding: 6px 0; display: flex; gap: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .a2a-task:last-child { border-bottom: none; }
+        .a2a-task .state { padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+        .a2a-task .state.completed { background: #22c55e18; color: var(--green); }
+        .a2a-task .state.working { background: #3b82f620; color: var(--accent); }
+        .a2a-task .state.failed { background: #ef444418; color: var(--red); }
+
+        /* Right: Output Panel */
+        .output-panel {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .output-stream { flex: 1; overflow-y: auto; padding: 12px; }
+        .output-card {
+            padding: 14px 16px; background: var(--elevated); border: 1px solid var(--border);
+            border-radius: 12px; margin-bottom: 8px; animation: slideIn 0.3s;
+        }
+        .output-card .badge {
+            font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 3px 8px; border-radius: 5px; display: inline-block; margin-bottom: 8px;
+        }
+        .output-card .badge.score { background: #22c55e18; color: var(--green); }
+        .output-card .badge.call { background: #3b82f620; color: var(--accent); }
+        .output-card .badge.gesture { background: #eab30818; color: var(--yellow); }
+        .output-card .badge.reasoning { background: #a855f720; color: var(--purple); }
+        .output-card .body { font-size: 13px; color: var(--secondary); line-height: 1.6; }
+        .output-card .body strong { color: var(--text); }
+
+        .scoreboard-mini {
+            padding: 16px 20px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; gap: 24px;
+        }
+        .sb-mini-player { text-align: center; }
+        .sb-mini-name { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; }
+        .sb-mini-pts { font-family: var(--mono); font-size: 28px; font-weight: 700; }
+        .sb-mini-sep { font-size: 20px; color: var(--dim); }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo">S</div>
+            <div class="nav-name">sideline <span>Playground</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/referee">Referee</a>
+            <a href="/playground" class="active">Playground</a>
+            <a href="https://github.com/nebiusbuildsf/sideline" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <div class="page">
+        <div class="pg-header">
+            <h1>Agent Playground</h1>
+            <p>Drop a frame, pick a model, watch tool calls, MCP, and A2A in action.</p>
+        </div>
+
+        <div class="pg-grid">
+            <!-- Left: Input -->
+            <div class="input-panel">
+                <div class="panel-title"><div class="icon" style="background:#3b82f620">📹</div> Input</div>
+                <div class="panel-body">
+                    <div class="frame-preview" id="frame-preview">
+                        <div class="empty" id="frame-empty">Drop an image or click to upload</div>
+                        <img id="frame-img" style="display:none">
+                    </div>
+                    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this)">
+                    <button class="btn" onclick="document.getElementById('file-input').click()" style="margin-bottom:16px">Upload Frame</button>
+
+                    <div class="form-group">
+                        <label class="form-label">Vision Model</label>
+                        <select class="form-select" id="model-select">
+                            <option value="Qwen/Qwen2-VL-72B-Instruct">Qwen2-VL-72B (default)</option>
+                            <option value="nvidia/Cosmos-Reason2-8B">Cosmos Reason 2</option>
+                            <option value="NVIDIA-Nemotron-Nano-2-VL">Nemotron Nano 2 VL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sport</label>
+                        <select class="form-select" id="sport-select">
+                            <option value="tennis">Tennis</option>
+                            <option value="cricket">Cricket</option>
+                            <option value="pickleball">Pickleball</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">System Prompt Override</label>
+                        <textarea class="form-textarea" id="prompt-override" placeholder="Leave empty for default referee prompt..."></textarea>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-accent" id="analyze-btn" onclick="analyzeFrame()">Analyze Frame</button>
+                </div>
+            </div>
+
+            <!-- Center: Protocol Flow -->
+            <div class="flow-panel">
+                <div class="flow-tabs">
+                    <div class="flow-tab active" onclick="showFlow('tools')">Tool Calls</div>
+                    <div class="flow-tab" onclick="showFlow('mcp')">MCP</div>
+                    <div class="flow-tab" onclick="showFlow('a2a')">A2A</div>
+                </div>
+                <div class="flow-content">
+                    <!-- Tool Calls -->
+                    <div class="flow-view active" id="flow-tools">
+                        <div class="tool-stream" id="tool-stream"></div>
+                    </div>
+
+                    <!-- MCP -->
+                    <div class="flow-view" id="flow-mcp">
+                        <div class="mcp-topology" id="mcp-topology">
+                            <div class="mcp-server">
+                                <div class="mcp-server-header">
+                                    <div class="mcp-dot on"></div>
+                                    <div class="mcp-server-name">sideline-referee</div>
+                                    <div class="mcp-server-url">stdio://localhost</div>
+                                </div>
+                                <div class="mcp-tools">
+                                    <span class="mcp-tool-pill">analyze_frame</span>
+                                    <span class="mcp-tool-pill">get_score</span>
+                                    <span class="mcp-tool-pill">get_call_history</span>
+                                    <span class="mcp-tool-pill">lookup_rule</span>
+                                    <span class="mcp-tool-pill">robot_action</span>
+                                </div>
+                                <div class="mcp-log" id="mcp-log"></div>
+                            </div>
+                            <div class="mcp-server">
+                                <div class="mcp-server-header">
+                                    <div class="mcp-dot off" id="tavily-dot"></div>
+                                    <div class="mcp-server-name">tavily-search</div>
+                                    <div class="mcp-server-url">api.tavily.com</div>
+                                </div>
+                                <div class="mcp-tools">
+                                    <span class="mcp-tool-pill">search</span>
+                                    <span class="mcp-tool-pill">extract</span>
+                                </div>
+                            </div>
+                            <div class="mcp-server">
+                                <div class="mcp-server-header">
+                                    <div class="mcp-dot off" id="robot-dot"></div>
+                                    <div class="mcp-server-name">robot-control</div>
+                                    <div class="mcp-server-url">ros2://mentorpi</div>
+                                </div>
+                                <div class="mcp-tools">
+                                    <span class="mcp-tool-pill">speak</span>
+                                    <span class="mcp-tool-pill">gesture</span>
+                                    <span class="mcp-tool-pill">move</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- A2A -->
+                    <div class="flow-view" id="flow-a2a">
+                        <div class="a2a-agents" id="a2a-agents">
+                            <div class="a2a-agent-card">
+                                <div class="a2a-agent-header">
+                                    <div class="a2a-agent-icon" style="background:#3b82f620">🎾</div>
+                                    <div class="a2a-agent-name">sideline-referee</div>
+                                    <div class="a2a-agent-status online">online</div>
+                                </div>
+                                <div class="a2a-skills">
+                                    <span class="a2a-skill">analyze_play</span>
+                                    <span class="a2a-skill">get_score</span>
+                                    <span class="a2a-skill">commentary</span>
+                                </div>
+                                <div class="a2a-tasks" id="a2a-referee-tasks"></div>
+                            </div>
+                            <div class="a2a-agent-card">
+                                <div class="a2a-agent-header">
+                                    <div class="a2a-agent-icon" style="background:#a855f720">🎙</div>
+                                    <div class="a2a-agent-name">sideline-commentator</div>
+                                    <div class="a2a-agent-status online">online</div>
+                                </div>
+                                <div class="a2a-skills">
+                                    <span class="a2a-skill">play_by_play</span>
+                                    <span class="a2a-skill">highlight</span>
+                                </div>
+                                <div class="a2a-tasks" id="a2a-commentary-tasks"></div>
+                            </div>
+                            <div class="a2a-agent-card">
+                                <div class="a2a-agent-header">
+                                    <div class="a2a-agent-icon" style="background:#22c55e20">🤖</div>
+                                    <div class="a2a-agent-name">sideline-robot</div>
+                                    <div class="a2a-agent-status offline">offline</div>
+                                </div>
+                                <div class="a2a-skills">
+                                    <span class="a2a-skill">execute_gesture</span>
+                                    <span class="a2a-skill">announce</span>
+                                    <span class="a2a-skill">navigate</span>
+                                </div>
+                                <div class="a2a-tasks" id="a2a-robot-tasks"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Output -->
+            <div class="output-panel">
+                <div class="panel-title"><div class="icon" style="background:#22c55e18">📊</div> Output</div>
+                <div class="output-stream" id="output-stream"></div>
+                <div class="scoreboard-mini">
+                    <div class="sb-mini-player">
+                        <div class="sb-mini-name">Player 1</div>
+                        <div class="sb-mini-pts" id="mini-p1">0</div>
+                    </div>
+                    <div class="sb-mini-sep">:</div>
+                    <div class="sb-mini-player">
+                        <div class="sb-mini-name">Player 2</div>
+                        <div class="sb-mini-pts" id="mini-p2">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+let frameB64 = null;
+let ws = null;
+
+function connect() {
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    ws = new WebSocket(`${proto}://${location.host}/ws`);
+    ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        handleResult(msg.type, msg.data);
+    };
+    ws.onclose = () => setTimeout(connect, 2000);
+}
+
+function showFlow(name) {
+    document.querySelectorAll('.flow-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.flow-view').forEach(v => v.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('flow-' + name).classList.add('active');
+}
+
+function handleFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        frameB64 = e.target.result.split(',')[1];
+        document.getElementById('frame-img').src = e.target.result;
+        document.getElementById('frame-img').style.display = 'block';
+        document.getElementById('frame-empty').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+}
+
+async function analyzeFrame() {
+    const btn = document.getElementById('analyze-btn');
+    btn.disabled = true;
+    btn.textContent = 'Analyzing...';
+
+    const model = document.getElementById('model-select').value;
+    const sport = document.getElementById('sport-select').value;
+    const start = Date.now();
+
+    // Simulate tool call flow
+    addToolCall('fn', 'VLM Inference', 'analyze_frame', {
+        model: model,
+        sport: sport,
+        frame: frameB64 ? '(base64 image)' : '(mock frame)',
+    }, null);
+
+    // Send to server or mock
+    try {
+        if (frameB64) {
+            const blob = await fetch(`data:image/jpeg;base64,${frameB64}`).then(r => r.blob());
+            const formData = new FormData();
+            formData.append('file', blob, 'frame.jpg');
+            const resp = await fetch('/analyze', { method: 'POST', body: formData });
+            const result = await resp.json();
+            processResult(result, Date.now() - start);
+        } else {
+            // Mock mode
+            await fetch('/start', { method: 'POST' });
+            await new Promise(r => setTimeout(r, 1500));
+        }
+    } catch (e) {
+        addOutput('error', 'Error: ' + e.message);
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Analyze Frame';
+}
+
+function processResult(result, latency) {
+    // Show reasoning
+    if (result.content) {
+        addOutput('reasoning', result.content);
+    }
+
+    // Show each tool call
+    (result.tool_calls || []).forEach((tc, i) => {
+        setTimeout(() => {
+            const protocol = tc.name === 'robot_gesture' ? 'mcp' : 'fn';
+            addToolCall(protocol, tc.name, tc.name, tc.args, latency);
+
+            // Add to MCP log
+            addMCPLog(tc.name, JSON.stringify(tc.args).substring(0, 40));
+
+            // Add to A2A tasks
+            if (tc.name === 'announce_call') {
+                addA2ATask('a2a-commentary-tasks', 'completed', `Commentary: ${tc.args.announcement || ''}`);
+            }
+            if (tc.name === 'robot_gesture') {
+                addA2ATask('a2a-robot-tasks', 'working', `Gesture: ${tc.args.gesture}`);
+            }
+
+            // Add output
+            if (tc.name === 'announce_call') {
+                addOutput('call', `<strong>${(tc.args.call_type||'').toUpperCase()}</strong> — ${tc.args.announcement || ''}`);
+            } else if (tc.name === 'update_score') {
+                addOutput('score', `Point to <strong>${tc.args.player}</strong> — ${tc.args.reason || ''}`);
+            } else if (tc.name === 'robot_gesture') {
+                addOutput('gesture', `Robot: <strong>${tc.args.gesture}</strong> ${tc.args.direction || ''}`);
+            }
+        }, i * 400);
+    });
+
+    // Update score
+    if (result.score) {
+        document.getElementById('mini-p1').textContent = result.score.points?.p1 || '0';
+        document.getElementById('mini-p2').textContent = result.score.points?.p2 || '0';
+    }
+}
+
+function handleResult(type, data) {
+    if (type === 'analysis') processResult(data, 0);
+    if (type === 'score') {
+        document.getElementById('mini-p1').textContent = data.score?.points?.p1 || '0';
+        document.getElementById('mini-p2').textContent = data.score?.points?.p2 || '0';
+    }
+    if (type === 'call') addOutput('call', `<strong>${(data.call_type||'').toUpperCase()}</strong> — ${data.announcement||''}`);
+}
+
+function addToolCall(protocol, displayName, fnName, args, latency) {
+    const el = document.getElementById('tool-stream');
+    const card = document.createElement('div');
+    card.className = 'tool-card';
+    const iconClass = protocol === 'mcp' ? 'mcp' : protocol === 'a2a' ? 'a2a' : 'fn';
+    const protoLabel = protocol === 'mcp' ? 'MCP' : protocol === 'a2a' ? 'A2A' : 'Function Call';
+    card.innerHTML = `
+        <div class="tool-header">
+            <div class="tool-icon ${iconClass}">${protocol === 'mcp' ? '🔌' : protocol === 'a2a' ? '🔗' : '⚡'}</div>
+            <div class="tool-name">${displayName}</div>
+            <div class="tool-protocol">${protoLabel}</div>
+        </div>
+        <div class="tool-body">
+            <div class="tool-json">${JSON.stringify(args, null, 2)}</div>
+            ${latency ? `<div class="tool-latency">${latency}ms</div>` : ''}
+        </div>
+    `;
+    el.insertBefore(card, el.firstChild);
+}
+
+function addMCPLog(method, result) {
+    const el = document.getElementById('mcp-log');
+    const time = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const entry = document.createElement('div');
+    entry.className = 'mcp-log-entry';
+    entry.innerHTML = `<span class="time">${time}</span><span class="method">${method}</span><span class="result">→ ${result}</span>`;
+    el.insertBefore(entry, el.firstChild);
+    while (el.children.length > 10) el.removeChild(el.lastChild);
+
+    // Highlight active tool
+    document.querySelectorAll('.mcp-tool-pill').forEach(p => {
+        p.classList.toggle('active', p.textContent === method);
+    });
+}
+
+function addA2ATask(containerId, state, text) {
+    const el = document.getElementById(containerId);
+    const task = document.createElement('div');
+    task.className = 'a2a-task';
+    task.innerHTML = `<span class="state ${state}">${state}</span><span style="color:var(--secondary)">${text}</span>`;
+    el.insertBefore(task, el.firstChild);
+    while (el.children.length > 5) el.removeChild(el.lastChild);
+}
+
+function addOutput(type, html) {
+    const el = document.getElementById('output-stream');
+    const card = document.createElement('div');
+    card.className = 'output-card';
+    card.innerHTML = `<span class="badge ${type}">${type}</span><div class="body">${html}</div>`;
+    el.insertBefore(card, el.firstChild);
+    while (el.children.length > 30) el.removeChild(el.lastChild);
+}
+
+connect();
+</script>
+</body>
+</html>
