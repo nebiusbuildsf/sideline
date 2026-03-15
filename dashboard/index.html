@@ -288,9 +288,9 @@
 
             <div class="video-section">
                 <div class="video-frame">
-                    <video id="video" controls muted style="display:none"></video>
+                    <video id="video" controls muted style="width:100%;height:100%;object-fit:contain;display:none"></video>
                     <div class="video-empty" id="video-empty">
-                        Drop a tennis video here<br>or click <strong>Start</strong> for mock mode
+                        Click <strong>Start Demo</strong> to analyze the tennis clip<br>or <strong>Start Mock</strong> for simulated data
                     </div>
                 </div>
                 <div class="video-bar">
@@ -298,7 +298,8 @@
                     <div class="video-progress"><div class="video-progress-fill" id="progress-fill"></div></div>
                     <div class="controls">
                         <button class="btn" onclick="resetGame()">Reset</button>
-                        <button class="btn btn-accent" id="start-btn" onclick="startGame()">Start</button>
+                        <button class="btn" onclick="startMock()">Mock</button>
+                        <button class="btn btn-accent" id="start-btn" onclick="startDemo()">Start Demo</button>
                     </div>
                 </div>
             </div>
@@ -536,10 +537,21 @@ function handleEvent(type, data) {
         document.getElementById('frame-num').textContent = `Frame ${data.frame}`;
         if (data.content && data.content !== `[Mock] Frame ${data.frame} analyzed`) addEv('analysis', {description: data.content});
     }
+    else if (type === 'video') {
+        // Load and show the video
+        const vid = document.getElementById('video');
+        vid.src = data.src;
+        vid.style.display = 'block';
+        document.getElementById('video-empty').style.display = 'none';
+        vid.play();
+    }
     else if (type === 'progress') {
         const pct = (data.frame / data.total * 100).toFixed(1);
         document.getElementById('progress-fill').style.width = pct + '%';
-        document.getElementById('frame-num').textContent = `Frame ${data.frame} / ${data.total}`;
+        document.getElementById('frame-num').textContent = `Frame ${data.frame} / ${data.total} · ${data.timestamp||0}s`;
+        // Sync video playback to analysis timestamp
+        const vid = document.getElementById('video');
+        if (vid.src && data.timestamp) vid.currentTime = data.timestamp;
     }
     else if (type === 'error') {
         document.getElementById('agent-status').textContent = '⚠ ' + data.message;
@@ -582,12 +594,21 @@ function addEv(type, data) {
     while (el.children.length > 60) el.removeChild(el.lastChild);
 }
 
-function startGame() {
+function startDemo() {
+    if (!connected) return;
+    ws.send(JSON.stringify({action:'start_demo'}));
+    document.getElementById('start-btn').textContent = 'Analyzing...';
+    document.getElementById('start-btn').disabled = true;
+    document.getElementById('agent-status').textContent = 'Analyzing demo clip...';
+    document.getElementById('agent-pulse').classList.add('on');
+}
+
+function startMock() {
     if (!connected) return;
     ws.send(JSON.stringify({action:'start', video:''}));
-    document.getElementById('start-btn').textContent = 'Running...';
+    document.getElementById('start-btn').textContent = 'Mock...';
     document.getElementById('start-btn').disabled = true;
-    document.getElementById('agent-status').textContent = 'Analyzing...';
+    document.getElementById('agent-status').textContent = 'Mock analysis...';
     document.getElementById('agent-pulse').classList.add('on');
 }
 

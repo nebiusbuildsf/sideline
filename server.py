@@ -69,12 +69,15 @@ async def websocket_endpoint(ws: WebSocket):
             msg = json.loads(data)
             if msg.get("action") == "start" and not is_running:
                 video = msg.get("video", "")
-                asyncio.create_task(run_analysis(video))
+                fps = msg.get("fps", 1.0)
+                asyncio.create_task(run_analysis(video, fps))
+            elif msg.get("action") == "start_demo" and not is_running:
+                asyncio.create_task(run_analysis("video/clips/videoplayback.mp4", 0.5))
     except WebSocketDisconnect:
         ws_clients.remove(ws)
 
 
-async def run_analysis(video_path: str):
+async def run_analysis(video_path: str, fps: float = 1.0):
     """Run the agent analysis loop on a video."""
     global is_running
     if is_running:
@@ -85,19 +88,27 @@ async def run_analysis(video_path: str):
 
     try:
         if video_path and os.path.exists(video_path):
-            extractor = VideoExtractor(video_path, fps=1.0)
+            extractor = VideoExtractor(video_path, fps=fps)
             frame_count = extractor.get_frame_count()
-            await ws_broadcast("status", {"message": f"Analyzing {frame_count} frames..."})
+            await ws_broadcast("video", {
+                "src": f"/static/clips/{os.path.basename(video_path)}",
+                "total_frames": frame_count,
+                "fps": fps,
+            })
+            await ws_broadcast("status", {"message": f"Analyzing {frame_count} frames at {fps} fps..."})
 
             idx = 0
             async for frame_b64 in extractor.frames():
                 idx += 1
+                timestamp = idx / fps
                 await ws_broadcast("progress", {
                     "frame": idx,
                     "total": frame_count,
+                    "timestamp": round(timestamp, 1),
                 })
                 result = await agent.analyze_frame(frame_b64)
-                logger.info(f"Frame {idx}: {len(result.get('tool_calls', []))} tool calls")
+                result["timestamp"] = round(timestamp, 1)
+                logger.info(f"Frame {idx}/{frame_count} ({timestamp:.1f}s): {len(result.get('tool_calls', []))} tool calls, latency={result.get('latency_s', 0)}s")
         else:
             # No video — run mock frames
             for i in range(20):
