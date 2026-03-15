@@ -62,7 +62,7 @@
             gap: 16px; padding: 20px 24px; height: calc(100vh - 56px);
         }
 
-        /* Court Simulation Mini */
+        /* Robot Simulation Mini */
         .sim-mini {
             background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
             overflow: hidden; display: flex; flex-direction: column;
@@ -70,12 +70,6 @@
         .sim-mini-header {
             padding: 12px 16px; border-bottom: 1px solid var(--border);
             font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-        }
-        .sim-mini canvas { flex: 1; width: 100%; display: block; }
-        .sim-mini-footer {
-            padding: 8px 16px; border-top: 1px solid var(--border);
-            font-family: var(--mono); font-size: 10px; color: var(--dim);
-            display: flex; justify-content: space-between;
         }
 
         /* Scoreboard */
@@ -330,17 +324,14 @@
                 </div>
             </div>
 
-            <!-- Court Simulation -->
-            <div class="sim-mini">
+            <!-- Robot Simulation -->
+            <div class="sim-mini" style="overflow:hidden">
                 <div class="sim-mini-header">
-                    <span class="material-symbols-outlined" style="font-size:14px">grid_on</span>
-                    Court View
+                    <span class="material-symbols-outlined" style="font-size:14px">smart_toy</span>
+                    Robot Simulation
+                    <a href="/robots" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);text-decoration:none">Fullscreen →</a>
                 </div>
-                <canvas id="court-canvas"></canvas>
-                <div class="sim-mini-footer">
-                    <span id="sim-status">Idle</span>
-                    <span id="sim-gesture">—</span>
-                </div>
+                <iframe id="robot-iframe" src="/robots" style="flex:1;width:100%;border:none;background:var(--bg)"></iframe>
             </div>
 
             <div class="reasoning">
@@ -698,194 +689,6 @@ function resetGame() {
         document.getElementById('sb-call').className = 'sb-call';
     });
 }
-
-// ─── Court Simulation ───
-const courtCanvas = document.getElementById('court-canvas');
-const cctx = courtCanvas.getContext('2d');
-let courtW, courtH;
-let robotGesture = 'idle';
-let lastCall = '';
-
-function resizeCourt() {
-    const wrap = courtCanvas.parentElement;
-    courtCanvas.width = wrap.clientWidth * devicePixelRatio;
-    courtCanvas.height = (wrap.clientHeight - 60) * devicePixelRatio;
-    cctx.scale(devicePixelRatio, devicePixelRatio);
-    courtW = wrap.clientWidth;
-    courtH = wrap.clientHeight - 60;
-    drawCourtScene();
-}
-
-function drawCourtScene() {
-    cctx.clearRect(0, 0, courtW, courtH);
-
-    // Court surface
-    const cx = courtW / 2, cy = courtH / 2;
-    const cw = courtW * 0.85, ch = courtH * 0.88;
-    const left = (courtW - cw) / 2, top = (courtH - ch) / 2;
-
-    cctx.fillStyle = '#1a4f2a';
-    cctx.fillRect(left, top, cw, ch);
-
-    // Lines
-    cctx.strokeStyle = '#fff';
-    cctx.lineWidth = 1.5;
-    cctx.strokeRect(left, top, cw, ch);
-
-    // Singles
-    const sl = cw * 0.08;
-    cctx.strokeRect(left + sl, top, cw - sl * 2, ch);
-
-    // Net
-    const mid = top + ch / 2;
-    cctx.lineWidth = 2.5;
-    cctx.strokeStyle = '#ccc';
-    cctx.beginPath();
-    cctx.moveTo(left, mid);
-    cctx.lineTo(left + cw, mid);
-    cctx.stroke();
-
-    // Service boxes
-    cctx.strokeStyle = '#fff';
-    cctx.lineWidth = 1;
-    const sTop = top + ch * 0.25, sBot = top + ch * 0.75;
-    const centerX = left + cw / 2;
-    cctx.strokeRect(left + sl, sTop, (cw - sl * 2) / 2, mid - sTop);
-    cctx.strokeRect(centerX, sTop, (cw - sl * 2) / 2, mid - sTop);
-    cctx.strokeRect(left + sl, mid, (cw - sl * 2) / 2, sBot - mid);
-    cctx.strokeRect(centerX, mid, (cw - sl * 2) / 2, sBot - mid);
-    cctx.beginPath();
-    cctx.moveTo(centerX, sTop);
-    cctx.lineTo(centerX, sBot);
-    cctx.stroke();
-
-    // Players
-    drawP(cx - cw * 0.15, top + ch * 0.15, '#3b82f6', 'P1');
-    drawP(cx + cw * 0.1, top + ch * 0.85, '#ef4444', 'P2');
-
-    // Robot referee at sideline
-    drawRobot(left - 25, mid);
-
-    // Last call overlay
-    if (lastCall) {
-        cctx.fillStyle = 'rgba(0,0,0,0.6)';
-        cctx.fillRect(cx - 60, top + ch - 30, 120, 24);
-        cctx.fillStyle = '#fff';
-        cctx.font = '700 11px Inter';
-        cctx.textAlign = 'center';
-        cctx.fillText(lastCall, cx, top + ch - 14);
-    }
-}
-
-function drawP(x, y, color, label) {
-    cctx.fillStyle = color;
-    cctx.beginPath();
-    cctx.arc(x, y, 10, 0, Math.PI * 2);
-    cctx.fill();
-    cctx.fillStyle = '#fff';
-    cctx.font = '700 8px Inter';
-    cctx.textAlign = 'center';
-    cctx.textBaseline = 'middle';
-    cctx.fillText(label, x, y);
-}
-
-function drawRobot(x, y) {
-    // Robot body
-    cctx.fillStyle = '#27272a';
-    cctx.fillRect(x - 12, y - 15, 24, 30);
-    cctx.strokeStyle = robotGesture !== 'idle' ? '#22c55e' : '#444';
-    cctx.lineWidth = 1.5;
-    cctx.strokeRect(x - 12, y - 15, 24, 30);
-
-    // Head
-    cctx.fillStyle = '#333';
-    cctx.fillRect(x - 7, y - 22, 14, 8);
-
-    // Eye
-    cctx.fillStyle = robotGesture !== 'idle' ? '#22c55e' : '#555';
-    cctx.fillRect(x - 3, y - 19, 6, 3);
-
-    // Arm gesture
-    cctx.strokeStyle = '#eab308';
-    cctx.lineWidth = 2;
-    if (robotGesture === 'point_out') {
-        cctx.beginPath();
-        cctx.moveTo(x + 12, y - 5);
-        cctx.lineTo(x + 35, y - 20);
-        cctx.stroke();
-        // Hand
-        cctx.fillStyle = '#eab308';
-        cctx.beginPath();
-        cctx.arc(x + 35, y - 20, 3, 0, Math.PI * 2);
-        cctx.fill();
-    } else if (robotGesture === 'arm_up') {
-        cctx.beginPath();
-        cctx.moveTo(x, y - 15);
-        cctx.lineTo(x, y - 40);
-        cctx.stroke();
-        cctx.fillStyle = '#eab308';
-        cctx.beginPath();
-        cctx.arc(x, y - 40, 3, 0, Math.PI * 2);
-        cctx.fill();
-    } else if (robotGesture === 'signal_fault') {
-        cctx.beginPath();
-        cctx.moveTo(x + 12, y - 5);
-        cctx.lineTo(x + 28, y - 5);
-        cctx.stroke();
-        cctx.beginPath();
-        cctx.moveTo(x - 12, y - 5);
-        cctx.lineTo(x - 28, y - 5);
-        cctx.stroke();
-    } else if (robotGesture === 'wave_off') {
-        const wave = Math.sin(Date.now() / 200) * 10;
-        cctx.beginPath();
-        cctx.moveTo(x + 12, y - 5);
-        cctx.lineTo(x + 30, y - 15 + wave);
-        cctx.stroke();
-    }
-
-    // Wheels
-    cctx.fillStyle = '#444';
-    cctx.fillRect(x - 14, y + 12, 6, 6);
-    cctx.fillRect(x + 8, y + 12, 6, 6);
-
-    // Label
-    cctx.fillStyle = '#71717a';
-    cctx.font = '600 7px JetBrains Mono';
-    cctx.textAlign = 'center';
-    cctx.fillText('REF', x, y + 25);
-}
-
-// React to WebSocket gesture events
-function handleGesture(gesture) {
-    robotGesture = gesture;
-    document.getElementById('sim-gesture').textContent = gesture;
-    drawCourtScene();
-    // Reset after 3s
-    setTimeout(() => {
-        robotGesture = 'idle';
-        document.getElementById('sim-gesture').textContent = '—';
-        drawCourtScene();
-    }, 3000);
-}
-
-function handleCallForSim(data) {
-    lastCall = (data.call_type || '').toUpperCase();
-    document.getElementById('sim-status').textContent = lastCall;
-    drawCourtScene();
-    setTimeout(() => { lastCall = ''; drawCourtScene(); }, 4000);
-}
-
-// Hook into existing event handler
-const origHandleEvent = handleEvent;
-handleEvent = function(type, data) {
-    origHandleEvent(type, data);
-    if (type === 'gesture') handleGesture(data.gesture || 'idle');
-    if (type === 'call') handleCallForSim(data);
-};
-
-window.addEventListener('resize', resizeCourt);
-setTimeout(resizeCourt, 100);
 
 connect();
 </script>
