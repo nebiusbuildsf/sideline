@@ -2,7 +2,7 @@
 
 import json
 import os
-import time
+import base64
 import asyncio
 import logging
 
@@ -11,12 +11,8 @@ from openai import OpenAI
 from agent.state import GameState
 from agent.prompts import get_system_prompt, get_frame_prompt
 from agent.tools import TOOLS
-from agent.parsing import parse_tool_calls_from_text
 
 logger = logging.getLogger("sideline")
-
-MAX_RETRIES = 2
-RETRY_DELAY = 1.0
 
 # Callbacks for broadcasting events to dashboard/robot
 _listeners: list = []
@@ -45,7 +41,7 @@ class SidelineAgent:
         self.mock = mock
         self.state = GameState(sport)
         self.model = model or os.environ.get(
-            "SIDELINE_VISION_MODEL", "Qwen/Qwen2.5-VL-72B-Instruct"
+            "SIDELINE_VISION_MODEL", "Qwen/Qwen2-VL-72B-Instruct"
         )
         self.client = None if mock else OpenAI(
             base_url=os.environ.get(
@@ -54,7 +50,6 @@ class SidelineAgent:
             api_key=os.environ.get("NEBIUS_API_KEY", "mock"),
         )
         self.recent_frames = []
-        self.stats = {"calls": 0, "errors": 0, "fallbacks": 0, "total_latency": 0.0}
 
     async def analyze_frame(self, frame_b64: str) -> dict:
         """Analyze a single frame and execute tool calls."""
@@ -72,13 +67,13 @@ class SidelineAgent:
             {"role": "system", "content": system},
         ]
 
-        # Add previous frames for rally context (full base64 for actual VLM input)
+        # Add last 2 frames for rally context
         for prev in self.recent_frames[-2:]:
             messages.append({
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": "Previous frame:"},
-                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{prev['b64']}"}},
+                    {"type": "text", "text": f"Previous frame:"},
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{prev['b64'][:100]}..."}},
                 ],
             })
             if prev.get("analysis"):
@@ -93,86 +88,40 @@ class SidelineAgent:
             ],
         })
 
-        # Call Nebius VLM with retries
-        result = {
-            "frame": self.state.frame_count,
-            "content": "",
-            "tool_calls": [],
-            "score": self.state.score_dict(),
-            "latency_s": 0.0,
-            "tool_call_source": "none",
-        }
-
-        for attempt in range(MAX_RETRIES + 1):
-            try:
-                t0 = time.time()
-                # Try with tools first; if model doesn't support it, retry without
-                try:
-                    response = self.client.chat.completions.create(
-                        model=self.model,
-                        messages=messages,
-                        tools=TOOLS,
-                        max_tokens=500,
-                    )
-                except Exception as tool_err:
-                    if "tool" in str(tool_err).lower():
-                        logger.info("Model doesn't support tools, using text-only mode")
-                        response = self.client.chat.completions.create(
-                            model=self.model,
-                            messages=messages,
-                            max_tokens=500,
-                        )
-                    else:
-                        raise
-                latency = time.time() - t0
-                self.stats["calls"] += 1
-                self.stats["total_latency"] += latency
-                result["latency_s"] = round(latency, 2)
-                break
-            except Exception as e:
-                self.stats["errors"] += 1
-                logger.error(f"VLM call failed (attempt {attempt+1}): {e}")
-                if attempt < MAX_RETRIES:
-                    await asyncio.sleep(RETRY_DELAY * (attempt + 1))
-                else:
-                    result["content"] = f"Error: {e}"
-                    await broadcast("error", {"message": str(e), "frame": self.state.frame_count})
-                    await broadcast("analysis", result)
-                    return result
+        # Call Nebius VLM with tools
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            tools=TOOLS,
+            tool_choice="auto",
+            max_tokens=500,
+        )
 
         msg = response.choices[0].message
-        result["content"] = msg.content or ""
+        result = {
+            "frame": self.state.frame_count,
+            "content": msg.content or "",
+            "tool_calls": [],
+            "score": self.state.score_dict(),
+        }
 
-        # Extract tool calls — native first, then fallback
+        # Execute tool calls
         if msg.tool_calls:
-            result["tool_call_source"] = "native"
             for tc in msg.tool_calls:
-                try:
-                    args = json.loads(tc.function.arguments)
-                except json.JSONDecodeError:
-                    logger.warning(f"Malformed tool args: {tc.function.arguments}")
-                    continue
-                result["tool_calls"].append({"name": tc.function.name, "args": args})
-                await self._execute_tool(tc.function.name, args)
-        elif msg.content:
-            # Fallback: parse tool calls from text
-            fallback_calls = parse_tool_calls_from_text(msg.content)
-            if fallback_calls:
-                self.stats["fallbacks"] += 1
-                result["tool_call_source"] = "fallback"
-                result["tool_calls"] = fallback_calls
-                for tc in fallback_calls:
-                    await self._execute_tool(tc["name"], tc["args"])
+                name = tc.function.name
+                args = json.loads(tc.function.arguments)
+                result["tool_calls"].append({"name": name, "args": args})
+                await self._execute_tool(name, args)
 
         # Update score in result after tool execution
         result["score"] = self.state.score_dict()
 
-        # Store for context (keep full b64 for multi-frame)
+        # Store for context
         self.recent_frames.append({
-            "b64": frame_b64,
+            "b64": frame_b64[:200],  # don't store full image in memory
             "analysis": msg.content or json.dumps(result["tool_calls"]),
         })
-        if len(self.recent_frames) > 3:
+        if len(self.recent_frames) > 5:
             self.recent_frames.pop(0)
 
         # Broadcast to dashboard

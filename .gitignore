@@ -4,5 +4,3 @@ __pycache__/
 *.egg-info/
 dist/
 .env
-eval_results.json
-assets/
