@@ -594,4 +594,4 @@ AGENT_CARD = {
 
 ## Key Constraint
 
-**NEW WORK ONLY.** All code must be written from scratch at the event. No copying from RefereAI, Undervolt, or any other repo. Domain knowledge and patterns in our heads are fine. Code is not.
+**NEW WORK ONLY.** All code must be written from scratch at the event. No copying from any prior repo. Domain knowledge and patterns in our heads are fine. Code is not.
