@@ -6,12 +6,15 @@ Usage (in Codespace):
     python -m actions.robot.demo --save              # save frames to disk
 """
 
+import os
+# Must be set before any mujoco import to avoid GLFW/X11 errors in headless environments
+os.environ.setdefault("MUJOCO_GL", "osmesa")
+
 import argparse
 import asyncio
 import base64
 import json
 import logging
-import os
 import sys
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from io import BytesIO

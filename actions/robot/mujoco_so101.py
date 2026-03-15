@@ -9,6 +9,10 @@ import logging
 import os
 from pathlib import Path
 
+# Force offscreen rendering before importing mujoco (avoids GLFW/X11 errors)
+if "MUJOCO_GL" not in os.environ:
+    os.environ["MUJOCO_GL"] = "osmesa"
+
 import numpy as np
 
 try:
