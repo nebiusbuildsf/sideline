@@ -293,6 +293,11 @@ async def simulation():
     return FileResponse("dashboard/simulation.html")
 
 
+@app.get("/robots")
+async def robots():
+    return FileResponse("dashboard/robots.html")
+
+
 # --- A2A Agent Card ---
 
 @app.get("/.well-known/agent.json")

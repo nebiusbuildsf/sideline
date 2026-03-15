@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sideline — Robot Simulation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+    </script>
+    <style>
+        :root {
+            --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
+            --border: #27272a; --text: #fafafa; --secondary: #a1a1aa; --dim: #71717a;
+            --accent: #3b82f6; --purple: #a855f7; --green: #22c55e;
+            --yellow: #eab308; --red: #ef4444; --teal: #14b8a6;
+            --font: 'Inter', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; min-height: 100vh; overflow: hidden; }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 56px;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 10px; }
+        .nav-logo { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; }
+        .nav-name { font-size: 15px; font-weight: 700; }
+        .nav-name span { color: var(--secondary); font-weight: 400; font-size: 13px; margin-left: 6px; }
+        .nav-links { display: flex; gap: 4px; }
+        .nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--secondary); text-decoration: none; transition: all 0.15s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--elevated); }
+
+        #three-canvas { position: fixed; top: 56px; left: 0; right: 0; bottom: 0; }
+
+        /* Overlay panels */
+        .panel {
+            position: fixed; z-index: 50; background: rgba(15,15,18,0.92);
+            backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 16px;
+            overflow: hidden;
+        }
+        .panel-title {
+            padding: 14px 18px; border-bottom: 1px solid var(--border);
+            font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+        }
+        .panel-body { padding: 14px 18px; }
+
+        /* Robot selector */
+        .robot-panel { top: 72px; left: 16px; width: 260px; }
+        .robot-btn {
+            width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--elevated); color: var(--text); font-family: var(--font);
+            font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 6px; text-align: left;
+        }
+        .robot-btn:hover { border-color: #444; }
+        .robot-btn.active { border-color: var(--accent); background: #3b82f610; }
+        .robot-btn .tier {
+            font-family: var(--mono); font-size: 10px; padding: 2px 6px;
+            border-radius: 4px; background: var(--bg); color: var(--dim); margin-left: auto;
+        }
+        .robot-btn .material-symbols-outlined { font-size: 18px; color: var(--accent); }
+
+        /* Gesture panel */
+        .gesture-panel { top: 72px; right: 16px; width: 280px; }
+        .gesture-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .gesture-btn {
+            padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--elevated); color: var(--text); font-family: var(--font);
+            font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .gesture-btn:hover { border-color: var(--accent); background: #3b82f610; }
+        .gesture-btn.playing { border-color: var(--green); background: #22c55e10; color: var(--green); }
+        .gesture-btn .material-symbols-outlined { font-size: 16px; }
+
+        /* Status panel */
+        .status-panel { bottom: 16px; left: 16px; right: 16px; }
+        .status-bar {
+            display: flex; align-items: center; gap: 16px; padding: 2px 0;
+        }
+        .status-item {
+            font-family: var(--mono); font-size: 11px; color: var(--dim);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .status-dot.on { background: var(--green); box-shadow: 0 0 6px #22c55e40; }
+        .status-dot.off { background: var(--dim); }
+        .status-label { color: var(--secondary); }
+
+        /* Event log overlay */
+        .log-panel { bottom: 70px; right: 16px; width: 280px; max-height: 260px; }
+        .log-body { max-height: 200px; overflow-y: auto; }
+        .log-entry {
+            font-family: var(--mono); font-size: 11px; padding: 5px 0;
+            border-bottom: 1px solid rgba(39,39,42,0.5); display: flex; gap: 8px;
+        }
+        .log-entry:last-child { border-bottom: none; }
+        .log-time { color: var(--dim); min-width: 36px; }
+        .log-action { color: var(--accent); }
+        .log-detail { color: var(--secondary); }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo">S</div>
+            <div class="nav-name">sideline <span>Robot Sim</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/referee">Referee</a>
+            <a href="/playground">Playground</a>
+            <a href="/simulation">Court Sim</a>
+            <a href="/robots" class="active">Robots</a>
+            <a href="https://github.com/nebiusbuildsf/sideline" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <div id="three-canvas"></div>
+
+    <!-- Robot Selector -->
+    <div class="panel robot-panel">
+        <div class="panel-title">
+            <span class="material-symbols-outlined" style="font-size:14px">smart_toy</span> Robot
+        </div>
+        <div class="panel-body">
+            <button class="robot-btn active" onclick="selectRobot('arm')" id="btn-arm">
+                <span class="material-symbols-outlined">precision_manufacturing</span>
+                SO-101 Arm
+                <span class="tier">Tier 2</span>
+            </button>
+            <button class="robot-btn" onclick="selectRobot('humanoid')" id="btn-humanoid">
+                <span class="material-symbols-outlined">directions_walk</span>
+                Unitree G1
+                <span class="tier">Tier 3</span>
+            </button>
+            <button class="robot-btn" onclick="selectRobot('rover')" id="btn-rover">
+                <span class="material-symbols-outlined">adb</span>
+                MentorPi
+                <span class="tier">Tier 1</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Gesture Controls -->
+    <div class="panel gesture-panel">
+        <div class="panel-title">
+            <span class="material-symbols-outlined" style="font-size:14px">gesture</span> Gestures
+        </div>
+        <div class="panel-body">
+            <div class="gesture-grid" id="gesture-grid">
+                <button class="gesture-btn" onclick="playGesture('point_right')">
+                    <span class="material-symbols-outlined">east</span> Point Out
+                </button>
+                <button class="gesture-btn" onclick="playGesture('arm_raise')">
+                    <span class="material-symbols-outlined">back_hand</span> Arm Raise
+                </button>
+                <button class="gesture-btn" onclick="playGesture('fault')">
+                    <span class="material-symbols-outlined">block</span> Fault
+                </button>
+                <button class="gesture-btn" onclick="playGesture('safe')">
+                    <span class="material-symbols-outlined">check_circle</span> Safe / In
+                </button>
+                <button class="gesture-btn" onclick="playGesture('wave')">
+                    <span class="material-symbols-outlined">waving_hand</span> Wave
+                </button>
+                <button class="gesture-btn" onclick="playGesture('idle')">
+                    <span class="material-symbols-outlined">person_outline</span> Idle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Log -->
+    <div class="panel log-panel">
+        <div class="panel-title">
+            <span class="material-symbols-outlined" style="font-size:14px">list</span> Actions
+        </div>
+        <div class="panel-body log-body" id="log-body"></div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="panel status-panel">
+        <div class="panel-body" style="padding:10px 18px">
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-dot on"></div>
+                    <span class="status-label" id="robot-label">SO-101 Arm</span>
+                </div>
+                <div class="status-item">
+                    <span class="material-symbols-outlined" style="font-size:13px">animation</span>
+                    <span id="gesture-label">idle</span>
+                </div>
+                <div class="status-item">
+                    <span class="material-symbols-outlined" style="font-size:13px">speed</span>
+                    <span id="joint-info">6 DOF</span>
+                </div>
+                <div class="status-item" style="margin-left:auto">
+                    <span class="material-symbols-outlined" style="font-size:13px">wifi</span>
+                    <span id="ws-status">connecting...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ─── Scene Setup ───
+const container = document.getElementById('three-canvas');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x09090b);
+scene.fog = new THREE.Fog(0x09090b, 15, 35);
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / (window.innerHeight - 56), 0.1, 100);
+camera.position.set(4, 3, 6);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight - 56);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+container.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.target.set(0, 1.2, 0);
+
+// ─── Lighting ───
+const ambient = new THREE.AmbientLight(0x404060, 0.6);
+scene.add(ambient);
+
+const key = new THREE.DirectionalLight(0xffffff, 1.2);
+key.position.set(5, 8, 4);
+key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+key.shadow.camera.near = 0.5;
+key.shadow.camera.far = 20;
+key.shadow.camera.left = -5;
+key.shadow.camera.right = 5;
+key.shadow.camera.top = 5;
+key.shadow.camera.bottom = -5;
+scene.add(key);
+
+const fill = new THREE.DirectionalLight(0x8888ff, 0.3);
+fill.position.set(-3, 4, -2);
+scene.add(fill);
+
+const rim = new THREE.PointLight(0x3b82f6, 0.5, 15);
+rim.position.set(-2, 3, -4);
+scene.add(rim);
+
+// ─── Ground ───
+const groundGeo = new THREE.PlaneGeometry(30, 30);
+const groundMat = new THREE.MeshStandardMaterial({ color: 0x111114, roughness: 0.9 });
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Grid
+const grid = new THREE.GridHelper(20, 40, 0x222228, 0x18181b);
+grid.position.y = 0.01;
+scene.add(grid);
+
+// ─── Materials ───
+const metalMat = new THREE.MeshStandardMaterial({ color: 0x555566, metalness: 0.8, roughness: 0.3 });
+const darkMat = new THREE.MeshStandardMaterial({ color: 0x222233, metalness: 0.6, roughness: 0.4 });
+const accentMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 0.5, roughness: 0.3 });
+const greenMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, metalness: 0.5, roughness: 0.3 });
+const redMat = new THREE.MeshStandardMaterial({ color: 0xef4444, metalness: 0.5, roughness: 0.3 });
+const bodyMat = new THREE.MeshStandardMaterial({ color: 0x333344, metalness: 0.7, roughness: 0.35 });
+const jointMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6, metalness: 0.6, roughness: 0.3, emissive: 0x1a3a6a, emissiveIntensity: 0.2 });
+
+// ─── SO-101 Robot Arm (6-DOF) ───
+const armGroup = new THREE.Group();
+const joints = []; // Store joint pivots for animation
+
+function buildArm() {
+    // Base platform
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 0.15, 32), darkMat);
+    base.position.y = 0.075;
+    base.castShadow = true;
+    armGroup.add(base);
+
+    // Base ring (accent)
+    const baseRing = new THREE.Mesh(new THREE.TorusGeometry(0.37, 0.02, 8, 32), accentMat);
+    baseRing.position.y = 0.15;
+    baseRing.rotation.x = Math.PI / 2;
+    armGroup.add(baseRing);
+
+    // Joint 1 — base rotation (yaw)
+    const j1 = new THREE.Group();
+    j1.position.y = 0.15;
+    armGroup.add(j1);
+    joints.push(j1);
+
+    const shoulder = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.12, 16), jointMat);
+    shoulder.castShadow = true;
+    j1.add(shoulder);
+
+    // Joint 2 — shoulder pitch
+    const j2 = new THREE.Group();
+    j2.position.y = 0.06;
+    j1.add(j2);
+    joints.push(j2);
+
+    // Upper arm
+    const upperArm = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.55, 0.08), metalMat);
+    upperArm.position.y = 0.3;
+    upperArm.castShadow = true;
+    j2.add(upperArm);
+
+    // Joint 3 — elbow
+    const j3 = new THREE.Group();
+    j3.position.y = 0.58;
+    j2.add(j3);
+    joints.push(j3);
+
+    const elbowJoint = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), jointMat);
+    elbowJoint.castShadow = true;
+    j3.add(elbowJoint);
+
+    // Lower arm
+    const lowerArm = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.45, 0.06), metalMat);
+    lowerArm.position.y = 0.25;
+    lowerArm.castShadow = true;
+    j3.add(lowerArm);
+
+    // Joint 4 — wrist pitch
+    const j4 = new THREE.Group();
+    j4.position.y = 0.5;
+    j3.add(j4);
+    joints.push(j4);
+
+    const wristJoint = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 12), jointMat);
+    wristJoint.castShadow = true;
+    j4.add(wristJoint);
+
+    // Joint 5 — wrist roll
+    const j5 = new THREE.Group();
+    j5.position.y = 0.04;
+    j4.add(j5);
+    joints.push(j5);
+
+    // Wrist segment
+    const wrist = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.12, 0.05), metalMat);
+    wrist.position.y = 0.06;
+    wrist.castShadow = true;
+    j5.add(wrist);
+
+    // Joint 6 — gripper
+    const j6 = new THREE.Group();
+    j6.position.y = 0.14;
+    j5.add(j6);
+    joints.push(j6);
+
+    // Gripper fingers
+    const fingerL = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.1, 0.04), accentMat);
+    fingerL.position.set(-0.03, 0.05, 0);
+    fingerL.castShadow = true;
+    j6.add(fingerL);
+
+    const fingerR = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.1, 0.04), accentMat);
+    fingerR.position.set(0.03, 0.05, 0);
+    fingerR.castShadow = true;
+    j6.add(fingerR);
+
+    // Indicator flag on gripper
+    const flag = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 0.05), greenMat);
+    flag.position.set(0, 0.12, 0);
+    j6.add(flag);
+
+    scene.add(armGroup);
+}
+
+// ─── Unitree G1 Humanoid ───
+const humanoidGroup = new THREE.Group();
+const hJoints = {}; // named joints
+
+function buildHumanoid() {
+    // Feet / base
+    const footL = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.04, 0.25), darkMat);
+    footL.position.set(-0.12, 0.02, 0);
+    footL.castShadow = true;
+    humanoidGroup.add(footL);
+
+    const footR = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.04, 0.25), darkMat);
+    footR.position.set(0.12, 0.02, 0);
+    footR.castShadow = true;
+    humanoidGroup.add(footR);
+
+    // Lower legs
+    const shinL = new THREE.Group(); shinL.position.set(-0.12, 0.04, 0);
+    humanoidGroup.add(shinL);
+    hJoints.shinL = shinL;
+    const shinLMesh = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.35, 0.08), bodyMat);
+    shinLMesh.position.y = 0.175; shinLMesh.castShadow = true;
+    shinL.add(shinLMesh);
+
+    const shinR = new THREE.Group(); shinR.position.set(0.12, 0.04, 0);
+    humanoidGroup.add(shinR);
+    hJoints.shinR = shinR;
+    const shinRMesh = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.35, 0.08), bodyMat);
+    shinRMesh.position.y = 0.175; shinRMesh.castShadow = true;
+    shinR.add(shinRMesh);
+
+    // Knees
+    const kneeJointL = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), jointMat);
+    kneeJointL.position.y = 0.37; shinL.add(kneeJointL);
+    const kneeJointR = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), jointMat);
+    kneeJointR.position.y = 0.37; shinR.add(kneeJointR);
+
+    // Upper legs
+    const thighL = new THREE.Group(); thighL.position.y = 0.37;
+    shinL.add(thighL); hJoints.thighL = thighL;
+    const thighLMesh = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.35, 0.09), bodyMat);
+    thighLMesh.position.y = 0.175; thighLMesh.castShadow = true;
+    thighL.add(thighLMesh);
+
+    const thighR = new THREE.Group(); thighR.position.y = 0.37;
+    shinR.add(thighR); hJoints.thighR = thighR;
+    const thighRMesh = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.35, 0.09), bodyMat);
+    thighRMesh.position.y = 0.175; thighRMesh.castShadow = true;
+    thighR.add(thighRMesh);
+
+    // Torso
+    const torso = new THREE.Group(); torso.position.set(0, 0.78, 0);
+    humanoidGroup.add(torso);
+    hJoints.torso = torso;
+
+    const torsoMesh = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.4, 0.18), bodyMat);
+    torsoMesh.position.y = 0.2; torsoMesh.castShadow = true;
+    torso.add(torsoMesh);
+
+    // Chest accent strip
+    const chestStrip = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.3, 0.19), accentMat);
+    chestStrip.position.set(0, 0.2, 0); torso.add(chestStrip);
+
+    // Head
+    const headGroup = new THREE.Group(); headGroup.position.y = 0.45;
+    torso.add(headGroup); hJoints.head = headGroup;
+
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.06, 8), bodyMat);
+    neck.castShadow = true; headGroup.add(neck);
+
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.18, 0.16), bodyMat);
+    head.position.y = 0.12; head.castShadow = true;
+    headGroup.add(head);
+
+    // Eyes (camera lenses)
+    const eyeL = new THREE.Mesh(new THREE.CircleGeometry(0.02, 12), accentMat);
+    eyeL.position.set(-0.035, 0.14, 0.081); headGroup.add(eyeL);
+    const eyeR = new THREE.Mesh(new THREE.CircleGeometry(0.02, 12), accentMat);
+    eyeR.position.set(0.035, 0.14, 0.081); headGroup.add(eyeR);
+
+    // Left arm
+    const shoulderL = new THREE.Group(); shoulderL.position.set(-0.2, 0.38, 0);
+    torso.add(shoulderL); hJoints.shoulderL = shoulderL;
+
+    const upperArmL = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.3, 0.07), bodyMat);
+    upperArmL.position.y = -0.15; upperArmL.castShadow = true;
+    shoulderL.add(upperArmL);
+
+    const elbowJointL = new THREE.Mesh(new THREE.SphereGeometry(0.04, 8, 8), jointMat);
+    elbowJointL.position.y = -0.32; shoulderL.add(elbowJointL);
+
+    const elbowL = new THREE.Group(); elbowL.position.y = -0.32;
+    shoulderL.add(elbowL); hJoints.elbowL = elbowL;
+
+    const forearmL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.28, 0.06), bodyMat);
+    forearmL.position.y = -0.14; forearmL.castShadow = true;
+    elbowL.add(forearmL);
+
+    const handL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, 0.04), metalMat);
+    handL.position.y = -0.3; handL.castShadow = true;
+    elbowL.add(handL);
+
+    // Right arm
+    const shoulderR = new THREE.Group(); shoulderR.position.set(0.2, 0.38, 0);
+    torso.add(shoulderR); hJoints.shoulderR = shoulderR;
+
+    const upperArmR = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.3, 0.07), bodyMat);
+    upperArmR.position.y = -0.15; upperArmR.castShadow = true;
+    shoulderR.add(upperArmR);
+
+    const elbowJointR = new THREE.Mesh(new THREE.SphereGeometry(0.04, 8, 8), jointMat);
+    elbowJointR.position.y = -0.32; shoulderR.add(elbowJointR);
+
+    const elbowR = new THREE.Group(); elbowR.position.y = -0.32;
+    shoulderR.add(elbowR); hJoints.elbowR = elbowR;
+
+    const forearmR = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.28, 0.06), bodyMat);
+    forearmR.position.y = -0.14; forearmR.castShadow = true;
+    elbowR.add(forearmR);
+
+    const handR = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, 0.04), metalMat);
+    handR.position.y = -0.3; handR.castShadow = true;
+    elbowR.add(handR);
+
+    humanoidGroup.visible = false;
+    scene.add(humanoidGroup);
+}
+
+// ─── MentorPi Rover ───
+const roverGroup = new THREE.Group();
+const roverParts = {};
+
+function buildRover() {
+    // Chassis
+    const chassis = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.12, 0.35), bodyMat);
+    chassis.position.y = 0.12; chassis.castShadow = true;
+    roverGroup.add(chassis);
+
+    // Top platform
+    const top = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.04, 0.3), darkMat);
+    top.position.y = 0.2; top.castShadow = true;
+    roverGroup.add(top);
+
+    // Camera mast
+    const mast = new THREE.Group(); mast.position.set(0.1, 0.22, 0);
+    roverGroup.add(mast); roverParts.mast = mast;
+
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.2, 8), metalMat);
+    pole.position.y = 0.1; mast.add(pole);
+
+    const camHead = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, 0.06), darkMat);
+    camHead.position.y = 0.22; camHead.castShadow = true;
+    mast.add(camHead);
+
+    const lens = new THREE.Mesh(new THREE.CircleGeometry(0.02, 12), accentMat);
+    lens.position.set(0, 0.22, 0.031); mast.add(lens);
+
+    // Speaker grille
+    const speaker = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.06, 0.02), metalMat);
+    speaker.position.set(-0.1, 0.15, 0.176); roverGroup.add(speaker);
+
+    // Lidar dome
+    const lidar = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.03, 16), accentMat);
+    lidar.position.set(-0.1, 0.24, 0); roverGroup.add(lidar);
+    roverParts.lidar = lidar;
+
+    // Mecanum wheels (4)
+    const wheelPositions = [
+        [-0.22, 0.06, 0.16], [0.22, 0.06, 0.16],
+        [-0.22, 0.06, -0.16], [0.22, 0.06, -0.16],
+    ];
+    roverParts.wheels = [];
+    wheelPositions.forEach(pos => {
+        const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.04, 12), darkMat);
+        wheel.position.set(...pos);
+        wheel.rotation.x = Math.PI / 2;
+        wheel.castShadow = true;
+        roverGroup.add(wheel);
+        roverParts.wheels.push(wheel);
+    });
+
+    roverGroup.visible = false;
+    scene.add(roverGroup);
+}
+
+// ─── Build All ───
+buildArm();
+buildHumanoid();
+buildRover();
+
+// ─── Robot Switching ───
+let currentRobot = 'arm';
+
+window.selectRobot = function(name) {
+    currentRobot = name;
+    armGroup.visible = name === 'arm';
+    humanoidGroup.visible = name === 'humanoid';
+    roverGroup.visible = name === 'rover';
+
+    document.querySelectorAll('.robot-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + name).classList.add('active');
+
+    const labels = { arm: 'SO-101 Arm', humanoid: 'Unitree G1', rover: 'MentorPi' };
+    const dofs = { arm: '6 DOF', humanoid: '23 DOF', rover: '4WD + Pan/Tilt' };
+    document.getElementById('robot-label').textContent = labels[name];
+    document.getElementById('joint-info').textContent = dofs[name];
+
+    // Adjust camera
+    if (name === 'arm') { camera.position.set(4, 3, 6); controls.target.set(0, 0.8, 0); }
+    if (name === 'humanoid') { camera.position.set(3, 2, 5); controls.target.set(0, 1.0, 0); }
+    if (name === 'rover') { camera.position.set(3, 2, 4); controls.target.set(0, 0.2, 0); }
+};
+
+// ─── Gesture Animation System ───
+let currentGesture = 'idle';
+let gestureTime = 0;
+let gestureActive = false;
+
+// Target angles for arm joints per gesture
+const armGestures = {
+    idle: [0, 0, 0, 0, 0, 0],
+    point_right: [1.2, -0.3, -0.8, 0, 0, 0],
+    arm_raise: [0, -0.2, -0.1, -0.1, 0, 0],
+    fault: [-0.5, 0.4, -1.5, -0.8, 0.5, 0],
+    safe: [0.3, -0.5, -0.5, 0, 0.3, 0],
+    wave: [0, -0.3, -0.6, 0, 0, 0],
+};
+
+// Target rotations for humanoid joints per gesture
+const humanoidGestures = {
+    idle: { shoulderL: [0,0,0], shoulderR: [0,0,0], elbowL: [0,0,0], elbowR: [0,0,0], head: [0,0,0], torso: [0,0,0] },
+    point_right: { shoulderL: [0,0,0], shoulderR: [0,0,-1.5], elbowR: [0,0,0], elbowL: [0,0,0], head: [0,0.3,0], torso: [0,0,0] },
+    arm_raise: { shoulderL: [0,0,0.3], shoulderR: [0,0,0.3], elbowL: [0,0,0], elbowR: [0,0,0], head: [-0.2,0,0], torso: [0,0,0] },
+    fault: { shoulderL: [-0.5,0,0.8], shoulderR: [-0.5,0,-0.8], elbowL: [-0.3,0,0], elbowR: [-0.3,0,0], head: [0,0,0], torso: [0,0,0] },
+    safe: { shoulderL: [0,0,1.2], shoulderR: [0,0,-1.2], elbowL: [0,0,0], elbowR: [0,0,0], head: [0,0,0], torso: [0,0,0] },
+    wave: { shoulderL: [0,0,0], shoulderR: [0,0,0.8], elbowR: [-1.0,0,0], elbowL: [0,0,0], head: [0,0.2,0], torso: [0,0,0] },
+};
+
+function lerpAngle(current, target, factor) {
+    return current + (target - current) * factor;
+}
+
+window.playGesture = function(name) {
+    currentGesture = name;
+    gestureTime = 0;
+    gestureActive = true;
+    document.getElementById('gesture-label').textContent = name;
+    addLog(name, currentRobot);
+
+    // Highlight button
+    document.querySelectorAll('.gesture-btn').forEach(b => b.classList.remove('playing'));
+    event.target.closest('.gesture-btn').classList.add('playing');
+    setTimeout(() => {
+        document.querySelectorAll('.gesture-btn').forEach(b => b.classList.remove('playing'));
+    }, 2000);
+};
+
+function animateArm(dt) {
+    const targets = armGestures[currentGesture] || armGestures.idle;
+    const speed = 3.0;
+
+    // Joint 0 — base yaw
+    joints[0].rotation.y = lerpAngle(joints[0].rotation.y, targets[0], dt * speed);
+    // Joint 1 — shoulder pitch
+    joints[1].rotation.z = lerpAngle(joints[1].rotation.z, targets[1], dt * speed);
+    // Joint 2 — elbow
+    joints[2].rotation.z = lerpAngle(joints[2].rotation.z, targets[2], dt * speed);
+    // Joint 3 — wrist pitch
+    joints[3].rotation.z = lerpAngle(joints[3].rotation.z, targets[3], dt * speed);
+    // Joint 4 — wrist roll
+    joints[4].rotation.y = lerpAngle(joints[4].rotation.y, targets[4], dt * speed);
+    // Joint 5 — gripper
+    joints[5].rotation.z = lerpAngle(joints[5].rotation.z, targets[5], dt * speed);
+
+    // Wave animation — oscillate wrist
+    if (currentGesture === 'wave') {
+        joints[3].rotation.z = Math.sin(gestureTime * 6) * 0.4;
+    }
+}
+
+function animateHumanoid(dt) {
+    const targets = humanoidGestures[currentGesture] || humanoidGestures.idle;
+    const speed = 3.0;
+
+    Object.keys(targets).forEach(jointName => {
+        const joint = hJoints[jointName];
+        if (!joint) return;
+        const t = targets[jointName];
+        joint.rotation.x = lerpAngle(joint.rotation.x, t[0], dt * speed);
+        joint.rotation.y = lerpAngle(joint.rotation.y, t[1], dt * speed);
+        joint.rotation.z = lerpAngle(joint.rotation.z, t[2], dt * speed);
+    });
+
+    // Wave — oscillate right forearm
+    if (currentGesture === 'wave') {
+        hJoints.elbowR.rotation.x = -1.0 + Math.sin(gestureTime * 6) * 0.5;
+    }
+
+    // Subtle idle sway
+    hJoints.torso.rotation.z = Math.sin(gestureTime * 0.8) * 0.01;
+}
+
+function animateRover(dt) {
+    // Camera mast tracks gesture
+    const mastTargets = {
+        idle: [0, 0], point_right: [0, 0.8], arm_raise: [-0.2, 0],
+        fault: [0, -0.5], safe: [0, 0], wave: [0, 0.3],
+    };
+    const mt = mastTargets[currentGesture] || [0, 0];
+    roverParts.mast.rotation.x = lerpAngle(roverParts.mast.rotation.x, mt[0], dt * 3);
+    roverParts.mast.rotation.y = lerpAngle(roverParts.mast.rotation.y, mt[1], dt * 3);
+
+    // Lidar spin
+    roverParts.lidar.rotation.y += dt * 4;
+
+    // Wheel spin when "moving"
+    if (currentGesture === 'point_right' || currentGesture === 'wave') {
+        roverParts.wheels.forEach(w => { w.rotation.z += dt * 8; });
+    }
+}
+
+// ─── Event Log ───
+function addLog(gesture, robot) {
+    const log = document.getElementById('log-body');
+    const el = document.createElement('div');
+    el.className = 'log-entry';
+    const t = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    el.innerHTML = `<span class="log-time">${t}</span><span class="log-action">${gesture}</span><span class="log-detail">→ ${robot}</span>`;
+    log.insertBefore(el, log.firstChild);
+    while (log.children.length > 20) log.removeChild(log.lastChild);
+}
+
+// ─── WebSocket ───
+function connectWS() {
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    const ws = new WebSocket(`${proto}://${location.host}/ws`);
+    ws.onopen = () => { document.getElementById('ws-status').textContent = 'connected'; };
+    ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'analysis' || msg.type === 'call') {
+            const data = msg.data;
+            (data.tool_calls || []).forEach(tc => {
+                if (tc.name === 'robot_gesture') {
+                    const g = tc.args.gesture || 'point_right';
+                    const mapped = Object.keys(armGestures).includes(g) ? g : 'point_right';
+                    playGesture(mapped);
+                }
+                if (tc.name === 'announce_call') {
+                    playGesture('arm_raise');
+                }
+            });
+        }
+    };
+    ws.onclose = () => {
+        document.getElementById('ws-status').textContent = 'reconnecting...';
+        setTimeout(connectWS, 2000);
+    };
+}
+connectWS();
+
+// ─── Render Loop ───
+const clock = new THREE.Clock();
+
+function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    gestureTime += dt;
+
+    if (currentRobot === 'arm') animateArm(dt);
+    if (currentRobot === 'humanoid') animateHumanoid(dt);
+    if (currentRobot === 'rover') animateRover(dt);
+
+    controls.update();
+    renderer.render(scene, camera);
+}
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / (window.innerHeight - 56);
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight - 56);
+});
+
+animate();
+</script>
+</body>
+</html>
