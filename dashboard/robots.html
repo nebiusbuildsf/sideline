@@ -125,9 +125,18 @@
         }
         .call-overlay.fault .call-text { color: #ff6666; text-shadow: 0 0 40px rgba(239,68,68,0.6); }
         .call-overlay.score .call-text { color: #55ffaa; text-shadow: 0 0 40px rgba(34,197,94,0.6); }
+
+        /* Embed mode — hide everything except the 3D canvas and call overlay */
+        body.embed nav,
+        body.embed .robot-panel,
+        body.embed .gesture-panel,
+        body.embed .log-panel,
+        body.embed .status-panel { display: none !important; }
+        body.embed #three-canvas { top: 0 !important; }
     </style>
 </head>
 <body>
+<script>if (location.search.includes('embed=1')) document.body.classList.add('embed');</script>
     <nav>
         <div class="nav-brand">
             <div class="nav-logo">S</div>

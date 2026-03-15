@@ -156,11 +156,23 @@ async def run_cached(cache_path: str):
         })
 
         # Replay tool calls
+        gesture_sent = False
         for tc in result.get("tool_calls", []):
             name = tc["name"]
             args = tc["args"]
             if name == "announce_call":
                 await ws_broadcast("call", args)
+                # Auto-generate robot gesture from call type
+                if not gesture_sent:
+                    gesture_map = {
+                        "fault": "fault", "double_fault": "fault",
+                        "out": "point_right", "ace": "arm_raise",
+                        "winner": "arm_raise", "let": "wave",
+                        "in": "safe",
+                    }
+                    g = gesture_map.get(args.get("call_type"), "arm_raise")
+                    await ws_broadcast("gesture", {"gesture": g, "direction": "right"})
+                    gesture_sent = True
             elif name == "update_score":
                 agent.state.update_score(args.get("player", "p1"), args.get("reason", ""))
                 await ws_broadcast("score", {
@@ -170,6 +182,7 @@ async def run_cached(cache_path: str):
                 })
             elif name == "robot_gesture":
                 await ws_broadcast("gesture", args)
+                gesture_sent = True
             elif name == "no_call":
                 await ws_broadcast("status", {"description": args.get("description", "Observing...")})
 
