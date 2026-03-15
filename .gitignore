@@ -1,8 +1,38 @@
 __pycache__/
 *.pyc
+*.pyo
 .venv/
 *.egg-info/
 dist/
+build/
 .env
-eval_results.json
+.env.*
+
+# Video assets (too large for git)
+video/clips/*.mp4
+video/clips/*.avi
+video/clips/*.mov
+video/clips/*.mkv
 assets/
+
+# Eval outputs
+eval_results.json
+eval_results/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude local config
+.Claude/
+.agents/
+skills-lock.json
+
+# Duplicate git dirs
+.git 2/
