@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sideline — Court Simulation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
+            --border: #27272a; --text: #fafafa; --secondary: #a1a1aa; --dim: #71717a;
+            --accent: #3b82f6; --purple: #a855f7; --green: #22c55e;
+            --yellow: #eab308; --red: #ef4444; --teal: #14b8a6;
+            --font: 'Inter', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; min-height: 100vh; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 32px; height: 56px;
+            background: rgba(9,9,11,0.8); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 10px; }
+        .nav-logo { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; }
+        .nav-name { font-size: 15px; font-weight: 700; }
+        .nav-name span { color: var(--secondary); font-weight: 400; font-size: 13px; margin-left: 6px; }
+        .nav-links { display: flex; gap: 4px; }
+        .nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--secondary); text-decoration: none; transition: all 0.15s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--elevated); }
+
+        .page { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+
+        .sim-header {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+        }
+        .sim-header h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+
+        /* Mode switcher */
+        .mode-switcher {
+            display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 4px;
+        }
+        .mode-btn {
+            padding: 8px 16px; border-radius: 8px; border: none; background: none;
+            color: var(--secondary); font-family: var(--font); font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px;
+        }
+        .mode-btn:hover { color: var(--text); }
+        .mode-btn.active { background: var(--elevated); color: var(--text); }
+        .mode-btn .material-symbols-outlined { font-size: 16px; }
+
+        /* Layout */
+        .sim-layout {
+            display: grid; grid-template-columns: 1fr 320px; gap: 16px;
+            height: calc(100vh - 150px);
+        }
+
+        .sim-canvas-wrap {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            overflow: hidden; position: relative;
+        }
+        canvas { width: 100%; height: 100%; display: block; }
+
+        /* Right sidebar */
+        .sim-sidebar {
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .sim-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            overflow: hidden;
+        }
+        .sim-card-title {
+            padding: 14px 18px; border-bottom: 1px solid var(--border);
+            font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+        }
+        .sim-card-body { padding: 14px 18px; }
+
+        /* Scoreboard */
+        .score-row {
+            display: flex; align-items: center; justify-content: center; gap: 20px;
+            padding: 8px 0;
+        }
+        .score-player { text-align: center; }
+        .score-name { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .score-pts { font-family: var(--mono); font-size: 32px; font-weight: 700; }
+        .score-detail { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-top: 2px; }
+        .score-sep { font-size: 24px; color: var(--dim); }
+
+        /* Events log */
+        .event-log { max-height: 280px; overflow-y: auto; }
+        .event-item {
+            padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px;
+            display: flex; gap: 8px; align-items: flex-start;
+        }
+        .event-item:last-child { border-bottom: none; }
+        .event-time { font-family: var(--mono); font-size: 10px; color: var(--dim); min-width: 40px; padding-top: 2px; }
+        .event-badge {
+            font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
+        }
+        .event-badge.call { background: #3b82f620; color: var(--accent); }
+        .event-badge.score { background: #22c55e18; color: var(--green); }
+        .event-badge.gesture { background: #eab30818; color: var(--yellow); }
+        .event-text { color: var(--secondary); }
+
+        /* Controls */
+        .controls { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ctrl-btn {
+            padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--elevated); color: var(--text); font-family: var(--font);
+            font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .ctrl-btn:hover { border-color: #444; }
+        .ctrl-btn.accent { background: var(--accent); border-color: var(--accent); }
+        .ctrl-btn .material-symbols-outlined { font-size: 14px; }
+
+        .speed-control {
+            display: flex; align-items: center; gap: 8px; margin-top: 10px;
+        }
+        .speed-control label { font-size: 11px; color: var(--dim); }
+        .speed-control input[type=range] { flex: 1; accent-color: var(--accent); }
+        .speed-val { font-family: var(--mono); font-size: 11px; color: var(--secondary); min-width: 30px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo">S</div>
+            <div class="nav-name">sideline <span>Simulation</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/referee">Referee</a>
+            <a href="/playground">Playground</a>
+            <a href="/simulation" class="active">Simulation</a>
+            <a href="https://github.com/nebiusbuildsf/sideline" target="_blank">GitHub</a>
+        </div>
+    </nav>
+
+    <div class="page">
+        <div class="sim-header">
+            <h1>Court Simulation</h1>
+            <div class="mode-switcher">
+                <button class="mode-btn active" onclick="setMode('2d')">
+                    <span class="material-symbols-outlined">grid_on</span> 2D Court
+                </button>
+                <button class="mode-btn" onclick="setMode('physics')">
+                    <span class="material-symbols-outlined">science</span> Physics
+                </button>
+                <button class="mode-btn" onclick="setMode('heatmap')">
+                    <span class="material-symbols-outlined">thermostat</span> Heatmap
+                </button>
+                <button class="mode-btn" onclick="setMode('trajectory')">
+                    <span class="material-symbols-outlined">timeline</span> Trajectory
+                </button>
+            </div>
+        </div>
+
+        <div class="sim-layout">
+            <div class="sim-canvas-wrap">
+                <canvas id="sim-canvas"></canvas>
+            </div>
+
+            <div class="sim-sidebar">
+                <!-- Scoreboard -->
+                <div class="sim-card">
+                    <div class="sim-card-title">
+                        <span class="material-symbols-outlined" style="font-size:14px">scoreboard</span> Score
+                    </div>
+                    <div class="sim-card-body">
+                        <div class="score-row">
+                            <div class="score-player">
+                                <div class="score-name">Player 1</div>
+                                <div class="score-pts" id="s-p1">0</div>
+                                <div class="score-detail" id="s-p1-detail">0-0</div>
+                            </div>
+                            <div class="score-sep">:</div>
+                            <div class="score-player">
+                                <div class="score-name">Player 2</div>
+                                <div class="score-pts" id="s-p2">0</div>
+                                <div class="score-detail" id="s-p2-detail">0-0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="sim-card">
+                    <div class="sim-card-title">
+                        <span class="material-symbols-outlined" style="font-size:14px">tune</span> Controls
+                    </div>
+                    <div class="sim-card-body">
+                        <div class="controls">
+                            <button class="ctrl-btn accent" id="play-btn" onclick="togglePlay()">
+                                <span class="material-symbols-outlined">play_arrow</span> Play
+                            </button>
+                            <button class="ctrl-btn" onclick="resetSim()">
+                                <span class="material-symbols-outlined">restart_alt</span> Reset
+                            </button>
+                            <button class="ctrl-btn" onclick="triggerServe()">
+                                <span class="material-symbols-outlined">sports_tennis</span> Serve
+                            </button>
+                            <button class="ctrl-btn" onclick="triggerFault()">
+                                <span class="material-symbols-outlined">error</span> Fault
+                            </button>
+                        </div>
+                        <div class="speed-control">
+                            <label>Speed</label>
+                            <input type="range" min="0.25" max="3" step="0.25" value="1" oninput="setSpeed(this.value)">
+                            <span class="speed-val" id="speed-val">1x</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events -->
+                <div class="sim-card" style="flex:1;display:flex;flex-direction:column">
+                    <div class="sim-card-title">
+                        <span class="material-symbols-outlined" style="font-size:14px">list</span> Events
+                    </div>
+                    <div class="sim-card-body event-log" id="event-log"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ─── State ───
+const canvas = document.getElementById('sim-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+let mode = '2d';
+let playing = false;
+let speed = 1;
+let t = 0;
+
+// Ball
+let ball = { x: 0, y: 0, vx: 0, vy: 0, trail: [], bouncing: false };
+// Players
+let p1 = { x: 0, y: 0, targetX: 0, targetY: 0 };
+let p2 = { x: 0, y: 0, targetX: 0, targetY: 0 };
+// Heatmap data
+let heatmap = [];
+const HEAT_RES = 40;
+// Score
+let score = { p1: 0, p2: 0 };
+const PTS = ['0', '15', '30', '40', 'AD'];
+
+// Court dimensions (proportional)
+const COURT = {
+    // Tennis court proportions (78ft x 36ft doubles, 27ft singles)
+    w: 0.7, h: 0.85,
+    netY: 0.5,
+    serviceL: 0.28,
+    serviceR: 0.72,
+    singlesSide: 0.12,
+};
+
+// ─── Resize ───
+function resize() {
+    const wrap = canvas.parentElement;
+    canvas.width = wrap.clientWidth * devicePixelRatio;
+    canvas.height = wrap.clientHeight * devicePixelRatio;
+    W = canvas.width;
+    H = canvas.height;
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    W = wrap.clientWidth;
+    H = wrap.clientHeight;
+
+    // Init heatmap grid
+    heatmap = Array.from({ length: HEAT_RES }, () => new Float32Array(HEAT_RES));
+
+    // Init positions
+    resetPositions();
+}
+
+function resetPositions() {
+    const cx = W / 2, cy = H / 2;
+    const cw = W * COURT.w, ch = H * COURT.h;
+    const left = (W - cw) / 2, top = (H - ch) / 2;
+
+    ball.x = cx;
+    ball.y = top + ch * 0.2;
+    ball.vx = 0;
+    ball.vy = 0;
+    ball.trail = [];
+    ball.bouncing = false;
+
+    p1.x = cx; p1.y = top + ch * 0.15;
+    p1.targetX = p1.x; p1.targetY = p1.y;
+
+    p2.x = cx; p2.y = top + ch * 0.85;
+    p2.targetX = p2.x; p2.targetY = p2.y;
+}
+
+// ─── Court Drawing ───
+function courtRect() {
+    const cw = W * COURT.w, ch = H * COURT.h;
+    return { x: (W - cw) / 2, y: (H - ch) / 2, w: cw, h: ch };
+}
+
+function drawCourt() {
+    const c = courtRect();
+    const mid = c.y + c.h / 2;
+
+    // Court surface
+    ctx.fillStyle = '#1a4f2a';
+    ctx.fillRect(c.x, c.y, c.w, c.h);
+
+    // Lines
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+
+    // Outer boundary
+    ctx.strokeRect(c.x, c.y, c.w, c.h);
+
+    // Singles sidelines
+    const sl = c.w * 0.08;
+    ctx.strokeRect(c.x + sl, c.y, c.w - sl * 2, c.h);
+
+    // Net
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#cccccc';
+    ctx.beginPath();
+    ctx.moveTo(c.x, mid);
+    ctx.lineTo(c.x + c.w, mid);
+    ctx.stroke();
+
+    // Net posts
+    ctx.fillStyle = '#888888';
+    ctx.fillRect(c.x - 4, mid - 3, 8, 6);
+    ctx.fillRect(c.x + c.w - 4, mid - 3, 8, 6);
+
+    // Service boxes
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    const serviceTop = c.y + c.h * 0.25;
+    const serviceBot = c.y + c.h * 0.75;
+    const centerX = c.x + c.w / 2;
+
+    // Top service boxes
+    ctx.strokeRect(c.x + sl, serviceTop, (c.w - sl * 2) / 2, mid - serviceTop);
+    ctx.strokeRect(centerX, serviceTop, (c.w - sl * 2) / 2, mid - serviceTop);
+
+    // Bottom service boxes
+    ctx.strokeRect(c.x + sl, mid, (c.w - sl * 2) / 2, serviceBot - mid);
+    ctx.strokeRect(centerX, mid, (c.w - sl * 2) / 2, serviceBot - mid);
+
+    // Center service line
+    ctx.beginPath();
+    ctx.moveTo(centerX, serviceTop);
+    ctx.lineTo(centerX, serviceBot);
+    ctx.stroke();
+
+    // Center marks
+    ctx.beginPath();
+    ctx.moveTo(centerX, c.y);
+    ctx.lineTo(centerX, c.y + 10);
+    ctx.moveTo(centerX, c.y + c.h);
+    ctx.lineTo(centerX, c.y + c.h - 10);
+    ctx.stroke();
+}
+
+// ─── Player Drawing ───
+function drawPlayer(p, color, label) {
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.beginPath();
+    ctx.ellipse(p.x + 2, p.y + 2, 14, 14, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Body
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Label
+    ctx.fillStyle = '#fff';
+    ctx.font = '700 10px Inter';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, p.x, p.y);
+}
+
+// ─── Ball Drawing ───
+function drawBall() {
+    // Trail
+    if (mode === 'trajectory' || mode === '2d') {
+        ctx.beginPath();
+        for (let i = 0; i < ball.trail.length; i++) {
+            const pt = ball.trail[i];
+            const alpha = i / ball.trail.length;
+            if (i === 0) ctx.moveTo(pt.x, pt.y);
+            else ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.strokeStyle = mode === 'trajectory' ? '#eab308' : 'rgba(234,179,8,0.3)';
+        ctx.lineWidth = mode === 'trajectory' ? 3 : 1.5;
+        ctx.stroke();
+    }
+
+    // Ball shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.beginPath();
+    ctx.arc(ball.x + 2, ball.y + 2, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Ball
+    const grad = ctx.createRadialGradient(ball.x - 2, ball.y - 2, 1, ball.x, ball.y, 6);
+    grad.addColorStop(0, '#ffff00');
+    grad.addColorStop(1, '#b8a000');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bounce indicator
+    if (ball.bouncing) {
+        ctx.strokeStyle = 'rgba(234,179,8,0.6)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, 16 + Math.sin(t * 10) * 4, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+}
+
+// ─── Heatmap Drawing ───
+function drawHeatmap() {
+    const c = courtRect();
+    const cellW = c.w / HEAT_RES;
+    const cellH = c.h / HEAT_RES;
+
+    for (let i = 0; i < HEAT_RES; i++) {
+        for (let j = 0; j < HEAT_RES; j++) {
+            const val = Math.min(heatmap[i][j], 1);
+            if (val > 0.01) {
+                const r = Math.floor(255 * Math.min(val * 2, 1));
+                const g = Math.floor(255 * Math.max(0, 1 - val * 2));
+                ctx.fillStyle = `rgba(${r},${g},0,${val * 0.6})`;
+                ctx.fillRect(c.x + j * cellW, c.y + i * cellH, cellW + 1, cellH + 1);
+            }
+        }
+    }
+}
+
+// ─── Physics Mode Overlay ───
+function drawPhysicsOverlay() {
+    // Velocity vector
+    if (Math.abs(ball.vx) > 0.1 || Math.abs(ball.vy) > 0.1) {
+        const scale = 15;
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(ball.x, ball.y);
+        ctx.lineTo(ball.x + ball.vx * scale, ball.y + ball.vy * scale);
+        ctx.stroke();
+
+        // Arrowhead
+        const angle = Math.atan2(ball.vy, ball.vx);
+        const ax = ball.x + ball.vx * scale;
+        const ay = ball.y + ball.vy * scale;
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax - 8 * Math.cos(angle - 0.4), ay - 8 * Math.sin(angle - 0.4));
+        ctx.lineTo(ax - 8 * Math.cos(angle + 0.4), ay - 8 * Math.sin(angle + 0.4));
+        ctx.fill();
+
+        // Speed readout
+        const spd = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+        ctx.fillStyle = '#ef4444';
+        ctx.font = '600 11px JetBrains Mono';
+        ctx.textAlign = 'left';
+        ctx.fillText(`${(spd * 10).toFixed(0)} km/h`, ax + 8, ay - 4);
+    }
+
+    // Grid overlay
+    ctx.strokeStyle = 'rgba(59,130,246,0.08)';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < W; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    // Coordinates
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '500 10px JetBrains Mono';
+    ctx.textAlign = 'left';
+    ctx.fillText(`ball: (${ball.x.toFixed(0)}, ${ball.y.toFixed(0)})`, 12, H - 36);
+    ctx.fillText(`vel: (${ball.vx.toFixed(1)}, ${ball.vy.toFixed(1)})`, 12, H - 22);
+    ctx.fillText(`t: ${t.toFixed(1)}s`, 12, H - 8);
+}
+
+// ─── Trajectory Mode Overlay ───
+function drawTrajectoryOverlay() {
+    // Predicted path (parabolic)
+    if (Math.abs(ball.vx) > 0.1 || Math.abs(ball.vy) > 0.1) {
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = 'rgba(234,179,8,0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        let px = ball.x, py = ball.y, pvx = ball.vx, pvy = ball.vy;
+        ctx.moveTo(px, py);
+        for (let i = 0; i < 60; i++) {
+            px += pvx * 2;
+            py += pvy * 2;
+            pvx *= 0.98;
+            pvy *= 0.98;
+            ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // Landing zone prediction
+    if (Math.abs(ball.vy) > 1) {
+        const c = courtRect();
+        const targetY = ball.vy > 0 ? c.y + c.h : c.y;
+        const timeToTarget = (targetY - ball.y) / ball.vy;
+        if (timeToTarget > 0 && timeToTarget < 100) {
+            const landX = ball.x + ball.vx * timeToTarget;
+            ctx.strokeStyle = 'rgba(234,179,8,0.5)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(landX, targetY, 12, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(landX, targetY, 3, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(234,179,8,0.5)';
+            ctx.fill();
+        }
+    }
+}
+
+// ─── Simulation Update ───
+function update(dt) {
+    if (!playing) return;
+
+    t += dt * speed;
+
+    // Move ball
+    ball.x += ball.vx * speed;
+    ball.y += ball.vy * speed;
+
+    // Trail
+    ball.trail.push({ x: ball.x, y: ball.y });
+    if (ball.trail.length > 120) ball.trail.shift();
+
+    // Court bounds check
+    const c = courtRect();
+    const net = c.y + c.h / 2;
+
+    // Bounce off side walls
+    if (ball.x < c.x + 6 || ball.x > c.x + c.w - 6) {
+        ball.vx *= -0.8;
+        ball.x = Math.max(c.x + 6, Math.min(c.x + c.w - 6, ball.x));
+        addEvent('call', 'Out — side');
+    }
+
+    // Ball reaches baseline
+    if (ball.y < c.y || ball.y > c.y + c.h) {
+        ball.bouncing = true;
+        setTimeout(() => { ball.bouncing = false; }, 500);
+
+        if (ball.y < c.y) {
+            score.p2++;
+            addEvent('score', 'Point to Player 2');
+        } else {
+            score.p1++;
+            addEvent('score', 'Point to Player 1');
+        }
+        updateScore();
+        resetBall();
+    }
+
+    // Friction
+    ball.vx *= 0.999;
+    ball.vy *= 0.999;
+
+    // Heatmap update
+    const hi = Math.floor(((ball.y - c.y) / c.h) * HEAT_RES);
+    const hj = Math.floor(((ball.x - c.x) / c.w) * HEAT_RES);
+    if (hi >= 0 && hi < HEAT_RES && hj >= 0 && hj < HEAT_RES) {
+        heatmap[hi][hj] = Math.min(heatmap[hi][hj] + 0.02, 1);
+    }
+    // Decay
+    for (let i = 0; i < HEAT_RES; i++)
+        for (let j = 0; j < HEAT_RES; j++)
+            heatmap[i][j] *= 0.998;
+
+    // Move players toward ball (basic AI)
+    const targetP = ball.vy < 0 ? p1 : p2;
+    targetP.targetX = ball.x + (Math.random() - 0.5) * 30;
+    targetP.targetX = Math.max(c.x + 20, Math.min(c.x + c.w - 20, targetP.targetX));
+
+    // Smooth player movement
+    [p1, p2].forEach(p => {
+        p.x += (p.targetX - p.x) * 0.05 * speed;
+        p.y += (p.targetY - p.y) * 0.05 * speed;
+    });
+}
+
+function resetBall() {
+    const c = courtRect();
+    ball.x = c.x + c.w / 2 + (Math.random() - 0.5) * 60;
+    ball.y = c.y + c.h * 0.2;
+    ball.vx = (Math.random() - 0.5) * 3;
+    ball.vy = 2 + Math.random() * 2;
+    ball.trail = [];
+}
+
+// ─── Render Loop ───
+let lastTime = 0;
+function render(now) {
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    update(dt);
+
+    // Clear
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw layers based on mode
+    drawCourt();
+
+    if (mode === 'heatmap') drawHeatmap();
+
+    drawPlayer(p1, '#3b82f6', 'P1');
+    drawPlayer(p2, '#ef4444', 'P2');
+    drawBall();
+
+    if (mode === 'physics') drawPhysicsOverlay();
+    if (mode === 'trajectory') drawTrajectoryOverlay();
+
+    // Mode label
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.font = '700 11px Inter';
+    ctx.textAlign = 'right';
+    const labels = { '2d': '2D COURT', physics: 'PHYSICS', heatmap: 'HEATMAP', trajectory: 'TRAJECTORY' };
+    ctx.fillText(labels[mode], W - 16, 24);
+
+    requestAnimationFrame(render);
+}
+
+// ─── Controls ───
+function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    event.target.closest('.mode-btn').classList.add('active');
+}
+
+function togglePlay() {
+    playing = !playing;
+    const btn = document.getElementById('play-btn');
+    btn.innerHTML = playing
+        ? '<span class="material-symbols-outlined">pause</span> Pause'
+        : '<span class="material-symbols-outlined">play_arrow</span> Play';
+}
+
+function resetSim() {
+    score = { p1: 0, p2: 0 };
+    t = 0;
+    heatmap = Array.from({ length: HEAT_RES }, () => new Float32Array(HEAT_RES));
+    document.getElementById('event-log').innerHTML = '';
+    resetPositions();
+    updateScore();
+}
+
+function setSpeed(v) {
+    speed = parseFloat(v);
+    document.getElementById('speed-val').textContent = v + 'x';
+}
+
+function triggerServe() {
+    const c = courtRect();
+    ball.x = c.x + c.w * 0.35 + Math.random() * c.w * 0.3;
+    ball.y = c.y + c.h * 0.12;
+    ball.vx = (Math.random() - 0.5) * 4;
+    ball.vy = 3 + Math.random() * 3;
+    ball.trail = [];
+    addEvent('call', 'Serve');
+    if (!playing) togglePlay();
+}
+
+function triggerFault() {
+    const c = courtRect();
+    ball.x = c.x + c.w * 0.2 + Math.random() * c.w * 0.1;
+    ball.y = c.y + c.h * 0.12;
+    ball.vx = -3 + Math.random() * 2;
+    ball.vy = 4 + Math.random() * 2;
+    ball.trail = [];
+    addEvent('call', 'Fault!');
+    if (!playing) togglePlay();
+}
+
+function updateScore() {
+    document.getElementById('s-p1').textContent = PTS[Math.min(score.p1, 4)] || 'AD';
+    document.getElementById('s-p2').textContent = PTS[Math.min(score.p2, 4)] || 'AD';
+}
+
+function addEvent(type, text) {
+    const log = document.getElementById('event-log');
+    const el = document.createElement('div');
+    el.className = 'event-item';
+    el.innerHTML = `
+        <span class="event-time">${t.toFixed(1)}s</span>
+        <span class="event-badge ${type}">${type}</span>
+        <span class="event-text">${text}</span>
+    `;
+    log.insertBefore(el, log.firstChild);
+    while (log.children.length > 30) log.removeChild(log.lastChild);
+}
+
+// ─── WebSocket ───
+function connectWS() {
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    const ws = new WebSocket(`${proto}://${location.host}/ws`);
+    ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'analysis' || msg.type === 'call') {
+            const data = msg.data;
+            // Trigger ball movement on agent events
+            if (data.tool_calls) {
+                data.tool_calls.forEach(tc => {
+                    if (tc.name === 'update_score') {
+                        const player = tc.args.player;
+                        if (player === 'p1' || player === 'player1') score.p1++;
+                        else score.p2++;
+                        updateScore();
+                        addEvent('score', `Point to ${player}`);
+                    }
+                    if (tc.name === 'announce_call') {
+                        addEvent('call', tc.args.announcement || tc.args.call_type || '');
+                        triggerServe();
+                    }
+                    if (tc.name === 'robot_gesture') {
+                        addEvent('gesture', tc.args.gesture || '');
+                    }
+                });
+            }
+        }
+        if (msg.type === 'score') {
+            document.getElementById('s-p1').textContent = msg.data.score?.points?.p1 || '0';
+            document.getElementById('s-p2').textContent = msg.data.score?.points?.p2 || '0';
+        }
+    };
+    ws.onclose = () => setTimeout(connectWS, 2000);
+}
+
+// ─── Init ───
+window.addEventListener('resize', resize);
+resize();
+connectWS();
+requestAnimationFrame(render);
+</script>
+</body>
+</html>
