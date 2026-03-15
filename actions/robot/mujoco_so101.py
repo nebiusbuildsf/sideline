@@ -45,8 +45,8 @@ class MuJoCoSO101Adapter(RobotAdapter):
         mujoco.mj_forward(self.model, self.data)
 
         if not self.headless:
-            import mujoco.viewer
-            self.viewer_handle = mujoco.viewer.launch_passive(self.model, self.data)
+            from mujoco import viewer as mj_viewer
+            self.viewer_handle = mj_viewer.launch_passive(self.model, self.data)
 
         logger.info(f"MuJoCo SO-101 loaded: {self.scene_path} (headless={self.headless})")
         logger.info(f"  Actuators: {[self.model.actuator(i).name for i in range(self.model.nu)]}")
