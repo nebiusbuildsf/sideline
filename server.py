@@ -114,6 +114,24 @@ async def run_analysis(video_path: str):
 
 # --- REST API ---
 
+@app.post("/api/set-key")
+async def set_key(body: dict):
+    """Set Nebius API key and optionally switch model at runtime."""
+    global agent
+    key = body.get("key", "")
+    model = body.get("model", "")
+    if key:
+        os.environ["NEBIUS_API_KEY"] = key
+        agent = SidelineAgent(
+            sport=agent.sport if agent else "tennis",
+            model=model or (agent.model if agent else None),
+            mock=False,
+        )
+        logger.info(f"API key set, agent reinitialized (model={agent.model})")
+        return {"status": "ok", "mock": False, "model": agent.model}
+    return {"status": "error", "message": "No key provided"}
+
+
 @app.get("/health")
 async def health():
     return {"status": "ok", "agent": agent is not None, "mock": agent.mock if agent else None}

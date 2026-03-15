@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sideline — Playground</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <style>
         :root {
             --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
@@ -259,7 +260,7 @@
         <div class="pg-grid">
             <!-- Left: Input -->
             <div class="input-panel">
-                <div class="panel-title"><div class="icon" style="background:#3b82f620">📹</div> Input</div>
+                <div class="panel-title"><div class="icon" style="background:#3b82f620"><span class="material-symbols-outlined" style="font-size:12px">videocam</span></div> Input</div>
                 <div class="panel-body">
                     <div class="frame-preview" id="frame-preview">
                         <div class="empty" id="frame-empty">Drop an image or click to upload</div>
@@ -268,6 +269,11 @@
                     <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this)">
                     <button class="btn" onclick="document.getElementById('file-input').click()" style="margin-bottom:16px">Upload Frame</button>
 
+                    <div class="form-group">
+                        <label class="form-label">Nebius API Key</label>
+                        <input class="form-input" type="password" id="api-key-input" placeholder="Enter your Nebius API key..." style="font-family:var(--mono)">
+                        <div id="key-status" style="font-size:11px;margin-top:4px;color:var(--dim)"></div>
+                    </div>
                     <div class="form-group">
                         <label class="form-label">Vision Model</label>
                         <select class="form-select" id="model-select">
@@ -356,7 +362,7 @@
                         <div class="a2a-agents" id="a2a-agents">
                             <div class="a2a-agent-card">
                                 <div class="a2a-agent-header">
-                                    <div class="a2a-agent-icon" style="background:#3b82f620">🎾</div>
+                                    <div class="a2a-agent-icon" style="background:#3b82f620"><span class="material-symbols-outlined" style="font-size:16px">sports_tennis</span></div>
                                     <div class="a2a-agent-name">sideline-referee</div>
                                     <div class="a2a-agent-status online">online</div>
                                 </div>
@@ -369,7 +375,7 @@
                             </div>
                             <div class="a2a-agent-card">
                                 <div class="a2a-agent-header">
-                                    <div class="a2a-agent-icon" style="background:#a855f720">🎙</div>
+                                    <div class="a2a-agent-icon" style="background:#a855f720"><span class="material-symbols-outlined" style="font-size:16px">mic</span></div>
                                     <div class="a2a-agent-name">sideline-commentator</div>
                                     <div class="a2a-agent-status online">online</div>
                                 </div>
@@ -381,7 +387,7 @@
                             </div>
                             <div class="a2a-agent-card">
                                 <div class="a2a-agent-header">
-                                    <div class="a2a-agent-icon" style="background:#22c55e20">🤖</div>
+                                    <div class="a2a-agent-icon" style="background:#22c55e20"><span class="material-symbols-outlined" style="font-size:16px">smart_toy</span></div>
                                     <div class="a2a-agent-name">sideline-robot</div>
                                     <div class="a2a-agent-status offline">offline</div>
                                 </div>
@@ -399,7 +405,7 @@
 
             <!-- Right: Output -->
             <div class="output-panel">
-                <div class="panel-title"><div class="icon" style="background:#22c55e18">📊</div> Output</div>
+                <div class="panel-title"><div class="icon" style="background:#22c55e18"><span class="material-symbols-outlined" style="font-size:12px">analytics</span></div> Output</div>
                 <div class="output-stream" id="output-stream"></div>
                 <div class="scoreboard-mini">
                     <div class="sb-mini-player">
@@ -457,7 +463,18 @@ async function analyzeFrame() {
 
     const model = document.getElementById('model-select').value;
     const sport = document.getElementById('sport-select').value;
+    const apiKey = document.getElementById('api-key-input').value;
     const start = Date.now();
+
+    // Save API key to server if provided
+    if (apiKey) {
+        await fetch('/api/set-key', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({key: apiKey, model: model})
+        });
+        document.getElementById('key-status').innerHTML = '<span style="color:var(--green)">● Key set</span>';
+    }
 
     // Simulate tool call flow
     addToolCall('fn', 'VLM Inference', 'analyze_frame', {
@@ -546,7 +563,7 @@ function addToolCall(protocol, displayName, fnName, args, latency) {
     const protoLabel = protocol === 'mcp' ? 'MCP' : protocol === 'a2a' ? 'A2A' : 'Function Call';
     card.innerHTML = `
         <div class="tool-header">
-            <div class="tool-icon ${iconClass}">${protocol === 'mcp' ? '🔌' : protocol === 'a2a' ? '🔗' : '⚡'}</div>
+            <div class="tool-icon ${iconClass}"><span class="material-symbols-outlined" style="font-size:13px">${protocol === 'mcp' ? 'extension' : protocol === 'a2a' ? 'hub' : 'bolt'}</span></div>
             <div class="tool-name">${displayName}</div>
             <div class="tool-protocol">${protoLabel}</div>
         </div>
