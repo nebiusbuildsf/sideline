@@ -1,0 +1,10 @@
+{
+  "name": "Sideline - MuJoCo SO-101",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "postCreateCommand": "pip install mujoco numpy",
+  "forwardPorts": [6080, 8000],
+  "portsAttributes": {
+    "6080": { "label": "MuJoCo Viewer", "onAutoForward": "openBrowser" },
+    "8000": { "label": "Sideline API" }
+  }
+}
