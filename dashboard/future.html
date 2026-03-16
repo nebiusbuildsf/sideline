@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <style>
         :root {
-            --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
+            --bg: #0a0e1a; --surface: #0f0f12; --elevated: #18181b;
             --border: #27272a; --text: #fafafa; --secondary: #a1a1aa; --dim: #71717a;
             --accent: #3b82f6; --purple: #a855f7; --green: #22c55e;
             --yellow: #eab308; --red: #ef4444; --teal: #14b8a6; --pink: #ec4899;
@@ -81,10 +81,13 @@
         .ref-item h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
         .ref-item p { font-size: 11px; color: var(--dim); line-height: 1.5; }
         .ref-item a { color: var(--accent); font-size: 11px; font-family: var(--mono); }
+        .glow-blob { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; opacity: 0.15; }
     </style>
 </head>
-<body>
-<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-[#09090b]/85 backdrop-blur-md px-6 lg:px-20 py-4" style="font-family:'Inter',sans-serif">
+<body class="bg-[#0a0e1a]">
+<div class="relative overflow-hidden">
+<div class="glow-blob w-[600px] h-[600px] bg-[#067ff9] -top-48 -left-48 fixed"></div><div class="glow-blob w-[500px] h-[500px] bg-purple-600 top-[40%] -right-48 fixed"></div><div class="glow-blob w-[400px] h-[400px] bg-teal-500 bottom-0 left-[30%] fixed"></div>
+<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-[#0a0e1a]/80 backdrop-blur-md px-6 lg:px-20 py-4" style="font-family:'Inter',sans-serif">
 <div class="max-w-7xl mx-auto flex items-center justify-between">
     <a href="/" class="flex items-center gap-2">
         <span class="material-symbols-outlined text-[#067ff9] text-3xl">precision_manufacturing</span>
@@ -217,5 +220,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

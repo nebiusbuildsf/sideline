@@ -15,12 +15,14 @@ tailwind.config = {
     theme: { extend: { colors: { "primary": "#067ff9", "background-dark": "#09090b" }, fontFamily: { "display": ["Inter", "sans-serif"] } } },
 }
 </script>
-<style>body { font-family: 'Inter', sans-serif; }</style>
+<style>.glow-blob { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; opacity: 0.15; }
+body { font-family: 'Inter', sans-serif; }</style>
 </head>
-<body class="bg-background-dark text-slate-100 antialiased">
-<div class="relative flex min-h-screen w-full flex-col">
+<body class="bg-[#0a0e1a] text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-hidden">
+<div class="glow-blob w-[600px] h-[600px] bg-[#067ff9] -top-48 -left-48 fixed"></div><div class="glow-blob w-[500px] h-[500px] bg-purple-600 top-[40%] -right-48 fixed"></div><div class="glow-blob w-[400px] h-[400px] bg-teal-500 bottom-0 left-[30%] fixed"></div>
 
-<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-[#09090b]/85 backdrop-blur-md px-6 lg:px-20 py-4" style="font-family:'Inter',sans-serif">
+<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-[#0a0e1a]/80 backdrop-blur-md px-6 lg:px-20 py-4" style="font-family:'Inter',sans-serif">
 <div class="max-w-7xl mx-auto flex items-center justify-between">
     <a href="/" class="flex items-center gap-2">
         <span class="material-symbols-outlined text-[#067ff9] text-3xl">precision_manufacturing</span>
@@ -46,7 +48,7 @@ tailwind.config = {
     </div>
 
     <div class="grid md:grid-cols-2 gap-6 mb-20">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 hover:border-primary/30 transition-all">
+        <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-8 hover:border-primary/30 transition-all">
             <div class="flex items-center gap-5 mb-4">
                 <img src="https://www.gravatar.com/avatar/07e9975093e352d88e8a43b95bbf3295?s=128&d=identicon" class="w-16 h-16 rounded-2xl flex-shrink-0 object-cover">
                 <div>
@@ -58,7 +60,7 @@ tailwind.config = {
             <a href="https://linkedin.com/in/jravinder" target="_blank" class="text-primary text-sm hover:underline">LinkedIn →</a>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 hover:border-primary/30 transition-all">
+        <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-8 hover:border-primary/30 transition-all">
             <div class="flex items-center gap-5 mb-4">
                 <img src="https://www.gravatar.com/avatar/86cda34cda2a5d9032f1136331899803?s=128&d=identicon" class="w-16 h-16 rounded-2xl flex-shrink-0 object-cover">
                 <div>
@@ -70,7 +72,7 @@ tailwind.config = {
             <a href="https://linkedin.com/in/vivekgr" target="_blank" class="text-primary text-sm hover:underline">LinkedIn →</a>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 hover:border-primary/30 transition-all">
+        <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-8 hover:border-primary/30 transition-all">
             <div class="flex items-center gap-5 mb-4">
                 <img src="https://www.gravatar.com/avatar/9a749fa41fc70e48cd6df24e199c6d74?s=128&d=identicon" class="w-16 h-16 rounded-2xl flex-shrink-0 object-cover">
                 <div>
@@ -82,7 +84,7 @@ tailwind.config = {
             <a href="https://linkedin.com/in/kruthik-hulisandra" target="_blank" class="text-primary text-sm hover:underline">LinkedIn →</a>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 hover:border-primary/30 transition-all">
+        <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-8 hover:border-primary/30 transition-all">
             <div class="flex items-center gap-5 mb-4">
                 <img src="https://www.gravatar.com/avatar/cc24220be3f63b9408fa90b0511d79c0?s=128&d=identicon" class="w-16 h-16 rounded-2xl flex-shrink-0 object-cover">
                 <div>
@@ -95,7 +97,7 @@ tailwind.config = {
         </div>
     </div>
 
-    <div class="bg-slate-900 border border-slate-800 rounded-[32px] p-10 mb-16">
+    <div class="bg-white/[0.03] border border-white/10 rounded-[32px] p-10 mb-16">
         <h2 class="text-2xl font-bold mb-8">Tech Stack</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
             <div><p class="text-sm font-bold text-white mb-1">Inference</p><p class="text-sm text-slate-500">Nebius Token Factory — Qwen2.5-VL-72B</p></div>
@@ -114,7 +116,7 @@ tailwind.config = {
 </div>
 </main>
 
-<footer class="bg-background-dark border-t border-slate-800 py-12 px-6">
+<footer class="bg-[#0a0e1a] border-t border-white/5 py-12 px-6">
 <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
     <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-primary text-2xl">precision_manufacturing</span>

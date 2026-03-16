@@ -14,8 +14,8 @@
     </script>
     <style>
         :root {
-            --bg: #09090b; --surface: #0f0f12; --elevated: #18181b;
-            --border: #27272a; --text: #fafafa; --secondary: #a1a1aa; --dim: #71717a;
+            --bg: #0a0e1a; --surface: #0f1424; --elevated: #151c2e;
+            --border: #1e2a3a; --text: #fafafa; --secondary: #a1a1aa; --dim: #71717a;
             --accent: #3b82f6; --purple: #a855f7; --green: #22c55e;
             --yellow: #eab308; --red: #ef4444; --teal: #14b8a6;
             --font: 'Inter', -apple-system, sans-serif;
@@ -258,8 +258,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // ─── Scene Setup ───
 const container = document.getElementById('three-canvas');
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0d0d1a);
-scene.fog = new THREE.Fog(0x0d0d1a, 20, 45);
+scene.background = new THREE.Color(0x0a0e1a);
+scene.fog = new THREE.Fog(0x0a0e1a, 20, 45);
 
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / (window.innerHeight - 56), 0.1, 100);
 camera.position.set(4, 3, 6);
@@ -308,7 +308,7 @@ scene.add(front);
 
 // ─── Ground ───
 const groundGeo = new THREE.PlaneGeometry(30, 30);
-const groundMat = new THREE.MeshStandardMaterial({ color: 0x12121e, roughness: 0.85 });
+const groundMat = new THREE.MeshStandardMaterial({ color: 0x0a0e1a, roughness: 0.85 });
 const ground = new THREE.Mesh(groundGeo, groundMat);
 ground.rotation.x = -Math.PI / 2;
 ground.receiveShadow = true;

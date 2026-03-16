@@ -23,13 +23,15 @@ tailwind.config = {
 <style>
 body { font-family: 'Inter', sans-serif; }
 .glass-effect { background: rgba(15, 25, 35, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(6, 127, 249, 0.1); }
+.glow-blob { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; opacity: 0.15; }
 </style>
 </head>
-<body class="bg-background-dark text-slate-100 antialiased overflow-x-hidden">
-<div class="relative flex min-h-screen w-full flex-col">
+<body class="bg-[#0a0e1a] text-slate-100 antialiased overflow-x-hidden">
+<div class="relative flex min-h-screen w-full flex-col overflow-hidden">
+<div class="glow-blob w-[600px] h-[600px] bg-[#067ff9] -top-48 -left-48 fixed"></div><div class="glow-blob w-[500px] h-[500px] bg-purple-600 top-[40%] -right-48 fixed"></div><div class="glow-blob w-[400px] h-[400px] bg-teal-500 bottom-0 left-[30%] fixed"></div>
 
 <!-- Navigation -->
-<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-[#09090b]/85 backdrop-blur-md px-6 lg:px-20 py-4" style="font-family:'Inter',sans-serif">
+<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-[#0a0e1a]/80 backdrop-blur-md px-6 lg:px-20 py-4" style="font-family:'Inter',sans-serif">
 <div class="max-w-7xl mx-auto flex items-center justify-between">
     <a href="/" class="flex items-center gap-2">
         <span class="material-symbols-outlined text-[#067ff9] text-3xl">precision_manufacturing</span>
@@ -89,7 +91,7 @@ body { font-family: 'Inter', sans-serif; }
 </section>
 
 <!-- Stats -->
-<section class="py-20 bg-slate-900/50">
+<section class="py-20 bg-white/[0.02]">
 <div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="flex flex-col items-center text-center p-8 border border-slate-800 rounded-2xl hover:border-primary/50 transition-colors">
@@ -147,7 +149,7 @@ body { font-family: 'Inter', sans-serif; }
     </div>
 
     <!-- Architecture — one line -->
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 text-center">
+    <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-8 text-center">
         <p class="text-xs text-primary font-bold uppercase tracking-widest mb-4">Architecture</p>
         <p class="text-slate-300 text-lg font-mono font-medium">Camera &rarr; Nebius VLM &rarr; Agent &rarr; Score + Voice + Robot</p>
     </div>
@@ -155,24 +157,24 @@ body { font-family: 'Inter', sans-serif; }
 </section>
 
 <!-- Training & Feedback Loop — Answers judge questions -->
-<section class="py-24 px-6 bg-primary/5" id="training">
+<section class="py-24 px-6 bg-white/[0.02]" id="training">
 <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
         <h2 class="text-4xl lg:text-5xl font-bold mb-4">Zero Training Required</h2>
         <p class="text-slate-400 max-w-2xl mx-auto">Sideline uses a pre-trained vision-language model. No fine-tuning, no custom datasets, no waiting.</p>
     </div>
     <div class="grid md:grid-cols-3 gap-8 mb-16">
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
+        <div class="p-8 rounded-3xl bg-white/[0.03] border border-white/10 text-center">
             <span class="text-primary text-5xl font-black block mb-3">0</span>
             <p class="font-bold text-lg mb-2">Training Videos Needed</p>
             <p class="text-sm text-slate-400">The VLM already understands sports. We give it rules and context via prompts — no training data required.</p>
         </div>
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
+        <div class="p-8 rounded-3xl bg-white/[0.03] border border-white/10 text-center">
             <span class="text-primary text-5xl font-black block mb-3">&lt;5min</span>
             <p class="font-bold text-lg mb-2">Setup Time</p>
             <p class="text-sm text-slate-400">Point a camera at the court, pick a sport, hit start. The agent reads the rules, understands the game, and begins making calls.</p>
         </div>
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
+        <div class="p-8 rounded-3xl bg-white/[0.03] border border-white/10 text-center">
             <span class="text-primary text-5xl font-black block mb-3">Live</span>
             <p class="font-bold text-lg mb-2">Feedback Loop</p>
             <p class="text-sm text-slate-400">Players can challenge calls. The agent re-examines the frame, shows its reasoning, and either confirms or corrects — just like real VAR.</p>
@@ -180,7 +182,7 @@ body { font-family: 'Inter', sans-serif; }
     </div>
 
     <!-- Feedback loop — simple -->
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 lg:p-10 text-center">
+    <div class="bg-white/[0.03] border border-white/10 rounded-3xl p-8 lg:p-10 text-center">
         <p class="text-xs text-primary font-bold uppercase tracking-widest mb-4">Feedback Loop</p>
         <p class="text-slate-300 text-lg font-medium mb-2">Play &rarr; Call &rarr; Challenge &rarr; Learn</p>
         <p class="text-slate-500 text-sm max-w-lg mx-auto">Players can challenge any call. The agent re-examines the frame, explains its reasoning, and updates match context. Every decision informs the next.</p>
@@ -189,7 +191,7 @@ body { font-family: 'Inter', sans-serif; }
 </section>
 
 <!-- Skill Store / Sports -->
-<section class="py-24 px-6 bg-slate-900/30" id="sports">
+<section class="py-24 px-6 bg-white/[0.02]" id="sports">
 <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
         <h2 class="text-4xl lg:text-5xl font-bold mb-4">Sport Modules</h2>
@@ -197,7 +199,7 @@ body { font-family: 'Inter', sans-serif; }
     </div>
     <div class="grid md:grid-cols-3 gap-8">
         <!-- Tennis -->
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
+        <div class="bg-white/[0.03] border border-white/10 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="material-symbols-outlined text-primary text-3xl">sports_tennis</span>
@@ -205,15 +207,15 @@ body { font-family: 'Inter', sans-serif; }
                 </div>
                 <p class="text-slate-400 mb-8">Fault, out, ace, winner, let — full scoring with deuce and advantage. Ball tracking and line call analysis.</p>
                 <div class="space-y-4">
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                    <div class="flex items-center gap-3 bg-black/20 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
                         <span class="material-symbols-outlined text-primary text-sm">gavel</span>
                         <div><p class="text-xs font-bold uppercase tracking-wider">Official Mode</p><p class="text-[10px] text-slate-500">AI-driven officiating for matches.</p></div>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                    <div class="flex items-center gap-3 bg-black/20 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
                         <span class="material-symbols-outlined text-primary text-sm">school</span>
                         <div><p class="text-xs font-bold uppercase tracking-wider">Coach Mode</p><p class="text-[10px] text-slate-500">Real-time feedback and technique analysis.</p></div>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl">
+                    <div class="flex items-center gap-3 bg-black/20 p-3 rounded-xl">
                         <span class="material-symbols-outlined text-primary text-sm">swords</span>
                         <div><p class="text-xs font-bold uppercase tracking-wider">Competition Mode</p><p class="text-[10px] text-slate-500">Bot plays against you.</p><span class="ml-2 text-[8px] px-1.5 py-0.5 bg-slate-700 text-slate-400 rounded-full font-bold uppercase">WIP</span></div>
                     </div>
@@ -221,7 +223,7 @@ body { font-family: 'Inter', sans-serif; }
             </div>
         </div>
         <!-- Pickleball -->
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
+        <div class="bg-white/[0.03] border border-white/10 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="material-symbols-outlined text-primary text-3xl">sports_handball</span>
@@ -229,15 +231,15 @@ body { font-family: 'Inter', sans-serif; }
                 </div>
                 <p class="text-slate-400 mb-8">Kitchen violations, line calls, scoring — for the fastest-growing sport in America.</p>
                 <div class="space-y-4">
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                    <div class="flex items-center gap-3 bg-black/20 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
                         <span class="material-symbols-outlined text-primary text-sm">gavel</span>
                         <div><p class="text-xs font-bold uppercase tracking-wider">Official Mode</p><p class="text-[10px] text-slate-500">Automated line calls and score tracking.</p></div>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                    <div class="flex items-center gap-3 bg-black/20 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
                         <span class="material-symbols-outlined text-primary text-sm">school</span>
                         <div><p class="text-xs font-bold uppercase tracking-wider">Coach Mode</p><p class="text-[10px] text-slate-500">Kitchen play and positioning drills.</p></div>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl">
+                    <div class="flex items-center gap-3 bg-black/20 p-3 rounded-xl">
                         <span class="material-symbols-outlined text-primary text-sm">swords</span>
                         <div><p class="text-xs font-bold uppercase tracking-wider">Competition Mode</p><p class="text-[10px] text-slate-500">Interactive rallies.</p><span class="ml-2 text-[8px] px-1.5 py-0.5 bg-slate-700 text-slate-400 rounded-full font-bold uppercase">WIP</span></div>
                     </div>
@@ -245,7 +247,7 @@ body { font-family: 'Inter', sans-serif; }
             </div>
         </div>
         <!-- Volleyball -->
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
+        <div class="bg-white/[0.03] border border-white/10 rounded-3xl overflow-hidden hover:border-primary/50 transition-all">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-6">
                     <span class="material-symbols-outlined text-primary text-3xl">sports_volleyball</span>
@@ -253,15 +255,15 @@ body { font-family: 'Inter', sans-serif; }
                 </div>
                 <p class="text-slate-400 mb-8">Line calls, rotation tracking, serve analysis — complete volleyball officiating.</p>
                 <div class="space-y-4">
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                    <div class="flex items-center gap-3 bg-black/20 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
                         <span class="material-symbols-outlined text-primary text-sm">gavel</span>
                         <div><p class="text-xs font-bold uppercase tracking-wider">Official Mode</p><p class="text-[10px] text-slate-500">Real-time line-call and rotation tracking.</p></div>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
+                    <div class="flex items-center gap-3 bg-black/20 p-3 rounded-xl ring-1 ring-primary/40 bg-primary/10">
                         <span class="material-symbols-outlined text-primary text-sm">school</span>
                         <div><p class="text-xs font-bold uppercase tracking-wider">Coach Mode</p><p class="text-[10px] text-slate-500">Serving drills and receive analysis.</p></div>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl">
+                    <div class="flex items-center gap-3 bg-black/20 p-3 rounded-xl">
                         <span class="material-symbols-outlined text-primary text-sm">swords</span>
                         <div><p class="text-xs font-bold uppercase tracking-wider">Competition Mode</p><p class="text-[10px] text-slate-500">Shadow training simulation.</p><span class="ml-2 text-[8px] px-1.5 py-0.5 bg-slate-700 text-slate-400 rounded-full font-bold uppercase">WIP</span></div>
                     </div>
@@ -280,7 +282,7 @@ body { font-family: 'Inter', sans-serif; }
         <p class="text-slate-400 max-w-2xl mx-auto">A ball tracker tells you <em>where</em>. Sideline tells you <em>what it means</em>.</p>
     </div>
     <div class="grid md:grid-cols-2 gap-8">
-        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800">
+        <div class="p-8 rounded-3xl bg-white/[0.03] border border-white/10">
             <p class="text-red-400 font-bold text-sm uppercase tracking-widest mb-4">Traditional CV</p>
             <ul class="space-y-3 text-slate-400 text-sm">
                 <li class="flex gap-3"><span class="text-red-400">&#x2717;</span> Ball in/out — that's it</li>
@@ -318,7 +320,7 @@ body { font-family: 'Inter', sans-serif; }
 
 </main>
 
-<footer class="bg-background-dark border-t border-slate-800 py-12 px-6">
+<footer class="bg-[#0a0e1a] border-t border-white/5 py-12 px-6">
 <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
     <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-primary text-2xl">precision_manufacturing</span>
