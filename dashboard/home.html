@@ -468,6 +468,7 @@ function buildRover() {
         const w = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.04,12), dark);
         w.position.set(...p); w.rotation.x = Math.PI/2; roverGroup.add(w); roverParts.wheels.push(w);
     });
+    roverGroup.rotation.y = Math.PI / 2;
     roverGroup.visible = false;
     scene.add(roverGroup);
 }

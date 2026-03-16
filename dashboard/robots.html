@@ -554,7 +554,6 @@ function buildHumanoid() {
     handR.position.y = -0.3; handR.castShadow = true;
     elbowR.add(handR);
 
-    humanoidGroup.rotation.y = Math.PI;
     humanoidGroup.visible = false;
     scene.add(humanoidGroup);
 }
@@ -612,6 +611,7 @@ function buildRover() {
         roverParts.wheels.push(wheel);
     });
 
+    roverGroup.rotation.y = Math.PI / 2;
     roverGroup.visible = false;
     scene.add(roverGroup);
 }
