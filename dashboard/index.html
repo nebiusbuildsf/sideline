@@ -542,16 +542,12 @@ function connect() {
     ws = new WebSocket(`${proto}://${location.host}/ws`);
     ws.onopen = () => {
         connected = true;
-        document.getElementById('nav-dot').classList.add('on');
-        document.getElementById('nav-status').textContent = 'Connected';
-        document.getElementById('agent-pulse').classList.add('on');
-        document.getElementById('agent-status').textContent = 'Ready';
+        const p = document.getElementById('agent-pulse'); if (p) p.classList.add('on');
+        const s = document.getElementById('agent-status'); if (s) s.textContent = 'Ready';
     };
     ws.onclose = () => {
         connected = false;
-        document.getElementById('nav-dot').classList.remove('on');
-        document.getElementById('nav-status').textContent = 'Disconnected';
-        document.getElementById('agent-pulse').classList.remove('on');
+        const p = document.getElementById('agent-pulse'); if (p) p.classList.remove('on');
         setTimeout(connect, 2000);
     };
     ws.onmessage = (e) => {
