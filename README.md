@@ -12,6 +12,8 @@ Powered by a **Qwen vision-language model** on **Nebius Token Factory**, Sidelin
 
 [Watch the full demo →](https://www.loom.com/share/a26c5048f556496487415a852eac6a1c)
 
+**Live Site:** [sideline-beige.vercel.app](https://sideline-beige.vercel.app/)
+
 ## How It Works
 
 Sideline is an agentic AI — not an image classifier. It observes video frames, reasons with chain-of-thought, decides on calls with confidence scores, and acts through three protocols: Function Calls, MCP, and A2A.

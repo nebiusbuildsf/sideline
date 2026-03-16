@@ -302,6 +302,11 @@ async def future():
     return FileResponse("dashboard/future.html")
 
 
+@app.get("/about")
+async def about():
+    return FileResponse("dashboard/about.html")
+
+
 @app.get("/simulation")
 async def simulation():
     return FileResponse("dashboard/simulation.html")
