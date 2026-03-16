@@ -630,8 +630,7 @@ function addEv(type, data) {
 }
 
 // Detect if running on Vercel (no backend) or local
-const isStatic = !location.port || location.hostname.includes('vercel');
-const clipBase = isStatic ? '/static/' : '/clips/';
+const clipBase = '/clips/';
 const clipMap = {
     'tennis_demo': { video: 'tennis_demo.mp4', cache: 'tennis_demo_cache.json', label: 'Match Highlights' },
     'tennis_rally': { video: 'tennis_rally.mp4', cache: 'tennis_rally_cache.json', label: 'Singles Rally' },
