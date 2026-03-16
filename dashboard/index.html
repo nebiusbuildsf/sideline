@@ -265,24 +265,25 @@
     </style>
 </head>
 <body>
-    <nav>
-        <div class="nav-brand">
-            <div class="nav-logo">S</div>
-            <div class="nav-name">sideline <span>AI Referee</span></div>
-        </div>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/referee" class="active">Referee</a>
-            <a href="/playground">Playground</a>
-            <a href="/robots">Robots</a>
-            <a href="/architecture">Architecture</a>
-            <a href="/future">Future</a>
-            <a href="https://github.com/nebiusbuildsf/sideline" target="_blank">GitHub</a>
-        </div>
+<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-[#0f1923]/80 backdrop-blur-md px-6 lg:px-20 py-4" style="font-family:'Inter',sans-serif">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[#067ff9] text-3xl">precision_manufacturing</span>
+        <span class="text-lg font-bold text-white tracking-tight">Sideline</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8">
+        <a class="text-sm font-medium text-slate-400 hover:text-[#067ff9] transition-colors" href="/">Home</a>
+        <a class="text-sm font-medium text-[#067ff9] hover:text-[#067ff9] transition-colors" href="/referee">Referee</a>
+        <a class="text-sm font-medium text-slate-400 hover:text-[#067ff9] transition-colors" href="/playground">Playground</a>
+        <a class="text-sm font-medium text-slate-400 hover:text-[#067ff9] transition-colors" href="/robots">Robots</a>
+        <a class="text-sm font-medium text-slate-400 hover:text-[#067ff9] transition-colors" href="/about">About</a>
+        <a class="bg-[#067ff9] hover:bg-[#067ff9]/90 text-white px-5 py-2 rounded-lg text-sm font-bold transition-all" href="https://github.com/nebiusbuildsf/sideline" target="_blank">GitHub</a>
     </nav>
+</div>
+</header>
 
     <!-- REFEREE PAGE -->
-    <div class="page active" id="page-referee">
+    <div class="page active" id="page-referee" style="padding-top:72px">
         <div class="referee-layout">
             <div class="scoreboard">
                 <div class="sb-player">
