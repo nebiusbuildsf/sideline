@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    { "source": "/clips/:path*", "destination": "/public/clips/:path*" },
+    { "source": "/referee", "destination": "/dashboard/index.html" },
+    { "source": "/playground", "destination": "/dashboard/playground.html" },
+    { "source": "/robots", "destination": "/dashboard/robots.html" },
+    { "source": "/robot-embed", "destination": "/dashboard/robot-embed.html" },
+    { "source": "/architecture", "destination": "/dashboard/architecture.html" },
+    { "source": "/future", "destination": "/dashboard/future.html" },
+    { "source": "/simulation", "destination": "/dashboard/simulation.html" },
+    { "source": "/about", "destination": "/dashboard/about.html" },
+    { "source": "/static/:path*", "destination": "/dashboard/:path*" },
+    { "source": "/", "destination": "/dashboard/home.html" }
+  ]
+}
