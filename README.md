@@ -6,6 +6,12 @@ Powered by a **Qwen vision-language model** on **Nebius Token Factory**, Sidelin
 
 **Built at Nebius.Build SF Hackathon — March 15, 2026**
 
+## Demo Video
+
+[![Sideline Demo](https://cdn.loom.com/sessions/thumbnails/a26c5048f556496487415a852eac6a1c-with-play.gif)](https://www.loom.com/share/a26c5048f556496487415a852eac6a1c)
+
+[Watch the full demo →](https://www.loom.com/share/a26c5048f556496487415a852eac6a1c)
+
 ## How It Works
 
 Sideline is an agentic AI — not an image classifier. It observes video frames, reasons with chain-of-thought, decides on calls with confidence scores, and acts through three protocols: Function Calls, MCP, and A2A.
