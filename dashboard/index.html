@@ -305,7 +305,7 @@
 
             <div class="video-section">
                 <div class="video-frame">
-                    <video id="video" src="/clips/tennis_demo.mp4" controls muted style="width:100%;height:100%;object-fit:contain"></video>
+                    <video id="video" src="" controls muted style="width:100%;height:100%;object-fit:contain"></video>
                 </div>
                 <div class="video-bar">
                     <span class="frame-num" id="frame-num">Frame 0</span>
@@ -648,6 +648,9 @@ function addEv(type, data) {
     while (el.children.length > 30) el.removeChild(el.lastChild);
 }
 
+// Detect if running on Vercel (no backend) or local
+const isStatic = !location.port || location.hostname.includes('vercel');
+const clipBase = isStatic ? '/static/' : '/clips/';
 const clipMap = {
     'tennis_demo': { video: 'tennis_demo.mp4', cache: 'tennis_demo_cache.json', label: 'Match Highlights' },
     'tennis_rally': { video: 'tennis_rally.mp4', cache: 'tennis_rally_cache.json', label: 'Singles Rally' },
@@ -658,7 +661,7 @@ let currentClip = 'tennis_demo';
 function switchClip(clipId) {
     currentClip = clipId;
     const clip = clipMap[clipId];
-    document.getElementById('video').src = '/clips/' + clip.video;
+    document.getElementById('video').src = clipBase + clip.video;
     resetGame();
 }
 
@@ -672,32 +675,113 @@ function startDemo() {
     document.getElementById('agent-pulse').classList.add('on');
 }
 
-function startCached() {
-    if (!connected) return;
+async function startCached() {
     const clip = clipMap[currentClip];
-    if (!clip.cache) { startDemo(); return; }
-    ws.send(JSON.stringify({action:'start_cached', cache:'video/clips/' + clip.cache}));
+    if (!clip.cache) { if (connected) startDemo(); return; }
+
     document.getElementById('start-btn').textContent = 'Playing...';
     document.getElementById('start-btn').disabled = true;
-    document.getElementById('agent-status').textContent = 'Cached: ' + clip.label;
-    document.getElementById('agent-pulse').classList.add('on');
+    const as = document.getElementById('agent-status'); if (as) as.textContent = 'Cached: ' + clip.label;
+    const ap = document.getElementById('agent-pulse'); if (ap) ap.classList.add('on');
+
+    // Client-side cached playback — works without backend
+    try {
+        const cachePath = clipBase + clip.cache;
+        const resp = await fetch(cachePath);
+        if (!resp.ok) throw new Error('Cache not found');
+        const cache = await resp.json();
+        const frames = cache.frames || [];
+        const fps = cache.fps || 0.5;
+
+        const vid = document.getElementById('video');
+        vid.play().catch(() => {});
+
+        // Tennis scoring state
+        const PTS = ['0','15','30','40','AD'];
+        let score = {p1:'0',p2:'0',g1:0,g2:0,s1:0,s2:0,server:'p1'};
+
+        for (let i = 0; i < frames.length; i++) {
+            const f = frames[i];
+            const ts = f.timestamp || i * (1/fps);
+
+            // Sync video
+            if (vid.src) vid.currentTime = ts;
+
+            // Progress
+            const pct = ((i+1) / frames.length * 100).toFixed(1);
+            document.getElementById('progress-fill').style.width = pct + '%';
+            document.getElementById('frame-num').textContent = `Frame ${i+1} / ${frames.length} · ${ts}s`;
+
+            // Process tool calls
+            for (const tc of (f.tool_calls || [])) {
+                if (tc.name === 'announce_call') {
+                    addEv('call', tc.args);
+                    const el = document.getElementById('sb-call');
+                    el.textContent = tc.args.announcement || tc.args.call_type;
+                    el.className = 'sb-call' + (['fault','double_fault','out'].includes(tc.args.call_type) ? ' fault' : ['ace','winner'].includes(tc.args.call_type) ? ' score' : '');
+
+                    // Auto gesture
+                    const gMap = {fault:'fault',double_fault:'fault',out:'point_right',ace:'arm_raise',winner:'arm_raise',let:'wave',in:'safe'};
+                    handleEvent('gesture', {gesture: gMap[tc.args.call_type] || 'arm_raise'});
+                }
+                if (tc.name === 'update_score') {
+                    const w = tc.args.player || 'p1';
+                    const l = w === 'p1' ? 'p2' : 'p1';
+                    // Simple score increment
+                    const idx = PTS.indexOf(score[w]);
+                    if (score[w] === '40' && score[l] !== '40' && score[l] !== 'AD') {
+                        score[w] = '0'; score[l] = '0'; score['g' + w[1]]++;
+                    } else if (idx >= 0 && idx < 3) {
+                        score[w] = PTS[idx + 1];
+                    }
+                    updateScore({points:{p1:score.p1,p2:score.p2},games:{p1:score.g1,p2:score.g2},sets:{p1:score.s1,p2:score.s2},server:score.server});
+                    addEv('score', tc.args);
+                }
+                if (tc.name === 'no_call') {
+                    if (as) as.textContent = tc.args.description || 'Observing...';
+                }
+            }
+
+            // Show reasoning content
+            if (f.content && !f.content.startsWith('no_call')) {
+                if (as) as.textContent = f.content.substring(0, 120);
+            }
+
+            await new Promise(r => setTimeout(r, 1000 / fps));
+        }
+
+        if (as) as.textContent = 'Playback complete';
+    } catch (e) {
+        // Fallback to WebSocket if client-side fails
+        if (connected) {
+            ws.send(JSON.stringify({action:'start_cached', cache:'video/clips/' + clip.cache}));
+        } else {
+            const as = document.getElementById('agent-status'); if (as) as.textContent = 'Error: ' + e.message;
+        }
+    }
+
+    document.getElementById('start-btn').textContent = 'Cached';
+    document.getElementById('start-btn').disabled = false;
 }
 
 function resetGame() {
-    fetch('/reset', {method:'POST'}).then(() => {
-        document.getElementById('events').innerHTML = '';
-        evCount = 0;
-        document.getElementById('ev-count').textContent = '0 events';
-        document.getElementById('start-btn').textContent = 'Start';
-        document.getElementById('start-btn').disabled = false;
-        document.getElementById('progress-fill').style.width = '0%';
-        document.getElementById('frame-num').textContent = 'Frame 0';
-        document.getElementById('sb-call').textContent = 'Ready';
-        document.getElementById('sb-call').className = 'sb-call';
-    });
+    fetch('/reset', {method:'POST'}).catch(() => {});
+    document.getElementById('events').innerHTML = '';
+    evCount = 0;
+    document.getElementById('ev-count').textContent = '0 events';
+    document.getElementById('start-btn').textContent = 'Cached';
+    document.getElementById('start-btn').disabled = false;
+    document.getElementById('progress-fill').style.width = '0%';
+    document.getElementById('frame-num').textContent = 'Frame 0';
+    document.getElementById('sb-call').textContent = 'Ready';
+    document.getElementById('sb-call').className = 'sb-call';
 }
 
-connect();
+// Load default video
+document.getElementById('video').src = clipBase + clipMap[currentClip].video;
+
+// Connect WebSocket (fails silently on Vercel)
+try { connect(); } catch(e) {}
 </script>
 
 <script type="importmap">

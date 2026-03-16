@@ -35,3 +35,4 @@ skills-lock.json
 
 # Duplicate git dirs
 .git 2/
+.vercel

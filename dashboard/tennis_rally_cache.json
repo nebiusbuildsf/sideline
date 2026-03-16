@@ -1,0 +1,909 @@
+{
+  "video": "tennis_rally.mp4",
+  "model": "Qwen/Qwen2.5-VL-72B-Instruct",
+  "fps": 0.5,
+  "total_frames": 30,
+  "analyzed_at": "2026-03-15T18:20:31Z",
+  "frames": [
+    {
+      "frame": 1,
+      "content": "no_call\ndescription: Player 1 is preparing to serve, standing behind the baseline with the ball in hand. Player 2 is positioned ready to receive the serve. No scoring event has occurred yet.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing to serve, standing behind the baseline with the ball in hand. Player 2 is positioned ready to receive the serve. No scoring event has occurred yet."
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 4.03,
+      "tool_call_source": "fallback",
+      "timestamp": 2.0
+    },
+    {
+      "frame": 2,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a serve or a shot, as indicated by his follow-through motion. The ball is not visible in this frame, so it's unclear whether the serve was successful or if a rally is underway. There is no evidence of a scoring event at this moment.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a serve or a shot, as indicated by his follow-through motion. The ball is not visible in this frame, so it's unclear whether the serve was successf"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 4.21,
+      "tool_call_source": "fallback",
+      "timestamp": 4.0
+    },
+    {
+      "frame": 3,
+      "content": "no_call\ndescription: Player 1 is in motion, having just hit a backhand shot. The ball is not visible in this frame, but based on the player's posture and the trajectory indicated by the SwingVision overlay, it seems the ball is traveling towards Player 2's side. There is no clear evidence of a scoring event such as the ball being out or a winner. The rally appears to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in motion, having just hit a backhand shot. The ball is not visible in this frame, but based on the player's posture and the trajectory indicated by the SwingVision overlay, i"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.71,
+      "tool_call_source": "fallback",
+      "timestamp": 6.0
+    },
+    {
+      "frame": 4,
+      "content": "no_call\ndescription: Player 1 has just executed a slice backhand shot, as indicated by the SwingVision overlay showing the ball's speed and type of shot. The ball is currently in flight, heading towards Player 2's side of the court. There is no indication yet of where the ball will land, so no scoring event can be determined at this time. The rally is still in progress.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just executed a slice backhand shot, as indicated by the SwingVision overlay showing the ball's speed and type of shot. The ball is currently in flight, heading towards Playe"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.68,
+      "tool_call_source": "fallback",
+      "timestamp": 8.0
+    },
+    {
+      "frame": 5,
+      "content": "no_call\ndescription: Player 1 is preparing to hit a topspin forehand, as indicated by the SwingVision overlay. The ball is not visible in this frame, suggesting it is either about to make contact with the racket or has just been struck. There is no evidence of a scoring event occurring yet; the rally is ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing to hit a topspin forehand, as indicated by the SwingVision overlay. The ball is not visible in this frame, suggesting it is either about to make contact with the rac"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 5.07,
+      "tool_call_source": "fallback",
+      "timestamp": 10.0
+    },
+    {
+      "frame": 6,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a topspin forehand stroke, as indicated by the SwingVision overlay. The ball is not visible in this frame, suggesting it may be traveling towards Player 2's side of the court. There is no clear evidence of a scoring event such as the ball landing out or being unreturnable. The rally seems to be continuing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a topspin forehand stroke, as indicated by the SwingVision overlay. The ball is not visible in this frame, suggesting it may be traveling towards P"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 6.34,
+      "tool_call_source": "fallback",
+      "timestamp": 12.0
+    },
+    {
+      "frame": 7,
+      "content": "no_call\ndescription: Player 1 is in the process of executing a flat forehand shot, as indicated by the SwingVision overlay showing \"Flat Forehand\" and the speed of 71 KM/H. The ball is visible near the racket, suggesting the moment of impact. There is no indication of a scoring event like the ball going out or being unreturnable at this stage. The rally is ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in the process of executing a flat forehand shot, as indicated by the SwingVision overlay showing \"Flat Forehand\" and the speed of 71 KM/H. The ball is visible near the racket"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.87,
+      "tool_call_source": "fallback",
+      "timestamp": 14.0
+    },
+    {
+      "frame": 8,
+      "content": "no_call\ndescription: Player 1 has just executed a topspin forehand shot, as indicated by the SwingVision overlay showing \"Topspin Forehand\" and a speed of 90 KM/H. The ball is not visible in this frame, but the player's posture suggests he has completed his swing. There is no clear evidence of a scoring event such as the ball landing out or being unreturnable. The rally appears to be continuing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just executed a topspin forehand shot, as indicated by the SwingVision overlay showing \"Topspin Forehand\" and a speed of 90 KM/H. The ball is not visible in this frame, but t"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.29,
+      "tool_call_source": "fallback",
+      "timestamp": 16.0
+    },
+    {
+      "frame": 9,
+      "content": "no_call\ndescription: Player 1 is running forward after hitting a topspin forehand, as indicated by the SwingVision overlay showing \"Topspin Forehand\" with a speed of 74 KM/H. The ball is not visible in this frame, but the player's movement suggests he is following through on his shot. There is no clear evidence of a scoring event such as the ball landing out or being unreturnable. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is running forward after hitting a topspin forehand, as indicated by the SwingVision overlay showing \"Topspin Forehand\" with a speed of 74 KM/H. The ball is not visible in this f"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.61,
+      "tool_call_source": "fallback",
+      "timestamp": 18.0
+    },
+    {
+      "frame": 10,
+      "content": "no_call\ndescription: Player 1 has just hit a topspin backhand, as indicated by the SwingVision overlay showing \"Topspin Backhand\" with a speed of 72 KM/H. The ball is not visible in this frame, but the player's posture suggests he has completed his swing. There is no clear evidence of a scoring event such as the ball landing out or being unreturnable. The rally appears to be continuing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just hit a topspin backhand, as indicated by the SwingVision overlay showing \"Topspin Backhand\" with a speed of 72 KM/H. The ball is not visible in this frame, but the player"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.88,
+      "tool_call_source": "fallback",
+      "timestamp": 20.0
+    },
+    {
+      "frame": 11,
+      "content": "no_call\ndescription: Player 1 is preparing for a serve, standing behind the baseline with the ball in hand, ready to initiate the serve motion. Player 2 is positioned near the service line, ready to receive the serve. There is no ball in play, and no scoring event has occurred yet. The players are setting up for the next point.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing for a serve, standing behind the baseline with the ball in hand, ready to initiate the serve motion. Player 2 is positioned near the service line, ready to receive t"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.88,
+      "tool_call_source": "fallback",
+      "timestamp": 22.0
+    },
+    {
+      "frame": 12,
+      "content": "no_call\ndescription: Player 1 has just executed a slice serve with a speed of 94 KM/H, as indicated by the SwingVision overlay. The ball is in flight towards the service box. There is no clear indication of whether the ball will land inside or outside the service box at this moment. The rally has not started yet, so there is no scoring event to announce.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just executed a slice serve with a speed of 94 KM/H, as indicated by the SwingVision overlay. The ball is in flight towards the service box. There is no clear indication of w"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.06,
+      "tool_call_source": "fallback",
+      "timestamp": 24.0
+    },
+    {
+      "frame": 13,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a backhand stroke, as indicated by the SwingVision overlay showing a \"Slice Backhand\" with a speed of 66 KM/H. The ball is not visible in this frame, suggesting it may have been hit recently. There is no immediate evidence of a scoring event such as the ball landing out or being unreturnable. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a backhand stroke, as indicated by the SwingVision overlay showing a \"Slice Backhand\" with a speed of 66 KM/H. The ball is not visible in this fram"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 6.76,
+      "tool_call_source": "fallback",
+      "timestamp": 26.0
+    },
+    {
+      "frame": 14,
+      "content": "no_call\ndescription: Player 1 is preparing for a backhand return, as indicated by the SwingVision overlay showing a \"Flat Backhand\" with a speed of 69 KM/H. The ball is approaching Player 1, but it's not clear from this frame alone whether the ball will land in or out. The rally is still ongoing, and no scoring event can be determined from this image alone.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing for a backhand return, as indicated by the SwingVision overlay showing a \"Flat Backhand\" with a speed of 69 KM/H. The ball is approaching Player 1, but it's not clea"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.3,
+      "tool_call_source": "fallback",
+      "timestamp": 28.0
+    },
+    {
+      "frame": 15,
+      "content": "no_call\ndescription: Player 1 has just executed a flat backhand stroke, as indicated by the SwingVision overlay showing a speed of 77 KM/H. The ball is not visible in this frame, so it's unclear where it landed. The rally continues without any immediate evidence of a scoring event like the ball going out or being unreturnable.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just executed a flat backhand stroke, as indicated by the SwingVision overlay showing a speed of 77 KM/H. The ball is not visible in this frame, so it's unclear where it land"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.04,
+      "tool_call_source": "fallback",
+      "timestamp": 30.0
+    },
+    {
+      "frame": 16,
+      "content": "no_call\ndescription: Player 1 appears to have just hit a forehand shot, as indicated by the SwingVision overlay showing a \"Flat Forehand\" with a speed of 49 KM/H. The ball is not visible in this frame, so its trajectory and landing cannot be determined. The rally seems to be ongoing, and there is no clear evidence of a scoring event such as the ball landing out or being unreturnable.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just hit a forehand shot, as indicated by the SwingVision overlay showing a \"Flat Forehand\" with a speed of 49 KM/H. The ball is not visible in this frame, so its"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.1,
+      "tool_call_source": "fallback",
+      "timestamp": 32.0
+    },
+    {
+      "frame": 17,
+      "content": "no_call\ndescription: Player 1 is preparing for a forehand shot, as indicated by their stance and the position of the racket. The ball is approaching them, but it hasn't been struck yet. There is no evidence of a scoring event at this moment; the rally is still in progress.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing for a forehand shot, as indicated by their stance and the position of the racket. The ball is approaching them, but it hasn't been struck yet. There is no evidence o"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.25,
+      "tool_call_source": "fallback",
+      "timestamp": 34.0
+    },
+    {
+      "frame": 18,
+      "content": "no_call\ndescription: Player 1 has just served the ball, which is now in the air heading towards Player 2's side of the court. Player 2 is positioned to receive the serve. There is no indication of a fault, let, or any other scoring event based on this frame alone. The rally is about to begin.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just served the ball, which is now in the air heading towards Player 2's side of the court. Player 2 is positioned to receive the serve. There is no indication of a fault, le"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.21,
+      "tool_call_source": "fallback",
+      "timestamp": 36.0
+    },
+    {
+      "frame": 19,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a forehand stroke, and the ball is traveling across the court. Player 2 is observing the ball's trajectory, preparing to respond. There is no clear evidence of a scoring event such as a fault, out, or winner in this frame. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a forehand stroke, and the ball is traveling across the court. Player 2 is observing the ball's trajectory, preparing to respond. There is no clear"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.97,
+      "tool_call_source": "fallback",
+      "timestamp": 38.0
+    },
+    {
+      "frame": 20,
+      "content": "no_call\ndescription: Player 1 has just executed a backhand stroke, sending the ball across the net towards Player 2. The ball is in mid-air, and there is no immediate evidence of it being out or resulting in a point-ending situation. The rally continues.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just executed a backhand stroke, sending the ball across the net towards Player 2. The ball is in mid-air, and there is no immediate evidence of it being out or resulting in "
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 4.88,
+      "tool_call_source": "fallback",
+      "timestamp": 40.0
+    },
+    {
+      "frame": 21,
+      "content": "no_call\ndescription: Player 1 is preparing for a backhand return, indicating that the ball is approaching them after being hit by Player 2. The ball is not yet visible in this frame, so there is no evidence of a scoring event like a fault, out, or winner. The rally is ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing for a backhand return, indicating that the ball is approaching them after being hit by Player 2. The ball is not yet visible in this frame, so there is no evidence o"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.24,
+      "tool_call_source": "fallback",
+      "timestamp": 42.0
+    },
+    {
+      "frame": 22,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a topspin backhand stroke. The ball is not visible in this frame, suggesting it may be traveling towards Player 2's side of the court. There is no clear indication of a scoring event such as the ball being out or a winner. The rally seems to be continuing normally.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a topspin backhand stroke. The ball is not visible in this frame, suggesting it may be traveling towards Player 2's side of the court. There is no "
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.3,
+      "tool_call_source": "fallback",
+      "timestamp": 44.0
+    },
+    {
+      "frame": 23,
+      "content": "no_call\ndescription: Player 1 has just executed a forehand shot, indicated by the speed and type of shot displayed (\"Flat Forehand\" at 62 KM/H). The ball is not visible in this frame, but based on the player's posture and follow-through, it suggests the ball has been hit and is likely heading towards Player 2's side. There is no evidence of a scoring event such as the ball being out or a winner. The rally continues.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just executed a forehand shot, indicated by the speed and type of shot displayed (\"Flat Forehand\" at 62 KM/H). The ball is not visible in this frame, but based on the player'"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.82,
+      "tool_call_source": "fallback",
+      "timestamp": 46.0
+    },
+    {
+      "frame": 24,
+      "content": "no_call\ndescription: Player 1 is preparing for a backhand return, as indicated by the \"Flat Backhand\" label and the speed of 49 KM/H. The ball is not visible in this frame, suggesting it is either approaching Player 1 or has just been hit. There is no clear evidence of a scoring event like the ball being out or a winner. The rally is ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing for a backhand return, as indicated by the \"Flat Backhand\" label and the speed of 49 KM/H. The ball is not visible in this frame, suggesting it is either approaching"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 8.36,
+      "tool_call_source": "fallback",
+      "timestamp": 48.0
+    },
+    {
+      "frame": 25,
+      "content": "no_call\ndescription: Player 1 is executing a topspin backhand shot, as indicated by the label and the speed of 75 KM/H. The ball is not visible in this frame, but the player's posture suggests they have just hit the ball. There is no evidence of a scoring event such as the ball being out or a winner. The rally continues.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is executing a topspin backhand shot, as indicated by the label and the speed of 75 KM/H. The ball is not visible in this frame, but the player's posture suggests they have just "
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 4.45,
+      "tool_call_source": "fallback",
+      "timestamp": 50.0
+    },
+    {
+      "frame": 26,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a topspin backhand shot, as indicated by the label and the speed of 75 KM/H. The ball is not visible in this frame, suggesting it may be traveling towards Player 2. There is no clear evidence of a scoring event such as the ball being out or a winner. The rally is ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a topspin backhand shot, as indicated by the label and the speed of 75 KM/H. The ball is not visible in this frame, suggesting it may be traveling "
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.76,
+      "tool_call_source": "fallback",
+      "timestamp": 52.0
+    },
+    {
+      "frame": 27,
+      "content": "no_call\ndescription: Player 1 is preparing for a flat serve, as indicated by the label and the speed of 97 KM/H. The ball has not been struck yet, and there is no evidence of a scoring event. The server is in position, and the rally has not started.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing for a flat serve, as indicated by the label and the speed of 97 KM/H. The ball has not been struck yet, and there is no evidence of a scoring event. The server is in"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.07,
+      "tool_call_source": "fallback",
+      "timestamp": 54.0
+    },
+    {
+      "frame": 28,
+      "content": "no_call\ndescription: Player 1 is executing a topspin forehand shot with the ball traveling at 74 KM/H. The ball is in motion but its exact landing position is not visible in this frame. There's no clear indication of a scoring event like the ball being out or a winner. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is executing a topspin forehand shot with the ball traveling at 74 KM/H. The ball is in motion but its exact landing position is not visible in this frame. There's no clear indic"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.69,
+      "tool_call_source": "fallback",
+      "timestamp": 56.0
+    },
+    {
+      "frame": 29,
+      "content": "no_call\ndescription: Player 1 appears to be preparing for a backhand return, as indicated by their stance and the ball's trajectory towards them. The ball is traveling at 72 KM/H, suggesting it was hit with a flat backhand. There is no evidence of a scoring event in this frame; the rally is still active.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to be preparing for a backhand return, as indicated by their stance and the ball's trajectory towards them. The ball is traveling at 72 KM/H, suggesting it was hit with a"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.32,
+      "tool_call_source": "fallback",
+      "timestamp": 58.0
+    },
+    {
+      "frame": 30,
+      "content": "no_call\ndescription: Player 1 has just executed a flat forehand shot with the ball traveling at 63 KM/H. The ball is in mid-air and heading towards the opponent's side of the court. There is no clear indication yet whether the ball will land in or out, so the rally continues without a scoring event.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just executed a flat forehand shot with the ball traveling at 63 KM/H. The ball is in mid-air and heading towards the opponent's side of the court. There is no clear indicati"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.37,
+      "tool_call_source": "fallback",
+      "timestamp": 60.0
+    }
+  ]
+}
