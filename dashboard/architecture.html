@@ -15,12 +15,19 @@ tailwind.config = {
     theme: { extend: { colors: { "primary": "#067ff9", "background-dark": "#09090b" }, fontFamily: { "display": ["Inter", "sans-serif"], "mono": ["JetBrains Mono", "monospace"] } } },
 }
 </script>
-<style>body { font-family: 'Inter', sans-serif; }</style>
+<style>
+body { font-family: 'Inter', sans-serif; }
+.glow-blob { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; opacity: 0.15; }
+</style>
 </head>
-<body class="bg-background-dark text-slate-100 antialiased">
-<div class="relative flex min-h-screen w-full flex-col">
+<body class="bg-[#0a0e1a] text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-hidden">
+<!-- Background gradient blobs -->
+<div class="glow-blob w-[600px] h-[600px] bg-primary -top-48 -left-48 fixed"></div>
+<div class="glow-blob w-[500px] h-[500px] bg-purple-600 top-[40%] -right-48 fixed"></div>
+<div class="glow-blob w-[400px] h-[400px] bg-teal-500 bottom-0 left-[30%] fixed"></div>
 
-<header class="fixed top-0 z-50 w-full border-b border-slate-200/10 bg-[#09090b]/85 backdrop-blur-md px-6 lg:px-20 py-4">
+<header class="fixed top-0 z-50 w-full border-b border-white/5 bg-[#0a0e1a]/80 backdrop-blur-xl px-6 lg:px-20 py-4">
 <div class="max-w-7xl mx-auto flex items-center justify-between">
     <a href="/" class="flex items-center gap-2">
         <span class="material-symbols-outlined text-primary text-3xl">precision_manufacturing</span>
@@ -47,14 +54,14 @@ tailwind.config = {
     </div>
 
     <!-- The Pipeline — Clean & Simple -->
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 lg:p-12 mb-12">
+    <div class="bg-white/[0.03] backdrop-blur-sm border border-white/10 rounded-3xl p-8 lg:p-12 mb-12">
         <p class="text-xs text-primary font-bold uppercase tracking-widest mb-8 text-center">The Pipeline</p>
 
         <!-- Layer 1: Input -->
         <div class="flex items-center gap-4 mb-3">
             <span class="text-xs font-bold text-primary uppercase tracking-widest w-20 text-right">Input</span>
             <div class="flex-1 flex gap-3">
-                <div class="flex-1 bg-slate-800 rounded-xl px-4 py-3 border border-slate-700 flex items-center gap-3">
+                <div class="flex-1 bg-white/[0.04] rounded-xl px-4 py-3 border border-white/10 flex items-center gap-3">
                     <span class="material-symbols-outlined text-primary">videocam</span>
                     <div><p class="text-sm font-bold">Camera</p><p class="text-[10px] text-slate-500 font-mono">court · phone · robot</p></div>
                 </div>
@@ -66,7 +73,7 @@ tailwind.config = {
         <div class="flex items-center gap-4 mb-3">
             <span class="text-xs font-bold text-purple-400 uppercase tracking-widest w-20 text-right">Vision</span>
             <div class="flex-1 flex gap-3">
-                <div class="flex-1 bg-slate-800 rounded-xl px-4 py-3 border border-slate-700 flex items-center gap-3">
+                <div class="flex-1 bg-white/[0.04] rounded-xl px-4 py-3 border border-white/10 flex items-center gap-3">
                     <span class="material-symbols-outlined text-purple-400">psychology</span>
                     <div><p class="text-sm font-bold">Nebius VLM</p><p class="text-[10px] text-slate-500 font-mono">Qwen2.5-VL-72B · 1 frame/sec</p></div>
                 </div>
@@ -90,15 +97,15 @@ tailwind.config = {
         <div class="flex items-center gap-4">
             <span class="text-xs font-bold text-green-400 uppercase tracking-widest w-20 text-right">Output</span>
             <div class="flex-1 flex gap-3">
-                <div class="flex-1 bg-slate-800 rounded-xl px-4 py-3 border border-slate-700 flex items-center gap-3">
+                <div class="flex-1 bg-white/[0.04] rounded-xl px-4 py-3 border border-white/10 flex items-center gap-3">
                     <span class="material-symbols-outlined text-green-400">scoreboard</span>
                     <div><p class="text-sm font-bold">Score</p><p class="text-[10px] text-slate-500 font-mono">auto-update</p></div>
                 </div>
-                <div class="flex-1 bg-slate-800 rounded-xl px-4 py-3 border border-slate-700 flex items-center gap-3">
+                <div class="flex-1 bg-white/[0.04] rounded-xl px-4 py-3 border border-white/10 flex items-center gap-3">
                     <span class="material-symbols-outlined text-yellow-400">record_voice_over</span>
                     <div><p class="text-sm font-bold">Voice</p><p class="text-[10px] text-slate-500 font-mono">TTS announce</p></div>
                 </div>
-                <div class="flex-1 bg-slate-800 rounded-xl px-4 py-3 border border-slate-700 flex items-center gap-3">
+                <div class="flex-1 bg-white/[0.04] rounded-xl px-4 py-3 border border-white/10 flex items-center gap-3">
                     <span class="material-symbols-outlined text-primary">precision_manufacturing</span>
                     <div><p class="text-sm font-bold">Robot</p><p class="text-[10px] text-slate-500 font-mono">gesture · move</p></div>
                 </div>
@@ -110,29 +117,29 @@ tailwind.config = {
     <div class="mb-12">
         <h2 class="text-2xl font-bold mb-6">How the Agent Dispatches Actions</h2>
         <div class="grid md:grid-cols-3 gap-4">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 border-t-2 border-t-primary">
+            <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-6 border-t-2 border-t-primary">
                 <div class="flex items-center gap-2 mb-3">
                     <span class="material-symbols-outlined text-primary">bolt</span>
                     <h3 class="font-bold">Function Calls</h3>
                 </div>
                 <p class="text-sm text-slate-400 mb-4">VLM decides which tools to call. Fast, internal, no network overhead.</p>
-                <div class="font-mono text-[10px] text-slate-500 bg-slate-800 rounded-lg p-3 leading-relaxed">tool_calls: [<br>&nbsp;&nbsp;announce_call({call: "out"}),<br>&nbsp;&nbsp;update_score({player: "p2"}),<br>&nbsp;&nbsp;robot_gesture({gesture: "point"})<br>]</div>
+                <div class="font-mono text-[10px] text-slate-500 bg-black/30 rounded-lg p-3 leading-relaxed">tool_calls: [<br>&nbsp;&nbsp;announce_call({call: "out"}),<br>&nbsp;&nbsp;update_score({player: "p2"}),<br>&nbsp;&nbsp;robot_gesture({gesture: "point"})<br>]</div>
             </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 border-t-2 border-t-purple-400">
+            <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-6 border-t-2 border-t-purple-400">
                 <div class="flex items-center gap-2 mb-3">
                     <span class="material-symbols-outlined text-purple-400">extension</span>
                     <h3 class="font-bold">MCP Server</h3>
                 </div>
                 <p class="text-sm text-slate-400 mb-4">Expose referee as tools. Any MCP client can use Sideline.</p>
-                <div class="font-mono text-[10px] text-slate-500 bg-slate-800 rounded-lg p-3 leading-relaxed">sideline-referee<br>&nbsp;&nbsp;analyze_frame(img, sport)<br>&nbsp;&nbsp;get_score()<br>&nbsp;&nbsp;lookup_rule(sport, situation)<br>&nbsp;&nbsp;robot_action(cmd, params)</div>
+                <div class="font-mono text-[10px] text-slate-500 bg-black/30 rounded-lg p-3 leading-relaxed">sideline-referee<br>&nbsp;&nbsp;analyze_frame(img, sport)<br>&nbsp;&nbsp;get_score()<br>&nbsp;&nbsp;lookup_rule(sport, situation)<br>&nbsp;&nbsp;robot_action(cmd, params)</div>
             </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 border-t-2 border-t-green-400">
+            <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-6 border-t-2 border-t-green-400">
                 <div class="flex items-center gap-2 mb-3">
                     <span class="material-symbols-outlined text-green-400">hub</span>
                     <h3 class="font-bold">A2A Protocol</h3>
                 </div>
                 <p class="text-sm text-slate-400 mb-4">Multi-agent coordination. Multiple cameras, one coordinator.</p>
-                <div class="font-mono text-[10px] text-slate-500 bg-slate-800 rounded-lg p-3 leading-relaxed">Camera-1 Agent &rarr;┐<br>Camera-2 Agent &rarr;├&rarr; Coordinator<br>Camera-3 Agent &rarr;┘&nbsp;&nbsp;&nbsp;&nbsp;│<br>&nbsp;&nbsp;(majority vote)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└&rarr; Robot</div>
+                <div class="font-mono text-[10px] text-slate-500 bg-black/30 rounded-lg p-3 leading-relaxed">Camera-1 Agent &rarr;┐<br>Camera-2 Agent &rarr;├&rarr; Coordinator<br>Camera-3 Agent &rarr;┘&nbsp;&nbsp;&nbsp;&nbsp;│<br>&nbsp;&nbsp;(majority vote)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└&rarr; Robot</div>
             </div>
         </div>
     </div>
@@ -140,19 +147,19 @@ tailwind.config = {
     <!-- Embodiment Tiers -->
     <div class="mb-12">
         <h2 class="text-2xl font-bold mb-6">Embodiment Tiers</h2>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden">
             <table class="w-full text-sm">
                 <thead>
-                    <tr class="border-b border-slate-800">
+                    <tr class="border-b border-white/5">
                         <th class="text-left px-6 py-4 text-xs uppercase tracking-widest text-slate-500 font-bold">Tier</th>
                         <th class="text-left px-6 py-4 text-xs uppercase tracking-widest text-slate-500 font-bold">Platform</th>
                         <th class="text-left px-6 py-4 text-xs uppercase tracking-widest text-slate-500 font-bold">What it does</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="border-b border-slate-800/50"><td class="px-6 py-4 font-mono text-primary">0</td><td class="px-6 py-4 font-bold">Dashboard</td><td class="px-6 py-4 text-slate-400">Video + reasoning + scoreboard in browser</td></tr>
-                    <tr class="border-b border-slate-800/50"><td class="px-6 py-4 font-mono text-primary">1</td><td class="px-6 py-4 font-bold">MentorPi</td><td class="px-6 py-4 text-slate-400">Tank bot — camera, speaker, lidar, mecanum wheels</td></tr>
-                    <tr class="border-b border-slate-800/50"><td class="px-6 py-4 font-mono text-primary">2</td><td class="px-6 py-4 font-bold">SO-101 Arm</td><td class="px-6 py-4 text-slate-400">6-DOF robotic arm — gestures for calls (point, raise, signal)</td></tr>
+                    <tr class="border-b border-white/5/50"><td class="px-6 py-4 font-mono text-primary">0</td><td class="px-6 py-4 font-bold">Dashboard</td><td class="px-6 py-4 text-slate-400">Video + reasoning + scoreboard in browser</td></tr>
+                    <tr class="border-b border-white/5/50"><td class="px-6 py-4 font-mono text-primary">1</td><td class="px-6 py-4 font-bold">MentorPi</td><td class="px-6 py-4 text-slate-400">Tank bot — camera, speaker, lidar, mecanum wheels</td></tr>
+                    <tr class="border-b border-white/5/50"><td class="px-6 py-4 font-mono text-primary">2</td><td class="px-6 py-4 font-bold">SO-101 Arm</td><td class="px-6 py-4 text-slate-400">6-DOF robotic arm — gestures for calls (point, raise, signal)</td></tr>
                     <tr><td class="px-6 py-4 font-mono text-primary">3</td><td class="px-6 py-4 font-bold">Unitree G1</td><td class="px-6 py-4 text-slate-400">Humanoid — walks, gestures, speaks, head-tracks the ball</td></tr>
                 </tbody>
             </table>
@@ -163,19 +170,19 @@ tailwind.config = {
     <div>
         <h2 class="text-2xl font-bold mb-6">Stack</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Inference</p><p class="text-sm text-slate-400">Nebius Token Factory — Qwen2.5-VL-72B</p></div>
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Backend</p><p class="text-sm text-slate-400">Python + FastAPI + WebSocket</p></div>
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Frontend</p><p class="text-sm text-slate-400">Vanilla JS + Three.js + Tailwind</p></div>
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Protocols</p><p class="text-sm text-slate-400">Tool Calling + MCP + Google A2A</p></div>
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Robotics</p><p class="text-sm text-slate-400">ROSA (NASA JPL) + LeRobot + ROS2</p></div>
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Simulation</p><p class="text-sm text-slate-400">Three.js 3D + Canvas 2D</p></div>
+            <div class="bg-white/[0.03] border border-white/10 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Inference</p><p class="text-sm text-slate-400">Nebius Token Factory — Qwen2.5-VL-72B</p></div>
+            <div class="bg-white/[0.03] border border-white/10 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Backend</p><p class="text-sm text-slate-400">Python + FastAPI + WebSocket</p></div>
+            <div class="bg-white/[0.03] border border-white/10 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Frontend</p><p class="text-sm text-slate-400">Vanilla JS + Three.js + Tailwind</p></div>
+            <div class="bg-white/[0.03] border border-white/10 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Protocols</p><p class="text-sm text-slate-400">Tool Calling + MCP + Google A2A</p></div>
+            <div class="bg-white/[0.03] border border-white/10 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Robotics</p><p class="text-sm text-slate-400">ROSA (NASA JPL) + LeRobot + ROS2</p></div>
+            <div class="bg-white/[0.03] border border-white/10 rounded-xl p-5"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Simulation</p><p class="text-sm text-slate-400">Three.js 3D + Canvas 2D</p></div>
         </div>
     </div>
 
 </div>
 </main>
 
-<footer class="bg-background-dark border-t border-slate-800 py-12 px-6">
+<footer class="bg-[#0a0e1a] border-t border-white/5 py-12 px-6">
 <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
     <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-primary text-2xl">precision_manufacturing</span>
