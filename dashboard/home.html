@@ -9,6 +9,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <script>
 tailwind.config = {
     darkMode: "class",
@@ -76,14 +77,23 @@ body { font-family: 'Inter', sans-serif; }
     </div>
     <div class="relative group">
         <div class="absolute -inset-1 bg-gradient-to-r from-primary to-blue-600 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-        <div class="relative h-[400px] lg:h-[600px] w-full bg-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-            <div class="absolute inset-0 flex items-center justify-center">
-                <iframe src="/robots?embed=1" class="w-full h-full border-none"></iframe>
+        <div class="relative h-[400px] lg:h-[600px] w-full rounded-2xl overflow-hidden shadow-2xl">
+            <canvas id="hero-canvas" class="w-full h-full"></canvas>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0e1a]/70 to-transparent pointer-events-none"></div>
+            <!-- Call overlay -->
+            <div id="hero-call" class="absolute top-8 left-0 right-0 text-center opacity-0 transition-all duration-300 pointer-events-none">
+                <span class="text-3xl font-black text-white" style="text-shadow:0 0 30px rgba(6,127,249,0.6)" id="hero-call-text"></span>
             </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 to-transparent pointer-events-none"></div>
+            <!-- Status pill -->
             <div class="absolute bottom-6 left-6 p-4 glass-effect rounded-xl">
-                <p class="text-xs uppercase text-primary font-bold mb-1">Active Session</p>
-                <p class="text-sm font-medium">Mode: AI Referee — Tennis</p>
+                <p class="text-xs uppercase text-primary font-bold mb-1" id="hero-status-label">Active Session</p>
+                <p class="text-sm font-medium" id="hero-status-text">SO-101 Arm — Idle</p>
+            </div>
+            <!-- Robot indicator -->
+            <div class="absolute bottom-6 right-6 flex gap-2">
+                <div class="w-2 h-2 rounded-full bg-primary" id="dot-arm"></div>
+                <div class="w-2 h-2 rounded-full bg-slate-600" id="dot-humanoid"></div>
+                <div class="w-2 h-2 rounded-full bg-slate-600" id="dot-rover"></div>
             </div>
         </div>
     </div>
@@ -339,5 +349,256 @@ body { font-family: 'Inter', sans-serif; }
 </footer>
 
 </div>
+<script type="module">
+import * as THREE from 'three';
+
+// ─── Hero Scene ───
+const canvas = document.getElementById('hero-canvas');
+if (canvas) {
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0e1a);
+scene.fog = new THREE.Fog(0x0a0e1a, 12, 30);
+
+const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+camera.position.set(3.5, 2.5, 5);
+camera.lookAt(0, 1, 0);
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.8;
+
+// Lights
+scene.add(new THREE.AmbientLight(0x8888bb, 1.0));
+const key = new THREE.DirectionalLight(0xffffff, 2.0);
+key.position.set(5, 8, 4); key.castShadow = true; scene.add(key);
+scene.add(new THREE.DirectionalLight(0xaabbff, 0.8).translateX(-3).translateY(4));
+scene.add(new THREE.PointLight(0x067ff9, 1.0, 15).translateX(-2).translateY(3).translateZ(-4));
+scene.add(new THREE.PointLight(0xffffff, 0.6, 12).translateY(2).translateZ(5));
+
+// Ground
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(30,30), new THREE.MeshStandardMaterial({color:0x0a0e1a, roughness:0.85}));
+ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+const grid = new THREE.GridHelper(20, 40, 0x1a2540, 0x101828);
+grid.position.y = 0.01; scene.add(grid);
+
+// Materials
+const metal = new THREE.MeshStandardMaterial({color:0xccccdd, metalness:0.6, roughness:0.2});
+const dark = new THREE.MeshStandardMaterial({color:0x2a2a3a, metalness:0.4, roughness:0.3});
+const accent = new THREE.MeshStandardMaterial({color:0x66bbff, metalness:0.3, roughness:0.2, emissive:0x3388ff, emissiveIntensity:0.5});
+const body = new THREE.MeshStandardMaterial({color:0xeeeef4, metalness:0.3, roughness:0.35});
+const joint = new THREE.MeshStandardMaterial({color:0x77ccff, metalness:0.4, roughness:0.2, emissive:0x3399ff, emissiveIntensity:0.6});
+
+// ─── Build SO-101 Arm ───
+const armGroup = new THREE.Group();
+const joints = [];
+function buildArm() {
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.4,0.15,32), dark);
+    base.position.y = 0.075; base.castShadow = true; armGroup.add(base);
+    armGroup.add(new THREE.Mesh(new THREE.TorusGeometry(0.37,0.02,8,32), accent).translateY(0.15).rotateX(Math.PI/2));
+    const j1 = new THREE.Group(); j1.position.y = 0.15; armGroup.add(j1); joints.push(j1);
+    j1.add(new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,0.12,16), joint));
+    const j2 = new THREE.Group(); j2.position.y = 0.06; j1.add(j2); joints.push(j2);
+    const ua = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.55,0.08), metal); ua.position.y = 0.3; ua.castShadow = true; j2.add(ua);
+    const j3 = new THREE.Group(); j3.position.y = 0.58; j2.add(j3); joints.push(j3);
+    j3.add(new THREE.Mesh(new THREE.SphereGeometry(0.06,12,12), joint));
+    const la = new THREE.Mesh(new THREE.BoxGeometry(0.06,0.45,0.06), metal); la.position.y = 0.25; la.castShadow = true; j3.add(la);
+    const j4 = new THREE.Group(); j4.position.y = 0.5; j3.add(j4); joints.push(j4);
+    j4.add(new THREE.Mesh(new THREE.SphereGeometry(0.04,12,12), joint));
+    const j5 = new THREE.Group(); j5.position.y = 0.04; j4.add(j5); joints.push(j5);
+    const wr = new THREE.Mesh(new THREE.BoxGeometry(0.05,0.12,0.05), metal); wr.position.y = 0.06; j5.add(wr);
+    const j6 = new THREE.Group(); j6.position.y = 0.14; j5.add(j6); joints.push(j6);
+    const fL = new THREE.Mesh(new THREE.BoxGeometry(0.015,0.1,0.04), accent); fL.position.set(-0.03,0.05,0); j6.add(fL);
+    const fR = new THREE.Mesh(new THREE.BoxGeometry(0.015,0.1,0.04), accent); fR.position.set(0.03,0.05,0); j6.add(fR);
+    scene.add(armGroup);
+}
+
+// ─── Build Humanoid ───
+const humanoidGroup = new THREE.Group();
+const hJ = {};
+function buildHumanoid() {
+    const footL = new THREE.Mesh(new THREE.BoxGeometry(0.12,0.04,0.25), dark); footL.position.set(-0.12,0.02,0); humanoidGroup.add(footL);
+    const footR = new THREE.Mesh(new THREE.BoxGeometry(0.12,0.04,0.25), dark); footR.position.set(0.12,0.02,0); humanoidGroup.add(footR);
+    // Legs
+    [[-0.12,'L'],[0.12,'R']].forEach(([x,s])=>{
+        const shin = new THREE.Group(); shin.position.set(x,0.04,0); humanoidGroup.add(shin); hJ['shin'+s] = shin;
+        const sm = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.35,0.08), body); sm.position.y = 0.175; sm.castShadow = true; shin.add(sm);
+        shin.add(new THREE.Mesh(new THREE.SphereGeometry(0.045,8,8), joint).translateY(0.37));
+        const thigh = new THREE.Group(); thigh.position.y = 0.37; shin.add(thigh); hJ['thigh'+s] = thigh;
+        const tm = new THREE.Mesh(new THREE.BoxGeometry(0.09,0.35,0.09), body); tm.position.y = 0.175; tm.castShadow = true; thigh.add(tm);
+    });
+    // Torso
+    const torso = new THREE.Group(); torso.position.set(0,0.78,0); humanoidGroup.add(torso); hJ.torso = torso;
+    const tMesh = new THREE.Mesh(new THREE.BoxGeometry(0.3,0.4,0.18), body); tMesh.position.y = 0.2; tMesh.castShadow = true; torso.add(tMesh);
+    torso.add(new THREE.Mesh(new THREE.BoxGeometry(0.05,0.3,0.19), accent).translateY(0.2));
+    // Head
+    const head = new THREE.Group(); head.position.y = 0.45; torso.add(head); hJ.head = head;
+    head.add(new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.05,0.06,8), body));
+    const hm = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.18,0.16), body); hm.position.y = 0.12; hm.castShadow = true; head.add(hm);
+    head.add(new THREE.Mesh(new THREE.CircleGeometry(0.02,12), accent).translateX(-0.035).translateY(0.14).translateZ(0.081));
+    head.add(new THREE.Mesh(new THREE.CircleGeometry(0.02,12), accent).translateX(0.035).translateY(0.14).translateZ(0.081));
+    // Arms
+    [[-0.2,'L'],[0.2,'R']].forEach(([x,s])=>{
+        const sh = new THREE.Group(); sh.position.set(x,0.38,0); torso.add(sh); hJ['shoulder'+s] = sh;
+        const uam = new THREE.Mesh(new THREE.BoxGeometry(0.07,0.3,0.07), body); uam.position.y = -0.15; uam.castShadow = true; sh.add(uam);
+        sh.add(new THREE.Mesh(new THREE.SphereGeometry(0.04,8,8), joint).translateY(-0.32));
+        const el = new THREE.Group(); el.position.y = -0.32; sh.add(el); hJ['elbow'+s] = el;
+        const fam = new THREE.Mesh(new THREE.BoxGeometry(0.06,0.28,0.06), body); fam.position.y = -0.14; fam.castShadow = true; el.add(fam);
+        el.add(new THREE.Mesh(new THREE.BoxGeometry(0.06,0.08,0.04), metal).translateY(-0.3));
+    });
+    humanoidGroup.rotation.y = Math.PI;
+    humanoidGroup.visible = false;
+    scene.add(humanoidGroup);
+}
+
+// ─── Build Rover ───
+const roverGroup = new THREE.Group();
+const roverParts = {};
+function buildRover() {
+    const ch = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.12,0.35), body); ch.position.y = 0.12; ch.castShadow = true; roverGroup.add(ch);
+    roverGroup.add(new THREE.Mesh(new THREE.BoxGeometry(0.4,0.04,0.3), dark).translateY(0.2));
+    const mast = new THREE.Group(); mast.position.set(0.1,0.22,0); roverGroup.add(mast); roverParts.mast = mast;
+    mast.add(new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.015,0.2,8), metal).translateY(0.1));
+    const cam = new THREE.Mesh(new THREE.BoxGeometry(0.08,0.06,0.06), dark); cam.position.y = 0.22; mast.add(cam);
+    mast.add(new THREE.Mesh(new THREE.CircleGeometry(0.02,12), accent).translateY(0.22).translateZ(0.031));
+    const lidar = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.03,16), accent); lidar.position.set(-0.1,0.24,0); roverGroup.add(lidar); roverParts.lidar = lidar;
+    roverParts.wheels = [];
+    [[-0.22,0.06,0.16],[0.22,0.06,0.16],[-0.22,0.06,-0.16],[0.22,0.06,-0.16]].forEach(p=>{
+        const w = new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.04,12), dark);
+        w.position.set(...p); w.rotation.x = Math.PI/2; roverGroup.add(w); roverParts.wheels.push(w);
+    });
+    roverGroup.visible = false;
+    scene.add(roverGroup);
+}
+
+buildArm(); buildHumanoid(); buildRover();
+
+// ─── Gestures ───
+const armGestures = {
+    idle: [0,0,0,0,0,0],
+    point_right: [1.2,-0.3,-0.8,0,0,0],
+    arm_raise: [0,-0.2,-0.1,-0.1,0,0],
+    fault: [-0.5,0.4,-1.5,-0.8,0.5,0],
+    safe: [0.3,-0.5,-0.5,0,0.3,0],
+};
+const humanoidGestures = {
+    idle: {shoulderL:[0,0,0],shoulderR:[0,0,0],elbowL:[0,0,0],elbowR:[0,0,0],head:[0,0,0]},
+    point_right: {shoulderL:[0,0,0],shoulderR:[-1.5,0,0],elbowR:[0,0,0],elbowL:[0,0,0],head:[0,0.3,0]},
+    arm_raise: {shoulderL:[-2.8,0,0],shoulderR:[-2.8,0,0],elbowL:[0,0,0],elbowR:[0,0,0],head:[-0.2,0,0]},
+    fault: {shoulderL:[-1.2,0,0.4],shoulderR:[-1.2,0,-0.4],elbowL:[-1.2,0,0],elbowR:[-1.2,0,0],head:[0,0,0]},
+    safe: {shoulderL:[-1.5,0,0.8],shoulderR:[-1.5,0,-0.8],elbowL:[0,0,0],elbowR:[0,0,0],head:[0,0,0]},
+};
+const callLabels = {point_right:'OUT!', arm_raise:'CALL', fault:'FAULT!', safe:'IN!'};
+
+// ─── Auto-play sequence ───
+const sequence = [
+    {robot:'arm', gesture:'idle', duration:2},
+    {robot:'arm', gesture:'point_right', duration:2.5},
+    {robot:'arm', gesture:'idle', duration:1},
+    {robot:'arm', gesture:'fault', duration:2.5},
+    {robot:'arm', gesture:'idle', duration:1.5},
+    {robot:'humanoid', gesture:'idle', duration:2},
+    {robot:'humanoid', gesture:'arm_raise', duration:2.5},
+    {robot:'humanoid', gesture:'idle', duration:1},
+    {robot:'humanoid', gesture:'safe', duration:2.5},
+    {robot:'humanoid', gesture:'idle', duration:1.5},
+    {robot:'rover', gesture:'idle', duration:2},
+    {robot:'rover', gesture:'point_right', duration:2.5},
+    {robot:'rover', gesture:'idle', duration:2},
+];
+const robotNames = {arm:'SO-101 Arm', humanoid:'Unitree G1', rover:'MentorPi'};
+let seqIdx = 0, seqTimer = 0, curRobot = 'arm', curGesture = 'idle';
+
+function switchRobot(name) {
+    curRobot = name;
+    armGroup.visible = name === 'arm';
+    humanoidGroup.visible = name === 'humanoid';
+    roverGroup.visible = name === 'rover';
+    document.getElementById('dot-arm').className = 'w-2 h-2 rounded-full ' + (name==='arm'?'bg-primary':'bg-slate-600');
+    document.getElementById('dot-humanoid').className = 'w-2 h-2 rounded-full ' + (name==='humanoid'?'bg-primary':'bg-slate-600');
+    document.getElementById('dot-rover').className = 'w-2 h-2 rounded-full ' + (name==='rover'?'bg-primary':'bg-slate-600');
+    if (name==='arm') { camera.position.set(3.5,2.5,5); camera.lookAt(0,0.8,0); }
+    if (name==='humanoid') { camera.position.set(3,2,5); camera.lookAt(0,1,0); }
+    if (name==='rover') { camera.position.set(3,2,4); camera.lookAt(0,0.2,0); }
+}
+
+function showCall(gesture) {
+    const label = callLabels[gesture];
+    if (!label) return;
+    const el = document.getElementById('hero-call');
+    const txt = document.getElementById('hero-call-text');
+    txt.textContent = label;
+    el.style.opacity = '1';
+    setTimeout(()=>{ el.style.opacity = '0'; }, 1800);
+}
+
+function lerp(a,b,t) { return a+(b-a)*t; }
+
+// ─── Render ───
+const clock = new THREE.Clock();
+function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    seqTimer += dt;
+
+    // Advance sequence
+    const step = sequence[seqIdx];
+    if (seqTimer >= step.duration) {
+        seqTimer = 0;
+        seqIdx = (seqIdx + 1) % sequence.length;
+        const next = sequence[seqIdx];
+        if (next.robot !== curRobot) switchRobot(next.robot);
+        curGesture = next.gesture;
+        document.getElementById('hero-status-text').textContent = robotNames[next.robot] + ' — ' + (next.gesture === 'idle' ? 'Observing' : next.gesture.replace('_',' '));
+        if (next.gesture !== 'idle') showCall(next.gesture);
+    }
+
+    // Animate arm
+    if (curRobot === 'arm') {
+        const t = armGestures[curGesture] || armGestures.idle;
+        joints[0].rotation.y = lerp(joints[0].rotation.y, t[0], dt*3);
+        joints[1].rotation.z = lerp(joints[1].rotation.z, t[1], dt*3);
+        joints[2].rotation.z = lerp(joints[2].rotation.z, t[2], dt*3);
+        joints[3].rotation.z = lerp(joints[3].rotation.z, t[3], dt*3);
+        joints[4].rotation.y = lerp(joints[4].rotation.y, t[4], dt*3);
+        joints[5].rotation.z = lerp(joints[5].rotation.z, t[5], dt*3);
+    }
+    // Animate humanoid
+    if (curRobot === 'humanoid') {
+        const t = humanoidGestures[curGesture] || humanoidGestures.idle;
+        Object.keys(t).forEach(k => {
+            if (!hJ[k]) return;
+            hJ[k].rotation.x = lerp(hJ[k].rotation.x, t[k][0], dt*3);
+            hJ[k].rotation.y = lerp(hJ[k].rotation.y, t[k][1], dt*3);
+            hJ[k].rotation.z = lerp(hJ[k].rotation.z, t[k][2], dt*3);
+        });
+    }
+    // Animate rover
+    if (curRobot === 'rover') {
+        const mt = curGesture === 'point_right' ? [0,0.8] : [0,0];
+        roverParts.mast.rotation.x = lerp(roverParts.mast.rotation.x, mt[0], dt*3);
+        roverParts.mast.rotation.y = lerp(roverParts.mast.rotation.y, mt[1], dt*3);
+        roverParts.lidar.rotation.y += dt*4;
+        if (curGesture !== 'idle') roverParts.wheels.forEach(w=>w.rotation.z += dt*6);
+    }
+
+    // Slow auto-rotate
+    const t = clock.elapsedTime;
+    camera.position.x += Math.sin(t*0.15)*0.002;
+
+    renderer.render(scene, camera);
+}
+
+window.addEventListener('resize', ()=>{
+    const w = canvas.parentElement.clientWidth, h = canvas.parentElement.clientHeight;
+    camera.aspect = w/h; camera.updateProjectionMatrix();
+    renderer.setSize(w,h);
+});
+renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+animate();
+}
+</script>
 </body>
 </html>
