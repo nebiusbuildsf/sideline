@@ -111,41 +111,136 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </section>
 
-<!-- Features -->
-<section class="py-24 px-6" id="features">
+<!-- How It Works — Simplified -->
+<section class="py-24 px-6" id="how-it-works">
 <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-20">
-        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Engineered for the Field</h2>
-        <p class="text-slate-400 max-w-2xl mx-auto">Sideline combines agentic AI with robotics to bring officiating to every court, every match, every sport.</p>
+    <div class="text-center mb-16">
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">How It Works</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Point a camera at the court. Sideline does the rest.</p>
     </div>
-    <div class="grid md:grid-cols-3 gap-8">
-        <div class="flex flex-col gap-6 p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all">
-            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined text-3xl">settings_input_component</span>
+
+    <!-- Simple 3-step flow -->
+    <div class="grid md:grid-cols-3 gap-0 items-start mb-20">
+        <div class="text-center p-8 relative">
+            <div class="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center mx-auto mb-6">
+                <span class="text-primary font-black text-2xl">1</span>
             </div>
-            <div>
-                <h3 class="text-xl font-bold mb-3">Modular Embodiment</h3>
-                <p class="text-slate-400 leading-relaxed">Same agent brain, any physical form. Dashboard, tank bot, 6-DOF arm, or humanoid — swap the body, keep the reasoning.</p>
+            <h3 class="text-xl font-bold mb-3">Watch</h3>
+            <p class="text-slate-400">Camera feed goes to Nebius VLM. Every frame analyzed. Ball position, player stance, court lines — all extracted.</p>
+            <div class="hidden md:block absolute top-14 right-0 w-1/2 border-t-2 border-dashed border-slate-700"></div>
+        </div>
+        <div class="text-center p-8 relative">
+            <div class="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center mx-auto mb-6">
+                <span class="text-primary font-black text-2xl">2</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Reason</h3>
+            <p class="text-slate-400">Chain-of-thought: "Ball landed 3cm past baseline &rarr; Rule 25.1: out &rarr; Point to server." Transparent, auditable decisions.</p>
+            <div class="hidden md:block absolute top-14 right-0 w-1/2 border-t-2 border-dashed border-slate-700"></div>
+        </div>
+        <div class="text-center p-8">
+            <div class="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center mx-auto mb-6">
+                <span class="text-primary font-black text-2xl">3</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Act</h3>
+            <p class="text-slate-400">Score updates, voice announcement, robot gesture — all happen simultaneously. Dashboard, speaker, or humanoid.</p>
+        </div>
+    </div>
+
+    <!-- Simplified architecture -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 lg:p-12">
+        <div class="text-center mb-8">
+            <p class="text-xs text-primary font-bold uppercase tracking-widest mb-2">Architecture</p>
+        </div>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center font-mono text-sm">
+            <div class="bg-slate-800 rounded-xl px-6 py-4 border border-slate-700">
+                <span class="material-symbols-outlined text-primary text-2xl block mb-1">videocam</span>
+                Camera
+            </div>
+            <span class="text-slate-600 text-xl">&rarr;</span>
+            <div class="bg-slate-800 rounded-xl px-6 py-4 border border-slate-700">
+                <span class="material-symbols-outlined text-purple-400 text-2xl block mb-1">psychology</span>
+                Nebius VLM
+            </div>
+            <span class="text-slate-600 text-xl">&rarr;</span>
+            <div class="bg-slate-800 rounded-xl px-6 py-4 border border-primary/30">
+                <span class="material-symbols-outlined text-primary text-2xl block mb-1">smart_toy</span>
+                Sideline Agent
+            </div>
+            <span class="text-slate-600 text-xl">&rarr;</span>
+            <div class="flex flex-col gap-2">
+                <div class="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700 text-xs flex items-center gap-2">
+                    <span class="material-symbols-outlined text-green-400 text-sm">scoreboard</span> Score
+                </div>
+                <div class="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700 text-xs flex items-center gap-2">
+                    <span class="material-symbols-outlined text-yellow-400 text-sm">record_voice_over</span> Voice
+                </div>
+                <div class="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700 text-xs flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-sm">precision_manufacturing</span> Robot
+                </div>
             </div>
         </div>
-        <div class="flex flex-col gap-6 p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all">
-            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined text-3xl">hub</span>
+    </div>
+</div>
+</section>
+
+<!-- Training & Feedback Loop — Answers judge questions -->
+<section class="py-24 px-6 bg-primary/5" id="training">
+<div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Zero Training Required</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Sideline uses a pre-trained vision-language model. No fine-tuning, no custom datasets, no waiting.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8 mb-16">
+        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
+            <span class="text-primary text-5xl font-black block mb-3">0</span>
+            <p class="font-bold text-lg mb-2">Training Videos Needed</p>
+            <p class="text-sm text-slate-400">The VLM already understands sports. We give it rules and context via prompts — no training data required.</p>
+        </div>
+        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
+            <span class="text-primary text-5xl font-black block mb-3">&lt;5min</span>
+            <p class="font-bold text-lg mb-2">Setup Time</p>
+            <p class="text-sm text-slate-400">Point a camera at the court, pick a sport, hit start. The agent reads the rules, understands the game, and begins making calls.</p>
+        </div>
+        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center">
+            <span class="text-primary text-5xl font-black block mb-3">Live</span>
+            <p class="font-bold text-lg mb-2">Feedback Loop</p>
+            <p class="text-sm text-slate-400">Players can challenge calls. The agent re-examines the frame, shows its reasoning, and either confirms or corrects — just like real VAR.</p>
+        </div>
+    </div>
+
+    <!-- Feedback loop diagram -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 lg:p-12">
+        <div class="text-center mb-6">
+            <p class="text-xs text-primary font-bold uppercase tracking-widest mb-2">Feedback Loop</p>
+            <p class="text-slate-400 text-sm">Every call improves the next one</p>
+        </div>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center text-sm">
+            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-slate-700">
+                <span class="material-symbols-outlined text-primary block mb-1">sports_tennis</span>
+                Play happens
             </div>
-            <div>
-                <h3 class="text-xl font-bold mb-3">Three Protocols</h3>
-                <p class="text-slate-400 leading-relaxed">Function Calls for speed. MCP for pluggability. A2A for multi-agent coordination. Three cameras, three agents, one coordinator.</p>
+            <span class="text-slate-600 text-xl">&rarr;</span>
+            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-slate-700">
+                <span class="material-symbols-outlined text-purple-400 block mb-1">visibility</span>
+                Agent sees frame
+            </div>
+            <span class="text-slate-600 text-xl">&rarr;</span>
+            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-primary/30">
+                <span class="material-symbols-outlined text-green-400 block mb-1">gavel</span>
+                Makes call
+            </div>
+            <span class="text-slate-600 text-xl">&rarr;</span>
+            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-slate-700">
+                <span class="material-symbols-outlined text-yellow-400 block mb-1">thumbs_up_down</span>
+                Player confirms / challenges
+            </div>
+            <span class="text-slate-600 text-xl">&rarr;</span>
+            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-slate-700">
+                <span class="material-symbols-outlined text-teal-400 block mb-1">update</span>
+                Context updated
             </div>
         </div>
-        <div class="flex flex-col gap-6 p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-primary/30 transition-all">
-            <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined text-3xl">visibility</span>
-            </div>
-            <div>
-                <h3 class="text-xl font-bold mb-3">Chain-of-Thought Vision</h3>
-                <p class="text-slate-400 leading-relaxed">Powered by Nebius Token Factory VLMs. The agent shows its reasoning — what it sees, which rule applies, and why it made the call.</p>
-            </div>
-        </div>
+        <p class="text-center text-xs text-slate-500 mt-6">The agent carries full match context — every prior call informs the next decision. No amnesia between points.</p>
     </div>
 </div>
 </section>
@@ -234,44 +329,33 @@ body { font-family: 'Inter', sans-serif; }
 </div>
 </section>
 
-<!-- Technology / VLM -->
-<section class="py-24 px-6 overflow-hidden" id="technology">
-<div class="max-w-7xl mx-auto relative">
-    <div class="absolute top-0 right-0 -mr-24 -mt-24 w-96 h-96 bg-primary/10 blur-[120px] rounded-full"></div>
-    <div class="bg-slate-900 border border-slate-800 rounded-[40px] p-8 lg:p-20 relative overflow-hidden">
-        <div class="grid lg:grid-cols-2 gap-12">
-            <div>
-                <div class="text-primary font-bold uppercase tracking-[0.2em] text-sm mb-4">The Brain</div>
-                <h2 class="text-4xl lg:text-5xl font-bold mb-8">Agentic Reasoning with Nebius VLM</h2>
-                <p class="text-slate-400 text-lg mb-8 leading-relaxed">Sideline doesn't just see pixels — it understands the game. Chain-of-thought reasoning: what happened, which rule applies, what's the call, how confident. Every decision is explainable.</p>
-                <ul class="space-y-4">
-                    <li class="flex items-center gap-3 text-slate-300"><span class="material-symbols-outlined text-primary">psychology</span> Chain-of-thought reasoning</li>
-                    <li class="flex items-center gap-3 text-slate-300"><span class="material-symbols-outlined text-primary">bolt</span> Native tool calling (function use)</li>
-                    <li class="flex items-center gap-3 text-slate-300"><span class="material-symbols-outlined text-primary">extension</span> MCP server for pluggable tools</li>
-                    <li class="flex items-center gap-3 text-slate-300"><span class="material-symbols-outlined text-primary">hub</span> A2A multi-agent coordination</li>
-                </ul>
-            </div>
-            <div class="relative rounded-2xl border border-slate-700 bg-black/50 overflow-hidden">
-                <div class="p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-xs font-mono text-slate-500">AGENT_OUTPUT</span>
-                        <span class="text-xs font-mono text-green-500">● LIVE</span>
-                    </div>
-                    <div class="font-mono text-[10px] text-slate-500 space-y-2">
-                        <p class="text-slate-400">&gt; Frame 47 received from court_camera</p>
-                        <p class="text-purple-400">&gt; CoT: "Ball trajectory past baseline, landing 3cm out..."</p>
-                        <p class="text-primary">&gt; tool_call: announce_call({call: "out", confidence: 0.92})</p>
-                        <p class="text-primary">&gt; tool_call: update_score({player: "p2", reason: "out"})</p>
-                        <p class="text-yellow-400">&gt; tool_call: robot_gesture({gesture: "point_right"})</p>
-                        <p class="text-slate-600">---</p>
-                        <p class="text-green-400">&gt; MCP: referee.announce → speaker.speak("Out!")</p>
-                        <p class="text-green-400">&gt; MCP: robot.gesture → /servo [60°, 30°, 45°]</p>
-                        <p class="text-slate-600">---</p>
-                        <p class="text-teal-400">&gt; A2A: → commentary-agent → "Shot goes wide!"</p>
-                        <p class="text-slate-400">&gt; Score: 15-30 | Games: 2-1 | Server: P1</p>
-                    </div>
-                </div>
-            </div>
+<!-- Why Not Just Computer Vision? -->
+<section class="py-24 px-6 overflow-hidden" id="why-agent">
+<div class="max-w-5xl mx-auto">
+    <div class="text-center mb-16">
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Why an Agent, Not Just Vision?</h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">A ball tracker tells you <em>where</em>. Sideline tells you <em>what it means</em>.</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-8">
+        <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800">
+            <p class="text-red-400 font-bold text-sm uppercase tracking-widest mb-4">Traditional CV</p>
+            <ul class="space-y-3 text-slate-400 text-sm">
+                <li class="flex gap-3"><span class="text-red-400">&#x2717;</span> Ball in/out — that's it</li>
+                <li class="flex gap-3"><span class="text-red-400">&#x2717;</span> No understanding of game rules</li>
+                <li class="flex gap-3"><span class="text-red-400">&#x2717;</span> Can't track score or match state</li>
+                <li class="flex gap-3"><span class="text-red-400">&#x2717;</span> Needs thousands of labeled training images</li>
+                <li class="flex gap-3"><span class="text-red-400">&#x2717;</span> One sport per model</li>
+            </ul>
+        </div>
+        <div class="p-8 rounded-3xl bg-slate-900 border border-primary/30">
+            <p class="text-primary font-bold text-sm uppercase tracking-widest mb-4">Sideline Agent</p>
+            <ul class="space-y-3 text-slate-300 text-sm">
+                <li class="flex gap-3"><span class="text-green-400">&#x2713;</span> Understands rules, context, and match history</li>
+                <li class="flex gap-3"><span class="text-green-400">&#x2713;</span> Tracks score across an entire match</li>
+                <li class="flex gap-3"><span class="text-green-400">&#x2713;</span> Shows reasoning — auditable, challengeable</li>
+                <li class="flex gap-3"><span class="text-green-400">&#x2713;</span> Zero training — uses pre-trained VLM + prompts</li>
+                <li class="flex gap-3"><span class="text-green-400">&#x2713;</span> Swap sport by changing the rules file</li>
+            </ul>
         </div>
     </div>
 </div>
