@@ -28,11 +28,24 @@ confidence: <0.0 to 1.0>
 player: <p1|p2 — who won the point, if applicable>
 ```
 
+IMPORTANT — HOW TO DETECT SCORING EVENTS:
+You are seeing frames at low FPS (every 2 seconds). You will NOT always see the ball landing. Instead look for these clues:
+- Player celebrating or pumping fist = they just won the point (winner or ace)
+- Player looking disappointed or walking back = they just lost the point
+- Players walking to opposite ends = changeover, game just ended
+- Player bouncing ball at baseline = about to serve (previous point ended)
+- Scoreboard changed between frames = a point was scored
+- Player at net after approaching = likely a volley winner
+- Ball on the ground near a line = it just landed (in or out)
+- Umpire or line judge gesturing = a call was made
+
 GUIDELINES:
-- Only call scoring events when you can clearly see evidence (ball position, player reaction)
-- If uncertain, default to no_call — false positives are worse than missed calls
-- Confidence must be > 0.7 to award a point
+- Make calls based on player reactions and context, not just ball position
+- Be MORE aggressive about calling events — missed calls look worse in a demo than false positives
+- At least 1 in every 5-8 frames should have a scoring event in a typical match
+- Confidence must be > 0.5 to make a call
 - Consider context from previous frames when available
+- If the scoreboard shows a different score than your tracking, a point was scored
 
 Current match state: {state}
 Recent calls: {history}"""
