@@ -208,39 +208,11 @@ body { font-family: 'Inter', sans-serif; }
         </div>
     </div>
 
-    <!-- Feedback loop diagram -->
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 lg:p-12">
-        <div class="text-center mb-6">
-            <p class="text-xs text-primary font-bold uppercase tracking-widest mb-2">Feedback Loop</p>
-            <p class="text-slate-400 text-sm">Every call improves the next one</p>
-        </div>
-        <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center text-sm">
-            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-slate-700">
-                <span class="material-symbols-outlined text-primary block mb-1">sports_tennis</span>
-                Play happens
-            </div>
-            <span class="text-slate-600 text-xl">&rarr;</span>
-            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-slate-700">
-                <span class="material-symbols-outlined text-purple-400 block mb-1">visibility</span>
-                Agent sees frame
-            </div>
-            <span class="text-slate-600 text-xl">&rarr;</span>
-            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-primary/30">
-                <span class="material-symbols-outlined text-green-400 block mb-1">gavel</span>
-                Makes call
-            </div>
-            <span class="text-slate-600 text-xl">&rarr;</span>
-            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-slate-700">
-                <span class="material-symbols-outlined text-yellow-400 block mb-1">thumbs_up_down</span>
-                Player confirms / challenges
-            </div>
-            <span class="text-slate-600 text-xl">&rarr;</span>
-            <div class="bg-slate-800 rounded-xl px-5 py-4 border border-slate-700">
-                <span class="material-symbols-outlined text-teal-400 block mb-1">update</span>
-                Context updated
-            </div>
-        </div>
-        <p class="text-center text-xs text-slate-500 mt-6">The agent carries full match context — every prior call informs the next decision. No amnesia between points.</p>
+    <!-- Feedback loop — simple -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 lg:p-10 text-center">
+        <p class="text-xs text-primary font-bold uppercase tracking-widest mb-4">Feedback Loop</p>
+        <p class="text-slate-300 text-lg font-medium mb-2">Play &rarr; Call &rarr; Challenge &rarr; Learn</p>
+        <p class="text-slate-500 text-sm max-w-lg mx-auto">Players can challenge any call. The agent re-examines the frame, explains its reasoning, and updates match context. Every decision informs the next.</p>
     </div>
 </div>
 </section>
