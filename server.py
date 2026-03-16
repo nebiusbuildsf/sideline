@@ -302,6 +302,11 @@ async def future():
     return FileResponse("dashboard/future.html")
 
 
+@app.get("/robot-embed")
+async def robot_embed():
+    return FileResponse("dashboard/robot-embed.html")
+
+
 @app.get("/about")
 async def about():
     return FileResponse("dashboard/about.html")
