@@ -697,9 +697,12 @@ async function startCached() {
                     el.textContent = tc.args.announcement || tc.args.call_type;
                     el.className = 'sb-call' + (['fault','double_fault','out'].includes(tc.args.call_type) ? ' fault' : ['ace','winner'].includes(tc.args.call_type) ? ' score' : '');
 
-                    // Auto gesture
+                    // Auto gesture — dispatch to both main UI and Three.js robot
                     const gMap = {fault:'fault',double_fault:'fault',out:'point_right',ace:'arm_raise',winner:'arm_raise',let:'wave',in:'safe'};
-                    handleEvent('gesture', {gesture: gMap[tc.args.call_type] || 'arm_raise'});
+                    const gestureData = {gesture: gMap[tc.args.call_type] || 'arm_raise'};
+                    handleEvent('gesture', gestureData);
+                    // Notify inline Three.js robot via custom event
+                    window.dispatchEvent(new CustomEvent('sideline-gesture', {detail: gestureData}));
                 }
                 if (tc.name === 'update_score') {
                     const w = tc.args.player || 'p1';
@@ -841,6 +844,17 @@ let currentGesture = 'idle';
 let gestureTime = 0;
 
 function lerp(a, b, t) { return a + (b - a) * t; }
+
+// Listen to custom events from client-side cached playback
+window.addEventListener('sideline-gesture', (e) => {
+    const g = e.detail?.gesture || 'idle';
+    currentGesture = Object.keys(gestures).includes(g) ? g : 'point_right';
+    gestureTime = 0;
+    const gl = document.getElementById('robot-gesture-label'); if (gl) gl.textContent = currentGesture;
+    const gd = document.getElementById('robot-dot'); if (gd) { gd.style.background = 'var(--green)'; gd.style.boxShadow = '0 0 6px #22c55e40'; }
+    clearTimeout(window._rTimer);
+    window._rTimer = setTimeout(() => { currentGesture = 'idle'; if (gl) gl.textContent = 'idle'; if (gd) { gd.style.background = 'var(--dim)'; gd.style.boxShadow = 'none'; } }, 3000);
+});
 
 // Listen to parent page events
 window.addEventListener('message', (e) => {
