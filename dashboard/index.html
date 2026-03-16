@@ -312,7 +312,11 @@
                     </select>
                     <a href="/robots" target="_blank" style="font-size:10px;color:var(--accent);text-decoration:none;margin-left:8px">↗</a>
                 </div>
-                <div id="robot-3d" style="flex:1;min-height:300px"></div>
+                <div id="robot-3d" style="flex:1;min-height:300px;position:relative">
+                    <div id="robot-call-overlay" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);z-index:10;pointer-events:none;opacity:0;transition:opacity 0.3s,transform 0.3s;text-align:center">
+                        <div id="robot-call-text" style="font-size:28px;font-weight:800;text-transform:uppercase;color:#fff;text-shadow:0 0 30px rgba(59,130,246,0.6),0 0 60px rgba(59,130,246,0.3)"></div>
+                    </div>
+                </div>
                 <div style="padding:8px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px">
                     <div style="display:flex;align-items:center;gap:6px">
                         <div id="robot-dot" style="width:6px;height:6px;border-radius:50%;background:var(--dim)"></div>
@@ -845,15 +849,37 @@ let gestureTime = 0;
 
 function lerp(a, b, t) { return a + (b - a) * t; }
 
+const callLabels = {point_right:'OUT!',arm_raise:'ACE!',fault:'FAULT!',safe:'IN!',wave:'LET!'};
+const callColors = {point_right:'#ff6666',arm_raise:'#55ffaa',fault:'#ff6666',safe:'#55ffaa',wave:'#eab308'};
+
+function showRobotOverlay(gesture) {
+    const overlay = document.getElementById('robot-call-overlay');
+    const text = document.getElementById('robot-call-text');
+    const label = callLabels[gesture];
+    if (!label || !overlay) return;
+    text.textContent = label;
+    text.style.color = callColors[gesture] || '#fff';
+    text.style.textShadow = `0 0 30px ${callColors[gesture] || '#3b82f6'}80, 0 0 60px ${callColors[gesture] || '#3b82f6'}40`;
+    overlay.style.opacity = '1';
+    overlay.style.transform = 'translate(-50%,-50%) scale(1)';
+    clearTimeout(window._overlayTimer);
+    window._overlayTimer = setTimeout(() => {
+        overlay.style.opacity = '0';
+        overlay.style.transform = 'translate(-50%,-50%) scale(0.8)';
+    }, 2000);
+}
+
 // Listen to custom events from client-side cached playback
 window.addEventListener('sideline-gesture', (e) => {
     const g = e.detail?.gesture || 'idle';
     currentGesture = Object.keys(gestures).includes(g) ? g : 'point_right';
     gestureTime = 0;
+    showRobotOverlay(g);
     const gl = document.getElementById('robot-gesture-label'); if (gl) gl.textContent = currentGesture;
     const gd = document.getElementById('robot-dot'); if (gd) { gd.style.background = 'var(--green)'; gd.style.boxShadow = '0 0 6px #22c55e40'; }
+    const cl = document.getElementById('robot-call-label'); if (cl) cl.textContent = callLabels[g] || '';
     clearTimeout(window._rTimer);
-    window._rTimer = setTimeout(() => { currentGesture = 'idle'; if (gl) gl.textContent = 'idle'; if (gd) { gd.style.background = 'var(--dim)'; gd.style.boxShadow = 'none'; } }, 3000);
+    window._rTimer = setTimeout(() => { currentGesture = 'idle'; if (gl) gl.textContent = 'idle'; if (gd) { gd.style.background = 'var(--dim)'; gd.style.boxShadow = 'none'; } if (cl) cl.textContent = ''; }, 3000);
 });
 
 // Listen to parent page events
@@ -876,20 +902,8 @@ let lastCallLabel = '';
 rws.onmessage = (e) => {
     const msg = JSON.parse(e.data);
     if (msg.type === 'gesture') {
-        const g = msg.data.gesture || 'idle';
-        currentGesture = Object.keys(gestures).includes(g) ? g : 'point_right';
-        gestureTime = 0;
-        document.getElementById('robot-gesture-label').textContent = currentGesture;
-        document.getElementById('robot-dot').style.background = 'var(--green)';
-        document.getElementById('robot-dot').style.boxShadow = '0 0 6px #22c55e40';
-        clearTimeout(window._rTimer);
-        window._rTimer = setTimeout(() => {
-            currentGesture = 'idle';
-            document.getElementById('robot-gesture-label').textContent = 'idle';
-            document.getElementById('robot-dot').style.background = 'var(--dim)';
-            document.getElementById('robot-dot').style.boxShadow = 'none';
-            document.getElementById('robot-call-label').textContent = '';
-        }, 3000);
+        // Reuse the custom event path so overlay + dot + label all update
+        window.dispatchEvent(new CustomEvent('sideline-gesture', {detail: msg.data}));
     }
     if (msg.type === 'call') {
         const ct = (msg.data.call_type || '').toUpperCase();
@@ -898,8 +912,12 @@ rws.onmessage = (e) => {
 };
 
 window.switchRobot = function(name) {
-    // Open full robot sim with selected robot
-    window.open('/robots#' + name, '_blank');
+    const labels = {arm:'SO-101 Arm', humanoid:'Unitree G1', rover:'MentorPi'};
+    const gl = document.getElementById('robot-gesture-label');
+    if (gl) gl.textContent = labels[name] || name;
+    // Show a demo gesture on switch
+    const demoGestures = {arm:'arm_raise', humanoid:'point_right', rover:'wave'};
+    window.dispatchEvent(new CustomEvent('sideline-gesture', {detail: {gesture: demoGestures[name] || 'arm_raise'}}));
 };
 
 const clock = new THREE.Clock();
