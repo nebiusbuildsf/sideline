@@ -288,10 +288,10 @@
                     <span class="frame-num" id="frame-num">Frame 0</span>
                     <div class="video-progress"><div class="video-progress-fill" id="progress-fill"></div></div>
                     <select id="clip-select" onchange="switchClip(this.value)" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--elevated);color:var(--text);font-family:var(--font);font-size:12px;cursor:pointer">
-                        <option value="tennis_atp" selected>ATP Tour (Best)</option>
-                        <option value="tennis_demo">Match Highlights</option>
+                        <option value="tennis_demo" selected>Demo (5 calls)</option>
+                        <option value="tennis_match">Andreeva vs Ghazouani</option>
+                        <option value="tennis_atp">ATP Tour</option>
                         <option value="tennis_rally">Singles Rally</option>
-                        <option value="videoplayback">Full Match</option>
                     </select>
                     <div class="controls">
                         <button class="btn" onclick="resetGame()">Reset</button>
@@ -633,12 +633,12 @@ function addEv(type, data) {
 // Detect if running on Vercel (no backend) or local
 const clipBase = '/clips/';
 const clipMap = {
-    'tennis_atp': { video: 'tennis_atp.mp4', cache: 'tennis_atp_cache.json', label: 'ATP Tour (Best)' },
-    'tennis_demo': { video: 'tennis_demo.mp4', cache: 'tennis_demo_cache.json', label: 'Match Highlights' },
+    'tennis_demo': { video: 'tennis_demo.mp4', cache: 'tennis_demo_cache.json', label: 'Demo (5 calls)' },
+    'tennis_match': { video: 'tennis_match.mp4', cache: 'tennis_match_cache.json', label: 'Andreeva vs Ghazouani' },
+    'tennis_atp': { video: 'tennis_atp.mp4', cache: 'tennis_atp_cache.json', label: 'ATP Tour' },
     'tennis_rally': { video: 'tennis_rally.mp4', cache: 'tennis_rally_cache.json', label: 'Singles Rally' },
-    'videoplayback': { video: 'videoplayback.mp4', cache: null, label: 'Full Match' },
 };
-let currentClip = 'tennis_atp';
+let currentClip = 'tennis_demo';
 
 function switchClip(clipId) {
     currentClip = clipId;

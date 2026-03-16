@@ -3,16 +3,16 @@
   "model": "Qwen/Qwen2.5-VL-72B-Instruct",
   "fps": 0.5,
   "total_frames": 33,
-  "analyzed_at": "2026-03-15T20:58:40Z",
+  "analyzed_at": "2026-03-15T21:12:47Z",
   "frames": [
     {
       "frame": 1,
-      "content": "no_call\ndescription: Player 1 is preparing to serve. The scoreboard indicates that Djokovic has 15 points and Nadal has 30 points. There is no immediate scoring event occurring in this frame.",
+      "content": "no_call\ndescription: Player 1 is preparing to serve. The ball is not yet in play, and there is no indication of a scoring event.",
       "tool_calls": [
         {
           "name": "no_call",
           "args": {
-            "description": "description: Player 1 is preparing to serve. The scoreboard indicates that Djokovic has 15 points and Nadal has 30 points. There is no immediate scoring event occurring in this frame."
+            "description": "description: Player 1 is preparing to serve. The ball is not yet in play, and there is no indication of a scoring event."
           }
         }
       ],
@@ -31,18 +31,18 @@
         },
         "server": "p1"
       },
-      "latency_s": 5.77,
+      "latency_s": 4.21,
       "tool_call_source": "fallback",
       "timestamp": 2.0
     },
     {
       "frame": 2,
-      "content": "no_call\ndescription: Player 1 appears to be preparing for a serve. The scoreboard shows Djokovic with 15 points and Nadal with 30 points. No scoring event is detected in this frame.",
+      "content": "no_call\ndescription: Player 1 is in a ready stance, preparing to receive a serve. There is no ball in play, and no scoring event has occurred.",
       "tool_calls": [
         {
           "name": "no_call",
           "args": {
-            "description": "description: Player 1 appears to be preparing for a serve. The scoreboard shows Djokovic with 15 points and Nadal with 30 points. No scoring event is detected in this frame."
+            "description": "description: Player 1 is in a ready stance, preparing to receive a serve. There is no ball in play, and no scoring event has occurred."
           }
         }
       ],
@@ -61,18 +61,858 @@
         },
         "server": "p1"
       },
-      "latency_s": 2.89,
+      "latency_s": 1.84,
       "tool_call_source": "fallback",
       "timestamp": 4.0
     },
     {
       "frame": 3,
-      "content": "no_call\ndescription: The frame shows both players positioned for play, but there is no visible action indicating a serve or return. The scoreboard reflects a score where Djokovic has 15 points and Nadal has 30 points. There's no evidence of a scoring event in this particular frame.",
+      "content": "no_call\ndescription: The image shows both players in their respective positions, ready for the next play. There is no ball visible in the frame, indicating that the serve has not been made yet or the ball is out of view. No scoring event is evident.",
       "tool_calls": [
         {
           "name": "no_call",
           "args": {
-            "description": "description: The frame shows both players positioned for play, but there is no visible action indicating a serve or return. The scoreboard reflects a score where Djokovic has 15 points and Nadal has 3"
+            "description": "description: The image shows both players in their respective positions, ready for the next play. There is no ball visible in the frame, indicating that the serve has not been made yet or the ball is "
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.13,
+      "tool_call_source": "fallback",
+      "timestamp": 6.0
+    },
+    {
+      "frame": 4,
+      "content": "no_call\ndescription: The frame shows Player 1 in a ready position, likely preparing to receive a serve. There is no ball in motion, and no action suggests a scoring event has occurred. The scoreboard indicates the current game score but does not reflect any new points being awarded.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: The frame shows Player 1 in a ready position, likely preparing to receive a serve. There is no ball in motion, and no action suggests a scoring event has occurred. The scoreboard indicate"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.87,
+      "tool_call_source": "fallback",
+      "timestamp": 8.0
+    },
+    {
+      "frame": 5,
+      "content": "no_call\ndescription: Player 1 appears to be preparing to serve, as indicated by his stance and the ball toss. There is no evidence of a scoring event occurring in this frame. The match is still in the initial stages with the server about to deliver the serve.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to be preparing to serve, as indicated by his stance and the ball toss. There is no evidence of a scoring event occurring in this frame. The match is still in the initial"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.88,
+      "tool_call_source": "fallback",
+      "timestamp": 10.0
+    },
+    {
+      "frame": 6,
+      "content": "no_call\ndescription: Both players appear to be in their respective positions after a rally. There is no visible ball in play, and neither player is actively engaged in a stroke. The scoreboard reflects a score change, suggesting the previous point has concluded, but there's no immediate evidence of a scoring event in this specific frame. Players seem to be resetting for the next point.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Both players appear to be in their respective positions after a rally. There is no visible ball in play, and neither player is actively engaged in a stroke. The scoreboard reflects a scor"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.02,
+      "tool_call_source": "fallback",
+      "timestamp": 12.0
+    },
+    {
+      "frame": 7,
+      "content": "no_call\ndescription: Player 1 is seen walking towards the baseline, likely after completing a serve attempt. Player 2 is positioned near the net, possibly indicating a volley was attempted or a point has just been played. There is no clear evidence of a scoring event such as a ball out of bounds, a celebration, or a scoreboard change in this frame. The players appear to be resetting for the next play.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is seen walking towards the baseline, likely after completing a serve attempt. Player 2 is positioned near the net, possibly indicating a volley was attempted or a point has just"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 6.68,
+      "tool_call_source": "fallback",
+      "timestamp": 14.0
+    },
+    {
+      "frame": 8,
+      "content": "no_call\ndescription: Player 1 is in the motion of serving the ball, while Player 2 is preparing to receive the serve. There is no clear evidence of a scoring event yet; the ball is still in the air, and the rally has not begun. The server appears to be executing the first serve.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in the motion of serving the ball, while Player 2 is preparing to receive the serve. There is no clear evidence of a scoring event yet; the ball is still in the air, and the r"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.92,
+      "tool_call_source": "fallback",
+      "timestamp": 16.0
+    },
+    {
+      "frame": 9,
+      "content": "no_call\ndescription: Player 1 is preparing to serve, standing behind the baseline with the ball in hand. Player 2 is positioned ready to receive the serve. No scoring event has occurred yet as the serve has not been delivered.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing to serve, standing behind the baseline with the ball in hand. Player 2 is positioned ready to receive the serve. No scoring event has occurred yet as the serve has n"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 4.4,
+      "tool_call_source": "fallback",
+      "timestamp": 18.0
+    },
+    {
+      "frame": 10,
+      "content": "no_call\ndescription: Player 1 is in the process of serving the ball. The ball is in the air, and it's unclear whether it will land inside or outside the service box. Player 2 is preparing to return the serve. There is no clear evidence of a scoring event at this moment.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in the process of serving the ball. The ball is in the air, and it's unclear whether it will land inside or outside the service box. Player 2 is preparing to return the serve."
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.76,
+      "tool_call_source": "fallback",
+      "timestamp": 20.0
+    },
+    {
+      "frame": 11,
+      "content": "no_call\ndescription: Player 1 appears to have just served the ball, and Player 2 is moving forward to return it. The ball is not clearly visible in this frame, so it's uncertain whether the serve was successful or not. There is no clear evidence of a scoring event such as the ball being out or a player reacting to a point being won.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just served the ball, and Player 2 is moving forward to return it. The ball is not clearly visible in this frame, so it's uncertain whether the serve was successf"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 5.0,
+      "tool_call_source": "fallback",
+      "timestamp": 22.0
+    },
+    {
+      "frame": 12,
+      "content": "no_call\ndescription: Player 1 has just completed a serve motion, and the ball is not visible in this frame. Player 2 is positioned near the baseline, ready to receive the serve. There is no clear evidence of a scoring event such as the ball being out or a player reacting to a point being won. The rally is ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just completed a serve motion, and the ball is not visible in this frame. Player 2 is positioned near the baseline, ready to receive the serve. There is no clear evidence of "
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 10.43,
+      "tool_call_source": "fallback",
+      "timestamp": 24.0
+    },
+    {
+      "frame": 13,
+      "content": "no_call\ndescription: Player 1 is in the process of serving the ball, while Player 2 is preparing to receive the serve. There is no clear evidence of a scoring event such as the ball being out or a player reacting to a point being won. The rally has not yet started.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in the process of serving the ball, while Player 2 is preparing to receive the serve. There is no clear evidence of a scoring event such as the ball being out or a player reac"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.28,
+      "tool_call_source": "fallback",
+      "timestamp": 26.0
+    },
+    {
+      "frame": 14,
+      "content": "no_call\ndescription: Player 1 appears to have just served the ball, and Player 2 is preparing to return it. There is no clear evidence of a scoring event such as the ball being out or a player reacting to a point being won. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just served the ball, and Player 2 is preparing to return it. There is no clear evidence of a scoring event such as the ball being out or a player reacting to a p"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.16,
+      "tool_call_source": "fallback",
+      "timestamp": 28.0
+    },
+    {
+      "frame": 15,
+      "content": "no_call\ndescription: Player 1 is preparing to serve, standing behind the baseline with the ball in hand, while Player 2 is positioned ready to receive the serve. No scoring event has occurred yet.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing to serve, standing behind the baseline with the ball in hand, while Player 2 is positioned ready to receive the serve. No scoring event has occurred yet."
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 1.73,
+      "tool_call_source": "fallback",
+      "timestamp": 30.0
+    },
+    {
+      "frame": 16,
+      "content": "no_call\ndescription: Player 1 has just served the ball, and Player 2 is preparing to return it. The ball is in the air, heading towards Player 2's side of the court. There is no clear evidence of a scoring event such as the ball being out or a player reacting to a point being won. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just served the ball, and Player 2 is preparing to return it. The ball is in the air, heading towards Player 2's side of the court. There is no clear evidence of a scoring ev"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.9,
+      "tool_call_source": "fallback",
+      "timestamp": 32.0
+    },
+    {
+      "frame": 17,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a serve, and Player 2 is in a ready position to return the ball. There is no clear evidence of a scoring event such as the ball being out or a player reacting to a point being won. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a serve, and Player 2 is in a ready position to return the ball. There is no clear evidence of a scoring event such as the ball being out or a play"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 4.23,
+      "tool_call_source": "fallback",
+      "timestamp": 34.0
+    },
+    {
+      "frame": 18,
+      "content": "no_call\ndescription: Player 1 is in the motion of serving the ball, and Player 2 is positioned to receive the serve. There is no clear evidence of a scoring event such as the ball being out or a player reacting to a point being won. The serve is still in progress.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in the motion of serving the ball, and Player 2 is positioned to receive the serve. There is no clear evidence of a scoring event such as the ball being out or a player reacti"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.59,
+      "tool_call_source": "fallback",
+      "timestamp": 36.0
+    },
+    {
+      "frame": 19,
+      "content": "no_call\ndescription: Player 1 has just served the ball and is now moving forward, likely preparing to play the next shot. Player 2 is not visible in this frame, but there's no clear evidence of a scoring event like the ball being out or a player reacting to winning a point. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just served the ball and is now moving forward, likely preparing to play the next shot. Player 2 is not visible in this frame, but there's no clear evidence of a scoring even"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 7.7,
+      "tool_call_source": "fallback",
+      "timestamp": 38.0
+    },
+    {
+      "frame": 20,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a serve, and Player 2 is preparing to return. There is no clear evidence of a scoring event such as the ball being out or a player reacting to winning a point. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a serve, and Player 2 is preparing to return. There is no clear evidence of a scoring event such as the ball being out or a player reacting to winn"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 4.73,
+      "tool_call_source": "fallback",
+      "timestamp": 40.0
+    },
+    {
+      "frame": 21,
+      "content": "no_call\ndescription: Player 1 has just served the ball, and Player 2 is preparing to return it. The ball is in the air, heading towards Player 2's side. There is no clear evidence of a scoring event such as the ball being out or a player reacting to winning a point. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just served the ball, and Player 2 is preparing to return it. The ball is in the air, heading towards Player 2's side. There is no clear evidence of a scoring event such as t"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 4.97,
+      "tool_call_source": "fallback",
+      "timestamp": 42.0
+    },
+    {
+      "frame": 22,
+      "content": "no_call\ndescription: Player 1 has just served the ball, and Player 2 is preparing to return it. The ball is in the air, heading towards Player 2's side. There is no clear evidence of a scoring event such as the ball being out or a player reacting to winning a point. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just served the ball, and Player 2 is preparing to return it. The ball is in the air, heading towards Player 2's side. There is no clear evidence of a scoring event such as t"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.74,
+      "tool_call_source": "fallback",
+      "timestamp": 44.0
+    },
+    {
+      "frame": 23,
+      "content": "no_call\ndescription: Player 1 appears to be preparing for a serve, standing behind the baseline with the ball in hand. There is no evidence of a scoring event; the players are not in motion, and there is no indication of a ball in play. The match is still at the beginning stage with both players at 0-0.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to be preparing for a serve, standing behind the baseline with the ball in hand. There is no evidence of a scoring event; the players are not in motion, and there is no i"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.13,
+      "tool_call_source": "fallback",
+      "timestamp": 46.0
+    },
+    {
+      "frame": 24,
+      "content": "no_call\ndescription: Player 1 is in the process of serving, with the ball tossed up in the air. There is no clear evidence of a scoring event yet as the ball has not landed, and the rally has not begun. The players are positioned for the start of the point.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in the process of serving, with the ball tossed up in the air. There is no clear evidence of a scoring event yet as the ball has not landed, and the rally has not begun. The p"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.44,
+      "tool_call_source": "fallback",
+      "timestamp": 48.0
+    },
+    {
+      "frame": 25,
+      "content": "no_call\ndescription: Player 1 is in the motion of serving, tossing the ball up in preparation to strike it. Player 2 is ready in their receiving stance. No scoring event has occurred yet as the ball has not been hit or landed. The match remains at the initial state with both players at 0-0.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in the motion of serving, tossing the ball up in preparation to strike it. Player 2 is ready in their receiving stance. No scoring event has occurred yet as the ball has not b"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.7,
+      "tool_call_source": "fallback",
+      "timestamp": 50.0
+    },
+    {
+      "frame": 26,
+      "content": "no_call\ndescription: Player 1 is in the process of serving, with the ball tossed up in the air. There is no clear evidence of a scoring event yet as the ball has not landed, and the rally has not begun. The players are positioned for the start of the point.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in the process of serving, with the ball tossed up in the air. There is no clear evidence of a scoring event yet as the ball has not landed, and the rally has not begun. The p"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.85,
+      "tool_call_source": "fallback",
+      "timestamp": 52.0
+    },
+    {
+      "frame": 27,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a serve, and the ball is now traveling towards Player 2. Player 2 is preparing to return the serve. There's no clear evidence of a scoring event such as the ball being out, a fault, or a winner. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a serve, and the ball is now traveling towards Player 2. Player 2 is preparing to return the serve. There's no clear evidence of a scoring event su"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.69,
+      "tool_call_source": "fallback",
+      "timestamp": 54.0
+    },
+    {
+      "frame": 28,
+      "content": "no_call\ndescription: Player 1 has just hit the ball, likely returning it after receiving a serve or during a rally. The ball is in mid-air, heading towards Player 2. There is no clear evidence of a scoring event such as the ball being out, a fault, or a winner. The rally appears to be continuing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 has just hit the ball, likely returning it after receiving a serve or during a rally. The ball is in mid-air, heading towards Player 2. There is no clear evidence of a scoring ev"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 2.61,
+      "tool_call_source": "fallback",
+      "timestamp": 56.0
+    },
+    {
+      "frame": 29,
+      "content": "no_call\ndescription: Player 1 is preparing to serve, standing behind the baseline with the ball in hand. Player 2 is positioned ready to receive the serve. No scoring event has occurred yet; the serve has not been delivered.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is preparing to serve, standing behind the baseline with the ball in hand. Player 2 is positioned ready to receive the serve. No scoring event has occurred yet; the serve has not"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.29,
+      "tool_call_source": "fallback",
+      "timestamp": 58.0
+    },
+    {
+      "frame": 30,
+      "content": "no_call\ndescription: Player 1 appears to have just completed a serve, as indicated by his posture and the ball near the ground. Player 2 is in a ready position, suggesting the serve was returned. There's no clear evidence of a scoring event like a fault, out, or winner in this frame. The rally seems to be ongoing.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 appears to have just completed a serve, as indicated by his posture and the ball near the ground. Player 2 is in a ready position, suggesting the serve was returned. There's no c"
+          }
+        }
+      ],
+      "score": {
+        "points": {
+          "p1": "0",
+          "p2": "0"
+        },
+        "games": {
+          "p1": 0,
+          "p2": 0
+        },
+        "sets": {
+          "p1": 0,
+          "p2": 0
+        },
+        "server": "p1"
+      },
+      "latency_s": 3.41,
+      "tool_call_source": "fallback",
+      "timestamp": 60.0
+    },
+    {
+      "frame": 31,
+      "content": "no_call\ndescription: Player 1 is in the motion of serving the ball. The ball is in the air above the server's head, indicating the serve is being executed. There is no evidence of a scoring event such as a fault, out, or winner in this frame. The rally has not started yet.",
+      "tool_calls": [
+        {
+          "name": "no_call",
+          "args": {
+            "description": "description: Player 1 is in the motion of serving the ball. The ball is in the air above the server's head, indicating the serve is being executed. There is no evidence of a scoring event such as a fa"
           }
         }
       ],
@@ -93,958 +933,65 @@
       },
       "latency_s": 3.85,
       "tool_call_source": "fallback",
-      "timestamp": 6.0
-    },
-    {
-      "frame": 4,
-      "content": "announce_call\ncall_type: out\nannouncement: \"Out!\"\nconfidence: 0.9\nplayer: p2\n\ndescription: Player 1 appears to have served the ball, which seems to have landed outside the service box. Player 2 is reacting as if the ball was out, suggesting that the serve was unsuccessful. Given the context and the players' positions, it is reasonable to conclude that the serve was out, awarding the point to Player 2.",
-      "tool_calls": [
-        {
-          "name": "announce_call",
-          "args": {
-            "call_type": "out",
-            "announcement": "\"Out!\"",
-            "confidence": 0.9
-          }
-        },
-        {
-          "name": "update_score",
-          "args": {
-            "player": "p2",
-            "reason": "out"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "15"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 4.83,
-      "tool_call_source": "fallback",
-      "timestamp": 8.0
-    },
-    {
-      "frame": 5,
-      "content": "no_call\ndescription: Player 1 is preparing to serve, standing behind the baseline with the ball in hand. Player 2 is ready in their receiving stance. No scoring event has occurred yet as the serve has not been delivered.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 1 is preparing to serve, standing behind the baseline with the ball in hand. Player 2 is ready in their receiving stance. No scoring event has occurred yet as the serve has not bee"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "15"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 3.17,
-      "tool_call_source": "fallback",
-      "timestamp": 10.0
-    },
-    {
-      "frame": 6,
-      "content": "no_call\ndescription: Both players appear to be in their respective positions on the court, with Player 1 preparing to serve. There is no indication of a scoring event occurring in this frame. The players seem to be getting ready for the next point.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Both players appear to be in their respective positions on the court, with Player 1 preparing to serve. There is no indication of a scoring event occurring in this frame. The players seem"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "15"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 3.37,
-      "tool_call_source": "fallback",
-      "timestamp": 12.0
-    },
-    {
-      "frame": 7,
-      "content": "no_call\ndescription: Player 1 appears to be preparing for a serve, while Player 2 is positioned to receive. The scoreboard indicates that Player 2 has a 15-0 lead in points. There is no immediate scoring event visible in this frame.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 1 appears to be preparing for a serve, while Player 2 is positioned to receive. The scoreboard indicates that Player 2 has a 15-0 lead in points. There is no immediate scoring even"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "15"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 2.99,
-      "tool_call_source": "fallback",
-      "timestamp": 14.0
-    },
-    {
-      "frame": 8,
-      "content": "announce_call\ncall_type: fault\nannouncement: \"Fault!\"\nconfidence: 0.8\nplayer: p2\n\nPlayer 1 appears to have served the ball, but it did not land within the service box as indicated by the positioning of the players and the lack of a reaction suggesting a successful serve. Player 2 remains in a ready position, indicating the serve may have been outside the designated area.",
-      "tool_calls": [
-        {
-          "name": "announce_call",
-          "args": {
-            "call_type": "fault",
-            "announcement": "\"Fault!\"",
-            "confidence": 0.8
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "15"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 3.68,
-      "tool_call_source": "fallback",
-      "timestamp": 16.0
-    },
-    {
-      "frame": 9,
-      "content": "no_call\ndescription: Player 1 is in the process of serving, with their body posture indicating the motion of a serve. Player 2 is in a ready stance, anticipating the serve. There is no indication of a scoring event in this frame.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 1 is in the process of serving, with their body posture indicating the motion of a serve. Player 2 is in a ready stance, anticipating the serve. There is no indication of a scoring"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "15"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 2.49,
-      "tool_call_source": "fallback",
-      "timestamp": 18.0
-    },
-    {
-      "frame": 10,
-      "content": "announce_call\ncall_type: double_fault\nannouncement: \"Double Fault! Point to Player 2.\"\nconfidence: 0.9\nplayer: p2\n\nPlayer 1 has just completed a serve attempt, and given the previous fault call and the current positioning of the players, it seems that the serve did not land within the service box again. Player 2 is not reacting as if he's preparing to return a serve, which suggests that the serve was unsuccessful. Therefore, this would constitute a double fault, awarding the point to Player 2.",
-      "tool_calls": [
-        {
-          "name": "announce_call",
-          "args": {
-            "call_type": "double_fault",
-            "announcement": "\"Double Fault! Point to Player 2.\"",
-            "confidence": 0.9
-          }
-        },
-        {
-          "name": "update_score",
-          "args": {
-            "player": "p2",
-            "reason": "double_fault"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "30"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 5.67,
-      "tool_call_source": "fallback",
-      "timestamp": 20.0
-    },
-    {
-      "frame": 11,
-      "content": "announce_call  \ncall_type: out  \nannouncement: \"Out!\"  \nconfidence: 0.8  \nplayer: p2  \n\nPlayer 1 appears to have hit a shot that has resulted in them moving away from the baseline towards the center of the court, suggesting they may have played a defensive shot. Player 2 is positioned closer to the net, possibly indicating they returned the ball. Given the match state and the players' positions, it looks like Player 1's shot may have gone out, leading to a point for Player 2. The confidence is high due to the players' body language and positioning.",
-      "tool_calls": [
-        {
-          "name": "announce_call",
-          "args": {
-            "call_type": "out",
-            "announcement": "\"Out!\"",
-            "confidence": 0.8
-          }
-        },
-        {
-          "name": "update_score",
-          "args": {
-            "player": "p2",
-            "reason": "out"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "40"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 5.94,
-      "tool_call_source": "fallback",
-      "timestamp": 22.0
-    },
-    {
-      "frame": 12,
-      "content": "no_call\ndescription: Player 1 is in motion, appearing to have just served the ball. Player 2 is ready at the baseline, anticipating the serve. There is no indication of a scoring event in this frame. The rally is ongoing.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 1 is in motion, appearing to have just served the ball. Player 2 is ready at the baseline, anticipating the serve. There is no indication of a scoring event in this frame. The rall"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "40"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 2.99,
-      "tool_call_source": "fallback",
-      "timestamp": 24.0
-    },
-    {
-      "frame": 13,
-      "content": "announce_call  \ncall_type: fault  \nannouncement: \"Fault!\"  \nconfidence: 0.8  \nplayer: p2  \n\nPlayer 1 is seen in a serving stance, but the ball is not visible in the air above the service box, which suggests the serve may have been unsuccessful. Player 2 remains stationary, indicating he hasn't attempted to return the ball yet. Given the match state where Player 1 is already at 0-40, this could be a second serve attempt. The lack of ball visibility and the players' positions suggest a fault has occurred.",
-      "tool_calls": [
-        {
-          "name": "announce_call",
-          "args": {
-            "call_type": "fault",
-            "announcement": "\"Fault!\"",
-            "confidence": 0.8
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "40"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 0
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p1"
-      },
-      "latency_s": 6.46,
-      "tool_call_source": "fallback",
-      "timestamp": 26.0
-    },
-    {
-      "frame": 14,
-      "content": "announce_call  \ncall_type: double_fault  \nannouncement: \"Double Fault! Point to Player 2.\"  \nconfidence: 0.9  \nplayer: p2  \n\nPlayer 1 appears to be reacting with disappointment, suggesting the serve was unsuccessful. Given the match state of 0-40, this would indicate a double fault as the previous frame showed a fault. The scoreboard and players' body language confirm that Player 2 wins the point.",
-      "tool_calls": [
-        {
-          "name": "announce_call",
-          "args": {
-            "call_type": "double_fault",
-            "announcement": "\"Double Fault! Point to Player 2.\"",
-            "confidence": 0.9
-          }
-        },
-        {
-          "name": "update_score",
-          "args": {
-            "player": "p2",
-            "reason": "double_fault"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 6.84,
-      "tool_call_source": "fallback",
-      "timestamp": 28.0
-    },
-    {
-      "frame": 15,
-      "content": "no_call  \ndescription: Player 2 is preparing to serve, standing behind the baseline with the ball in hand. Player 1 is positioned ready to receive the serve. The match is paused momentarily as the server gets ready.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 is preparing to serve, standing behind the baseline with the ball in hand. Player 1 is positioned ready to receive the serve. The match is paused momentarily as the server gets r"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 2.78,
-      "tool_call_source": "fallback",
-      "timestamp": 30.0
-    },
-    {
-      "frame": 16,
-      "content": "no_call  \ndescription: Player 2 has just served the ball, and Player 1 is in motion, preparing to return the serve. The ball is not visible in this frame, but the players' positions suggest the rally is ongoing. There's no indication of a scoring event yet.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 has just served the ball, and Player 1 is in motion, preparing to return the serve. The ball is not visible in this frame, but the players' positions suggest the rally is ongoing"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 3.06,
-      "tool_call_source": "fallback",
-      "timestamp": 32.0
-    },
-    {
-      "frame": 17,
-      "content": "no_call  \ndescription: Player 2 appears to be in the process of serving, while Player 1 is positioned to receive the serve. The ball is not visible in this frame, indicating the serve may have just been initiated. No scoring event can be determined from this image alone.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 appears to be in the process of serving, while Player 1 is positioned to receive the serve. The ball is not visible in this frame, indicating the serve may have just been initiat"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 2.93,
-      "tool_call_source": "fallback",
-      "timestamp": 34.0
-    },
-    {
-      "frame": 18,
-      "content": "no_call  \ndescription: Player 2 is in the motion of serving the ball, and Player 1 is readying to receive the serve. The ball is not visible in this frame, suggesting the serve is either just being hit or has just left the server's hand. There is no indication of a scoring event in this particular frame.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 is in the motion of serving the ball, and Player 1 is readying to receive the serve. The ball is not visible in this frame, suggesting the serve is either just being hit or has j"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 4.72,
-      "tool_call_source": "fallback",
-      "timestamp": 36.0
-    },
-    {
-      "frame": 19,
-      "content": "announce_call  \ncall_type: fault  \nannouncement: \"Fault!\"  \nconfidence: 0.7  \nplayer: p1  \n\nPlayer 2 appears to have just completed a serve attempt but is now moving forward as if reacting to a missed serve. This suggests the serve did not land within the service box, resulting in a fault. The lack of celebration or disappointment from Player 1 further supports that the serve was unsuccessful.",
-      "tool_calls": [
-        {
-          "name": "announce_call",
-          "args": {
-            "call_type": "fault",
-            "announcement": "\"Fault!\"",
-            "confidence": 0.7
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 4.22,
-      "tool_call_source": "fallback",
-      "timestamp": 38.0
-    },
-    {
-      "frame": 20,
-      "content": "no_call  \ndescription: Player 2 is in the process of serving the ball, while Player 1 is preparing to return. The ball is not yet visible, indicating the serve is still in progress. No scoring event can be determined from this frame alone.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 is in the process of serving the ball, while Player 1 is preparing to return. The ball is not yet visible, indicating the serve is still in progress. No scoring event can be dete"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 4.15,
-      "tool_call_source": "fallback",
-      "timestamp": 40.0
-    },
-    {
-      "frame": 21,
-      "content": "no_call  \ndescription: Player 2 has just served the ball, and Player 1 is preparing to receive. The ball is in the air, heading towards Player 1's side. There is no indication of a scoring event in this frame.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 has just served the ball, and Player 1 is preparing to receive. The ball is in the air, heading towards Player 1's side. There is no indication of a scoring event in this frame."
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 4.89,
-      "tool_call_source": "fallback",
-      "timestamp": 42.0
-    },
-    {
-      "frame": 22,
-      "content": "no_call  \ndescription: Player 2 appears to be in motion, possibly following through after a serve or a shot. Player 1 is positioned to react but hasn't moved significantly. There's no clear evidence of a scoring event in this frame.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 appears to be in motion, possibly following through after a serve or a shot. Player 1 is positioned to react but hasn't moved significantly. There's no clear evidence of a scorin"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 7.9,
-      "tool_call_source": "fallback",
-      "timestamp": 44.0
-    },
-    {
-      "frame": 23,
-      "content": "no_call  \ndescription: Player 2 is seen bouncing the ball at the baseline, indicating preparation for a serve. No scoring event has occurred yet as the serve has not been delivered.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 is seen bouncing the ball at the baseline, indicating preparation for a serve. No scoring event has occurred yet as the serve has not been delivered."
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 2.62,
-      "tool_call_source": "fallback",
-      "timestamp": 46.0
-    },
-    {
-      "frame": 24,
-      "content": "no_call  \ndescription: Player 2 is preparing to serve, standing behind the baseline with the ball in hand. The players are in their respective positions, ready for the next point. No scoring event has occurred yet.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 is preparing to serve, standing behind the baseline with the ball in hand. The players are in their respective positions, ready for the next point. No scoring event has occurred "
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 2.62,
-      "tool_call_source": "fallback",
-      "timestamp": 48.0
-    },
-    {
-      "frame": 25,
-      "content": "no_call  \ndescription: Player 2 appears to be in the motion of serving the ball. There is no indication of a scoring event occurring yet. The players are positioned for the start of the rally.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 appears to be in the motion of serving the ball. There is no indication of a scoring event occurring yet. The players are positioned for the start of the rally."
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 7.08,
-      "tool_call_source": "fallback",
-      "timestamp": 50.0
-    },
-    {
-      "frame": 26,
-      "content": "no_call  \ndescription: Player 2 is in the process of serving the ball. The ball is visible above the server's head, indicating the serve toss. No scoring event has occurred yet as the serve is still being executed.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 is in the process of serving the ball. The ball is visible above the server's head, indicating the serve toss. No scoring event has occurred yet as the serve is still being execu"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 3.03,
-      "tool_call_source": "fallback",
-      "timestamp": 52.0
-    },
-    {
-      "frame": 27,
-      "content": "no_call  \ndescription: Player 2 is preparing to hit a forehand return. The ball is not visible in this frame, but the player's posture suggests they are actively engaged in the rally. There is no indication of a scoring event at this moment.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 is preparing to hit a forehand return. The ball is not visible in this frame, but the player's posture suggests they are actively engaged in the rally. There is no indication of "
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "0",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 2.97,
-      "tool_call_source": "fallback",
-      "timestamp": 54.0
-    },
-    {
-      "frame": 28,
-      "content": "announce_call  \ncall_type: out  \nannouncement: \"Out! Point to Player 1.\"  \nconfidence: 0.8  \nplayer: p1  \n\nThe ball appears to have landed outside the baseline, as indicated by its position relative to the court lines. Player 2 seems to be reacting to a missed shot, suggesting the ball did not land within the court boundaries. This results in a point awarded to Player 1.",
-      "tool_calls": [
-        {
-          "name": "announce_call",
-          "args": {
-            "call_type": "out",
-            "announcement": "\"Out! Point to Player 1.\"",
-            "confidence": 0.8
-          }
-        },
-        {
-          "name": "update_score",
-          "args": {
-            "player": "p1",
-            "reason": "out"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "15",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 7.69,
-      "tool_call_source": "fallback",
-      "timestamp": 56.0
-    },
-    {
-      "frame": 29,
-      "content": "no_call  \ndescription: Player 2 is preparing to serve, standing behind the baseline with the ball in hand. Player 1 is positioned ready to receive the serve. No scoring event has occurred yet.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 is preparing to serve, standing behind the baseline with the ball in hand. Player 1 is positioned ready to receive the serve. No scoring event has occurred yet."
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "15",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 2.3,
-      "tool_call_source": "fallback",
-      "timestamp": 58.0
-    },
-    {
-      "frame": 30,
-      "content": "announce_call  \ncall_type: fault  \nannouncement: \"Fault!\"  \nconfidence: 0.7  \nplayer: p2  \n\nPlayer 2 appears to have just served, and his body language suggests disappointment, indicating the serve may have been unsuccessful. Given the context of the previous fault and the current server being Player 2, this is likely another fault.",
-      "tool_calls": [
-        {
-          "name": "announce_call",
-          "args": {
-            "call_type": "fault",
-            "announcement": "\"Fault!\"",
-            "confidence": 0.7
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "15",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 7.41,
-      "tool_call_source": "fallback",
-      "timestamp": 60.0
-    },
-    {
-      "frame": 31,
-      "content": "no_call  \ndescription: Player 2 is in the motion of serving the ball. The ball is not visible in this frame, but the posture indicates the serve is underway. No scoring event can be determined from this frame alone.",
-      "tool_calls": [
-        {
-          "name": "no_call",
-          "args": {
-            "description": "description: Player 2 is in the motion of serving the ball. The ball is not visible in this frame, but the posture indicates the serve is underway. No scoring event can be determined from this frame a"
-          }
-        }
-      ],
-      "score": {
-        "points": {
-          "p1": "15",
-          "p2": "0"
-        },
-        "games": {
-          "p1": 0,
-          "p2": 1
-        },
-        "sets": {
-          "p1": 0,
-          "p2": 0
-        },
-        "server": "p2"
-      },
-      "latency_s": 2.56,
-      "tool_call_source": "fallback",
       "timestamp": 62.0
     },
     {
       "frame": 32,
-      "content": "no_call  \ndescription: Player 2 is preparing to serve, as indicated by their stance and the ball toss. There is no indication of a scoring event in this frame.",
+      "content": "no_call\ndescription: Player 1 is preparing to serve, as indicated by their stance and the ball toss. No scoring event has occurred yet; the serve has not been completed.",
       "tool_calls": [
         {
           "name": "no_call",
           "args": {
-            "description": "description: Player 2 is preparing to serve, as indicated by their stance and the ball toss. There is no indication of a scoring event in this frame."
+            "description": "description: Player 1 is preparing to serve, as indicated by their stance and the ball toss. No scoring event has occurred yet; the serve has not been completed."
           }
         }
       ],
       "score": {
         "points": {
-          "p1": "15",
+          "p1": "0",
           "p2": "0"
         },
         "games": {
           "p1": 0,
-          "p2": 1
+          "p2": 0
         },
         "sets": {
           "p1": 0,
           "p2": 0
         },
-        "server": "p2"
+        "server": "p1"
       },
-      "latency_s": 3.77,
+      "latency_s": 1.68,
       "tool_call_source": "fallback",
       "timestamp": 64.0
     },
     {
       "frame": 33,
-      "content": "no_call  \ndescription: Player 2 appears to be in the process of serving, as they are positioned behind the baseline with their arm raised, suggesting a serve toss. There is no immediate evidence of a scoring event in this frame.",
+      "content": "no_call\ndescription: Player 1 appears to have just served the ball, but there is no clear evidence of where the ball landed or any immediate reaction from either player. The rally seems to be ongoing without a scoring event occurring.",
       "tool_calls": [
         {
           "name": "no_call",
           "args": {
-            "description": "description: Player 2 appears to be in the process of serving, as they are positioned behind the baseline with their arm raised, suggesting a serve toss. There is no immediate evidence of a scoring ev"
+            "description": "description: Player 1 appears to have just served the ball, but there is no clear evidence of where the ball landed or any immediate reaction from either player. The rally seems to be ongoing without "
           }
         }
       ],
       "score": {
         "points": {
-          "p1": "15",
+          "p1": "0",
           "p2": "0"
         },
         "games": {
           "p1": 0,
-          "p2": 1
+          "p2": 0
         },
         "sets": {
           "p1": 0,
           "p2": 0
         },
-        "server": "p2"
+        "server": "p1"
       },
-      "latency_s": 6.94,
+      "latency_s": 3.8,
       "tool_call_source": "fallback",
       "timestamp": 66.0
     }
