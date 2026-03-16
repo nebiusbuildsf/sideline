@@ -730,7 +730,15 @@ async function startCached() {
                 if (as) as.textContent = f.content.substring(0, 120);
             }
 
-            await new Promise(r => setTimeout(r, 1000 / fps));
+            // Check if this frame had a call — pause longer so user sees it
+            const hadCall = (f.tool_calls || []).some(tc => tc.name === 'announce_call');
+            if (hadCall) {
+                vid.pause();
+                await new Promise(r => setTimeout(r, 2500));
+                vid.play().catch(() => {});
+            } else {
+                await new Promise(r => setTimeout(r, 1000 / fps));
+            }
         }
 
         if (as) as.textContent = 'Playback complete';
