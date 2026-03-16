@@ -360,19 +360,19 @@ scene.background = new THREE.Color(0x0a0e1a);
 scene.fog = new THREE.Fog(0x0a0e1a, 12, 30);
 
 const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-camera.position.set(3.5, 2.5, 5);
-camera.lookAt(0, 1, 0);
+camera.position.set(1.8, 1.5, 2.8);
+camera.lookAt(0, 0.7, 0);
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.8;
+renderer.toneMappingExposure = 2.2;
 
 // Lights
-scene.add(new THREE.AmbientLight(0x8888bb, 1.0));
-const key = new THREE.DirectionalLight(0xffffff, 2.0);
+scene.add(new THREE.AmbientLight(0x8888bb, 1.4));
+const key = new THREE.DirectionalLight(0xffffff, 2.5);
 key.position.set(5, 8, 4); key.castShadow = true; scene.add(key);
 scene.add(new THREE.DirectionalLight(0xaabbff, 0.8).translateX(-3).translateY(4));
 scene.add(new THREE.PointLight(0x067ff9, 1.0, 15).translateX(-2).translateY(3).translateZ(-4));
@@ -448,7 +448,6 @@ function buildHumanoid() {
         const fam = new THREE.Mesh(new THREE.BoxGeometry(0.06,0.28,0.06), body); fam.position.y = -0.14; fam.castShadow = true; el.add(fam);
         el.add(new THREE.Mesh(new THREE.BoxGeometry(0.06,0.08,0.04), metal).translateY(-0.3));
     });
-    humanoidGroup.rotation.y = Math.PI;
     humanoidGroup.visible = false;
     scene.add(humanoidGroup);
 }
@@ -519,9 +518,9 @@ function switchRobot(name) {
     document.getElementById('dot-arm').className = 'w-2 h-2 rounded-full ' + (name==='arm'?'bg-primary':'bg-slate-600');
     document.getElementById('dot-humanoid').className = 'w-2 h-2 rounded-full ' + (name==='humanoid'?'bg-primary':'bg-slate-600');
     document.getElementById('dot-rover').className = 'w-2 h-2 rounded-full ' + (name==='rover'?'bg-primary':'bg-slate-600');
-    if (name==='arm') { camera.position.set(3.5,2.5,5); camera.lookAt(0,0.8,0); }
-    if (name==='humanoid') { camera.position.set(3,2,5); camera.lookAt(0,1,0); }
-    if (name==='rover') { camera.position.set(3,2,4); camera.lookAt(0,0.2,0); }
+    if (name==='arm') { camera.position.set(1.8,1.5,2.8); camera.lookAt(0,0.7,0); }
+    if (name==='humanoid') { camera.position.set(1.5,1.2,2.5); camera.lookAt(0,0.9,0); }
+    if (name==='rover') { camera.position.set(1.5,0.8,2.0); camera.lookAt(0,0.15,0); }
 }
 
 function showCall(gesture) {
