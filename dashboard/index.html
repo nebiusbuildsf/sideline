@@ -60,8 +60,18 @@
 
         /* === REFEREE PAGE === */
         .referee-layout {
-            display: grid; grid-template-columns: 1fr 420px; grid-template-rows: auto 1fr;
-            gap: 16px; padding: 20px 24px; height: calc(100vh - 64px);
+            display: grid; grid-template-columns: 1fr 320px 380px; grid-template-rows: auto 1fr;
+            gap: 16px; padding: 20px 24px; height: calc(100vh - 56px);
+        }
+
+        /* Robot Simulation Mini */
+        .sim-mini {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .sim-mini-header {
+            padding: 12px 16px; border-bottom: 1px solid var(--border);
+            font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px;
         }
 
         /* Scoreboard */
@@ -312,6 +322,28 @@
                         <button class="btn" onclick="startDemo()">Live</button>
                         <button class="btn btn-accent" id="start-btn" onclick="startCached()">Cached</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Sideline Agent Embodiment -->
+            <div class="sim-mini" style="position:relative">
+                <div class="sim-mini-header">
+                    <span class="material-symbols-outlined" style="font-size:14px">smart_toy</span>
+                    Sideline
+                    <select id="robot-select" onchange="switchRobot(this.value)" style="margin-left:auto;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--elevated);color:var(--text);font-size:10px;cursor:pointer">
+                        <option value="arm" selected>SO-101 Arm</option>
+                        <option value="humanoid">Unitree G1</option>
+                        <option value="rover">MentorPi</option>
+                    </select>
+                    <a href="/robots" target="_blank" style="font-size:10px;color:var(--accent);text-decoration:none;margin-left:8px">↗</a>
+                </div>
+                <div id="robot-3d" style="flex:1;min-height:300px"></div>
+                <div style="padding:8px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <div id="robot-dot" style="width:6px;height:6px;border-radius:50%;background:var(--dim)"></div>
+                        <span id="robot-gesture-label" style="font-family:var(--mono);font-size:11px;color:var(--secondary)">idle</span>
+                    </div>
+                    <span id="robot-call-label" style="font-size:11px;font-weight:600;color:var(--accent)"></span>
                 </div>
             </div>
 
@@ -754,5 +786,159 @@ document.getElementById('video').src = clipBase + clipMap[currentClip].video;
 try { connect(); } catch(e) {}
 </script>
 
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const container = document.getElementById('robot-3d');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d0d1a);
+
+const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 50);
+camera.position.set(3, 2.5, 4);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.8;
+container.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.target.set(0, 0.8, 0);
+
+// Lights
+scene.add(new THREE.AmbientLight(0x8888bb, 1.0));
+const key = new THREE.DirectionalLight(0xffffff, 2.0);
+key.position.set(5, 8, 4); key.castShadow = true; scene.add(key);
+scene.add(new THREE.PointLight(0x3b82f6, 1.0, 15).translateX(-2).translateY(3));
+
+// Ground + grid
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.MeshStandardMaterial({color: 0x12121e, roughness: 0.85}));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+scene.add(new THREE.GridHelper(12, 24, 0x334455, 0x252540));
+
+// Materials
+const M = {
+    metal: new THREE.MeshStandardMaterial({color:0xccccdd, metalness:0.6, roughness:0.2}),
+    dark: new THREE.MeshStandardMaterial({color:0x2a2a3a, metalness:0.4, roughness:0.3}),
+    accent: new THREE.MeshStandardMaterial({color:0x66bbff, metalness:0.3, roughness:0.2, emissive:0x3388ff, emissiveIntensity:0.5}),
+    joint: new THREE.MeshStandardMaterial({color:0x77ccff, metalness:0.4, roughness:0.2, emissive:0x3399ff, emissiveIntensity:0.6}),
+    body: new THREE.MeshStandardMaterial({color:0xeeeef4, metalness:0.3, roughness:0.35}),
+};
+
+// SO-101 Arm
+const armGroup = new THREE.Group();
+const joints = [];
+(function buildArm() {
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 0.15, 32), M.dark);
+    base.position.y = 0.075; base.castShadow = true; armGroup.add(base);
+    armGroup.add(new THREE.Mesh(new THREE.TorusGeometry(0.37, 0.02, 8, 32), M.accent).translateY(0.15).rotateX(Math.PI/2));
+
+    let parent = armGroup;
+    const segs = [{h:0.12,r:0.12,y:0.15},{h:0.55,r:0.04,y:0.06},{h:0.45,r:0.03,y:0.58},{h:0.12,r:0.03,y:0.5},{h:0.08,r:0.025,y:0.04},{h:0.1,r:0.015,y:0.14}];
+    segs.forEach((s,i) => {
+        const g = new THREE.Group(); g.position.y = s.y; parent.add(g); joints.push(g);
+        if (i < 3) { const jm = new THREE.Mesh(new THREE.SphereGeometry(s.r*1.5,12,12), M.joint); jm.castShadow=true; g.add(jm); }
+        const arm = new THREE.Mesh(new THREE.BoxGeometry(s.r*2, s.h, s.r*2), M.metal);
+        arm.position.y = s.h/2; arm.castShadow = true; g.add(arm);
+        parent = g;
+    });
+    scene.add(armGroup);
+})();
+
+// Gesture targets
+const gestures = {
+    idle: [0,0,0,0,0,0],
+    point_right: [1.2,-0.3,-0.8,0,0,0],
+    arm_raise: [0,-0.2,-0.1,-0.1,0,0],
+    fault: [-0.5,0.4,-1.5,-0.8,0.5,0],
+    safe: [0.3,-0.5,-0.5,0,0.3,0],
+    wave: [0,-0.3,-0.6,0,0,0],
+};
+
+let currentGesture = 'idle';
+let gestureTime = 0;
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+// Listen to parent page events
+window.addEventListener('message', (e) => {
+    if (e.data?.type === 'gesture') {
+        const g = e.data.gesture || 'idle';
+        currentGesture = Object.keys(gestures).includes(g) ? g : 'point_right';
+        gestureTime = 0;
+        document.getElementById('robot-gesture-label').textContent = currentGesture;
+        document.getElementById('robot-call-label').textContent = e.data.call || '';
+        clearTimeout(window._rTimer);
+        window._rTimer = setTimeout(() => { currentGesture = 'idle'; document.getElementById('robot-gesture-label').textContent = 'idle'; }, 3000);
+    }
+});
+
+// Also listen via WebSocket directly
+const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+const rws = new WebSocket(`${proto}://${location.host}/ws`);
+let lastCallLabel = '';
+rws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type === 'gesture') {
+        const g = msg.data.gesture || 'idle';
+        currentGesture = Object.keys(gestures).includes(g) ? g : 'point_right';
+        gestureTime = 0;
+        document.getElementById('robot-gesture-label').textContent = currentGesture;
+        document.getElementById('robot-dot').style.background = 'var(--green)';
+        document.getElementById('robot-dot').style.boxShadow = '0 0 6px #22c55e40';
+        clearTimeout(window._rTimer);
+        window._rTimer = setTimeout(() => {
+            currentGesture = 'idle';
+            document.getElementById('robot-gesture-label').textContent = 'idle';
+            document.getElementById('robot-dot').style.background = 'var(--dim)';
+            document.getElementById('robot-dot').style.boxShadow = 'none';
+            document.getElementById('robot-call-label').textContent = '';
+        }, 3000);
+    }
+    if (msg.type === 'call') {
+        const ct = (msg.data.call_type || '').toUpperCase();
+        document.getElementById('robot-call-label').textContent = ct;
+    }
+};
+
+window.switchRobot = function(name) {
+    // Open full robot sim with selected robot
+    window.open('/robots#' + name, '_blank');
+};
+
+const clock = new THREE.Clock();
+function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    gestureTime += dt;
+
+    const t = gestures[currentGesture] || gestures.idle;
+    joints[0].rotation.y = lerp(joints[0].rotation.y, t[0], dt*3);
+    joints[1].rotation.z = lerp(joints[1].rotation.z, t[1], dt*3);
+    joints[2].rotation.z = lerp(joints[2].rotation.z, t[2], dt*3);
+    joints[3].rotation.z = lerp(joints[3].rotation.z, t[3], dt*3);
+    if (joints[4]) joints[4].rotation.y = lerp(joints[4].rotation.y, t[4], dt*3);
+    if (joints[5]) joints[5].rotation.z = lerp(joints[5].rotation.z, t[5], dt*3);
+    if (currentGesture === 'wave') joints[3].rotation.z = Math.sin(gestureTime*6)*0.4;
+
+    controls.update();
+    renderer.render(scene, camera);
+}
+
+new ResizeObserver(() => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+}).observe(container);
+
+animate();
+</script>
 </body>
 </html>
