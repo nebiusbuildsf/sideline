@@ -843,6 +843,83 @@ const joints = [];
     scene.add(armGroup);
 })();
 
+// Humanoid (Unitree G1)
+const humanoidGroup = new THREE.Group();
+(function buildHumanoid() {
+    // Feet
+    [-0.1, 0.1].forEach(x => {
+        const foot = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.03, 0.2), M.dark);
+        foot.position.set(x, 0.015, 0); foot.castShadow = true; humanoidGroup.add(foot);
+    });
+    // Legs
+    [-0.1, 0.1].forEach(x => {
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.35, 0.07), M.body);
+        leg.position.set(x, 0.2, 0); leg.castShadow = true; humanoidGroup.add(leg);
+        const knee = new THREE.Mesh(new THREE.SphereGeometry(0.04, 8, 8), M.joint);
+        knee.position.set(x, 0.38, 0); humanoidGroup.add(knee);
+        const thigh = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.3, 0.08), M.body);
+        thigh.position.set(x, 0.55, 0); thigh.castShadow = true; humanoidGroup.add(thigh);
+    });
+    // Torso
+    const torso = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.35, 0.16), M.body);
+    torso.position.y = 0.88; torso.castShadow = true; humanoidGroup.add(torso);
+    const chest = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.25, 0.17), M.accent);
+    chest.position.y = 0.88; humanoidGroup.add(chest);
+    // Head
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.05, 8), M.body);
+    neck.position.y = 1.08; humanoidGroup.add(neck);
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.16, 0.14), M.body);
+    head.position.y = 1.19; head.castShadow = true; humanoidGroup.add(head);
+    const eyeL = new THREE.Mesh(new THREE.CircleGeometry(0.018, 12), M.accent);
+    eyeL.position.set(-0.03, 1.21, 0.071); humanoidGroup.add(eyeL);
+    const eyeR = new THREE.Mesh(new THREE.CircleGeometry(0.018, 12), M.accent);
+    eyeR.position.set(0.03, 1.21, 0.071); humanoidGroup.add(eyeR);
+    // Arms
+    [-1, 1].forEach(side => {
+        const shoulder = new THREE.Mesh(new THREE.SphereGeometry(0.04, 8, 8), M.joint);
+        shoulder.position.set(side * 0.18, 1.02, 0); humanoidGroup.add(shoulder);
+        const upper = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.25, 0.06), M.body);
+        upper.position.set(side * 0.18, 0.87, 0); upper.castShadow = true; humanoidGroup.add(upper);
+        const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 8), M.joint);
+        elbow.position.set(side * 0.18, 0.73, 0); humanoidGroup.add(elbow);
+        const fore = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.22, 0.05), M.body);
+        fore.position.set(side * 0.18, 0.6, 0); fore.castShadow = true; humanoidGroup.add(fore);
+        const hand = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.06, 0.03), M.metal);
+        hand.position.set(side * 0.18, 0.47, 0); humanoidGroup.add(hand);
+    });
+    humanoidGroup.visible = false;
+    scene.add(humanoidGroup);
+})();
+
+// MentorPi Rover
+const roverGroup = new THREE.Group();
+(function buildRover() {
+    const chassis = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.1, 0.3), M.body);
+    chassis.position.y = 0.1; chassis.castShadow = true; roverGroup.add(chassis);
+    const top = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.04, 0.25), M.dark);
+    top.position.y = 0.17; roverGroup.add(top);
+    // Camera mast
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.18, 8), M.metal);
+    pole.position.set(0.08, 0.28, 0); roverGroup.add(pole);
+    const camHead = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.05, 0.05), M.dark);
+    camHead.position.set(0.08, 0.39, 0); camHead.castShadow = true; roverGroup.add(camHead);
+    const lens = new THREE.Mesh(new THREE.CircleGeometry(0.018, 12), M.accent);
+    lens.position.set(0.08, 0.39, 0.026); roverGroup.add(lens);
+    // Speaker
+    const speaker = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.05, 0.015), M.metal);
+    speaker.position.set(-0.08, 0.13, 0.155); roverGroup.add(speaker);
+    // Lidar
+    const lidar = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.025, 16), M.accent);
+    lidar.position.set(-0.08, 0.21, 0); roverGroup.add(lidar);
+    // Wheels (4 tracks)
+    [[-0.2,0.05,0.14],[0.2,0.05,0.14],[-0.2,0.05,-0.14],[0.2,0.05,-0.14]].forEach(pos => {
+        const w = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.035, 12), M.dark);
+        w.position.set(...pos); w.rotation.x = Math.PI/2; w.castShadow = true; roverGroup.add(w);
+    });
+    roverGroup.visible = false;
+    scene.add(roverGroup);
+})();
+
 // Gesture targets
 const gestures = {
     idle: [0,0,0,0,0,0],
@@ -921,10 +998,19 @@ rws.onmessage = (e) => {
 };
 
 window.switchRobot = function(name) {
-    const labels = {arm:'SO-101 Arm', humanoid:'Unitree G1', rover:'MentorPi'};
+    armGroup.visible = name === 'arm';
+    humanoidGroup.visible = name === 'humanoid';
+    roverGroup.visible = name === 'rover';
+
+    // Adjust camera per robot
+    if (name === 'arm') { camera.position.set(3, 2.5, 4); controls.target.set(0, 0.8, 0); }
+    if (name === 'humanoid') { camera.position.set(2.5, 2, 3.5); controls.target.set(0, 0.8, 0); }
+    if (name === 'rover') { camera.position.set(2.5, 1.5, 3); controls.target.set(0, 0.15, 0); }
+
     const gl = document.getElementById('robot-gesture-label');
-    if (gl) gl.textContent = labels[name] || name;
-    // Show a demo gesture on switch
+    if (gl) gl.textContent = 'idle';
+
+    // Demo gesture on switch
     const demoGestures = {arm:'arm_raise', humanoid:'point_right', rover:'wave'};
     window.dispatchEvent(new CustomEvent('sideline-gesture', {detail: {gesture: demoGestures[name] || 'arm_raise'}}));
 };
